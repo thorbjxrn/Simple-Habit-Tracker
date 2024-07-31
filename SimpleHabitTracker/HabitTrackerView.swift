@@ -59,6 +59,11 @@ struct HabitTrackerView: View {
     // Initialize lastTapTime
     @State private var lastTapTime: Date?
 
+    // Get the current day of the week (0 = Sunday, 1 = Monday, etc.)
+    private var currentDayIndex: Int {
+        Calendar.current.component(.weekday, from: Date()) - 1
+    }
+
     var body: some View {
         NavigationView {
             List {
@@ -71,6 +76,7 @@ struct HabitTrackerView: View {
                             ForEach(0..<7) { index in
                                 Circle()
                                     .fill(color(for: habit.completedDays[index]))
+                                    .shadow(color: borderColor(isToday: index), radius: 8, x: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/, y: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/)
                                     .frame(width: 30, height: 30)
                                     .onTapGesture {
                                         handleTap(index: index, for: &habit.completedDays)
@@ -110,6 +116,15 @@ struct HabitTrackerView: View {
             return Color.green
         case .failed:
             return Color.red
+        }
+    }
+
+    func borderColor(isToday: Int) -> Color {
+        if isToday == currentDayIndex {
+            return Color.accentColor.opacity(0.45)
+        }
+        else {
+            return Color.accentColor.opacity(0.1)
         }
     }
 
