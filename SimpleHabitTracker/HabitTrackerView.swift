@@ -120,7 +120,7 @@ struct HabitTrackerView: View {
                                         ForEach(0..<7) { index in
                                             Circle()
                                                 .fill(color(for: habit.completedDays[index]))
-                                                .shadow(color: borderColor(isToday: index), radius: 8, x: 0.0, y: 0.0)
+                                                .shadow(color: borderColor(for: habit.completedDays[index], isToday: index), radius: 8, x: 0.0, y: 0.0)
                                                 .frame(width: 30, height: 30)
                                                 .onTapGesture {
                                                     handleTap(index: index, for: &habit.completedDays)
@@ -132,7 +132,7 @@ struct HabitTrackerView: View {
                                     )
                                 }
                             }
-                            .frame(height: 50) // Adjust the height as needed
+//                            .frame(height: ) // Adjust the height as needed
                         }
                         .padding(.vertical)
                     }
@@ -207,11 +207,11 @@ struct HabitTrackerView: View {
         }
     }
 
-    func borderColor(isToday: Int) -> Color {
+    func borderColor(for state: Habit.HabitState, isToday: Int) -> Color {
         if isToday == currentDayIndex {
-            return Color.accentColor.opacity(0.45)
+            return color(for: state).opacity(1.0)
         } else {
-            return Color.accentColor.opacity(0.1)
+            return color(for: state).opacity(0.2)
         }
     }
 
@@ -263,7 +263,7 @@ struct LineConnectingConsecutiveDays: View {
 
         return (0..<7).map { index in
             CGPoint(x: CGFloat(index) * circleWidth + diameter / 2,
-                    y: geometry.size.height / 3 - 1.5)
+                    y: geometry.size.height / 2 + 3.15)
         }
     }
 
