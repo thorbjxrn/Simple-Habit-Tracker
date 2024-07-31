@@ -7,19 +7,19 @@ inspiration is taken from Habit Bull and Stronglifts 5x5, but I aim to not infri
 
 ideas for further development:
 
--[ ] more than one week
--[ ] history
--[ ] monthly view (on touching the habit name?)
--[ ] some graph of sorts
--[ ] conditional success for the week/streak
-    -[ ] number of days, specific days
-    -[ ] some reward, like a badge/animation for completing the weekly goal? 
--[ ] partial success on day, slider amount to fill the ball 0 - 100%
--[ ] haptics
--[ ] proper app icon
--[ ] launch screen?
--[ ] about page
--[ ] onboarding?
--[ ] any apple integration? apple health?
-    -[ ] auto checking health habits
+- [ ] more than one week
+- [ ] historic values, scroll back in time
+- [ ] monthly view (on touching the habit name?)
+- [ ] some graph of sorts
+- [ ] conditional success for the week/streak
+    - [ ] number of days, specific days
+    - [ ] some reward, like a badge/animation for completing the weekly goal? 
+- [ ] partial success on day, slider amount to fill the ball 0 - 100%
+- [ ] haptics
+- [ ] proper app icon
+- [ ] launch screen?
+- [ ] about page
+- [ ] onboarding?
+- [ ] any apple integration? apple health?
+    - [ ] auto checking health habits
 
