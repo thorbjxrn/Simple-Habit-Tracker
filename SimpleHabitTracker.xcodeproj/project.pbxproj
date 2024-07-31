@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0811AC1D2C5AE48A003E752D /* readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 0811AC1C2C5AE48A003E752D /* readme.md */; };
 		08C6A69C2C5AC8640001A26D /* SimpleHabitTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */; };
 		08C6A69E2C5AC8640001A26D /* HabitTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */; };
 		08C6A6A02C5AC8660001A26D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08C6A69F2C5AC8660001A26D /* Assets.xcassets */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0811AC1C2C5AE48A003E752D /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = SOURCE_ROOT; };
 		08C6A6982C5AC8640001A26D /* SimpleHabitTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleHabitTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerApp.swift; sourceTree = "<group>"; };
 		08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTrackerView.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 			children = (
 				08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */,
 				08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */,
+				0811AC1C2C5AE48A003E752D /* readme.md */,
 				08C6A69F2C5AC8660001A26D /* Assets.xcassets */,
 				08C6A6A12C5AC8660001A26D /* Preview Content */,
 			);
@@ -232,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08C6A6A32C5AC8660001A26D /* Preview Assets.xcassets in Resources */,
+				0811AC1D2C5AE48A003E752D /* readme.md in Resources */,
 				08C6A6A02C5AC8660001A26D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
