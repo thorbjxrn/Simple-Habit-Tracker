@@ -1,31 +1,68 @@
 import SwiftUI
 
 // Habit model with completion and failure states
-struct Habit: Identifiable {
-    let id = UUID()
+struct Habit: Identifiable, Codable {
+    let id: UUID
     let name: String
     var completedDays: [HabitState]
 
-    enum HabitState {
+    enum HabitState: String, Codable {
         case notCompleted
         case completed
         case failed
     }
 }
 
-// Main View
-struct HabitTrackerView: View {
-    @State private var habits: [Habit] = [
-        Habit(name: "Drink Water", completedDays: Array(repeating: .notCompleted, count: 7)),
-        Habit(name: "Exercise", completedDays: Array(repeating: .notCompleted, count: 7))
-    ]
+class HabitViewModel: ObservableObject {
+    @Published var habits: [Habit] = [] {
+        didSet {
+            saveHabits()
+        }
+    }
 
-    @State private var lastTapTime: Date? = nil
+    init() {
+        loadHabits()
+    }
+
+    // MARK: - UserDefaults Keys
+    private let habitsKey = "habits"
+
+    // MARK: - Data Persistence Methods
+    func saveHabits() {
+        if let encoded = try? JSONEncoder().encode(habits) {
+            UserDefaults.standard.set(encoded, forKey: habitsKey)
+        }
+    }
+
+    func loadHabits() {
+        if let data = UserDefaults.standard.data(forKey: habitsKey),
+           let decoded = try? JSONDecoder().decode([Habit].self, from: data) {
+            habits = decoded
+        }
+    }
+
+    func addHabit(name: String) {
+        let newHabit = Habit(id: UUID(), name: name, completedDays: Array(repeating: .notCompleted, count: 7))
+        habits.append(newHabit)
+    }
+
+    func removeHabit(at indexSet: IndexSet) {
+        habits.remove(atOffsets: indexSet)
+    }
+}
+
+struct HabitTrackerView: View {
+    @StateObject private var viewModel = HabitViewModel()
+    @State private var showingAddHabitAlert = false
+    @State private var newHabitName = ""
+
+    // Initialize lastTapTime
+    @State private var lastTapTime: Date?
 
     var body: some View {
         NavigationView {
             List {
-                ForEach($habits) { $habit in
+                ForEach($viewModel.habits) { $habit in
                     VStack(alignment: .leading) {
                         Text(habit.name)
                             .font(.headline)
@@ -43,8 +80,23 @@ struct HabitTrackerView: View {
                     }
                     .padding(.vertical)
                 }
+                .onDelete(perform: viewModel.removeHabit)
             }
             .navigationTitle("Habit Tracker")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showingAddHabitAlert = true
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .alert("Add New Habit", isPresented: $showingAddHabitAlert) {
+                TextField("Habit Name", text: $newHabitName)
+                Button("Add", action: addNewHabit)
+                Button("Cancel", role: .cancel, action: {})
+            }
         }
     }
 
@@ -65,14 +117,18 @@ struct HabitTrackerView: View {
         let now = Date()
 
         if let lastTap = lastTapTime, now.timeIntervalSince(lastTap) < 0.3 {
-            // Double tap detected
             markAsFailed(index: index, in: &days)
         } else {
-            // Single tap detected
             markAsCompleted(index: index, in: &days)
         }
 
         lastTapTime = now
+    }
+
+    func addNewHabit() {
+        guard !newHabitName.isEmpty else { return }
+        viewModel.addHabit(name: newHabitName)
+        newHabitName = ""
     }
 
     func markAsCompleted(index: Int, in days: inout [Habit.HabitState]) {
