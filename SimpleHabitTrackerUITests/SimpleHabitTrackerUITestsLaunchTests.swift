@@ -1,13 +1,6 @@
-//
-//  simpleHabitTrackerUITestsLaunchTests.swift
-//  simpleHabitTrackerUITests
-//
-//  Created by Thorbjørn on 31/07/2024.
-//
-
 import XCTest
 
-final class simpleHabitTrackerUITestsLaunchTests: XCTestCase {
+final class SimpleHabitTrackerUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08C6A69C2C5AC8640001A26D /* simpleHabitTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A69B2C5AC8640001A26D /* simpleHabitTrackerApp.swift */; };
+		08C6A69C2C5AC8640001A26D /* SimpleHabitTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */; };
 		08C6A69E2C5AC8640001A26D /* HabitTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */; };
 		08C6A6A02C5AC8660001A26D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08C6A69F2C5AC8660001A26D /* Assets.xcassets */; };
 		08C6A6A32C5AC8660001A26D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08C6A6A22C5AC8660001A26D /* Preview Assets.xcassets */; };
-		08C6A6AD2C5AC8660001A26D /* simpleHabitTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6AC2C5AC8660001A26D /* simpleHabitTrackerTests.swift */; };
-		08C6A6B72C5AC8660001A26D /* simpleHabitTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B62C5AC8660001A26D /* simpleHabitTrackerUITests.swift */; };
-		08C6A6B92C5AC8660001A26D /* simpleHabitTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B82C5AC8660001A26D /* simpleHabitTrackerUITestsLaunchTests.swift */; };
+		08C6A6AD2C5AC8660001A26D /* SimpleHabitTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6AC2C5AC8660001A26D /* SimpleHabitTrackerTests.swift */; };
+		08C6A6B72C5AC8660001A26D /* SimpleHabitTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B62C5AC8660001A26D /* SimpleHabitTrackerUITests.swift */; };
+		08C6A6B92C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,16 +34,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		08C6A6982C5AC8640001A26D /* simpleHabitTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = simpleHabitTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		08C6A69B2C5AC8640001A26D /* simpleHabitTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = simpleHabitTrackerApp.swift; sourceTree = "<group>"; };
+		08C6A6982C5AC8640001A26D /* SimpleHabitTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleHabitTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerApp.swift; sourceTree = "<group>"; };
 		08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTrackerView.swift; sourceTree = "<group>"; };
 		08C6A69F2C5AC8660001A26D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		08C6A6A22C5AC8660001A26D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		08C6A6A82C5AC8660001A26D /* simpleHabitTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = simpleHabitTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		08C6A6AC2C5AC8660001A26D /* simpleHabitTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = simpleHabitTrackerTests.swift; sourceTree = "<group>"; };
-		08C6A6B22C5AC8660001A26D /* simpleHabitTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = simpleHabitTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		08C6A6B62C5AC8660001A26D /* simpleHabitTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = simpleHabitTrackerUITests.swift; sourceTree = "<group>"; };
-		08C6A6B82C5AC8660001A26D /* simpleHabitTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = simpleHabitTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		08C6A6A82C5AC8660001A26D /* SimpleHabitTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimpleHabitTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		08C6A6AC2C5AC8660001A26D /* SimpleHabitTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerTests.swift; sourceTree = "<group>"; };
+		08C6A6B22C5AC8660001A26D /* SimpleHabitTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimpleHabitTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		08C6A6B62C5AC8660001A26D /* SimpleHabitTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerUITests.swift; sourceTree = "<group>"; };
+		08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,9 +74,9 @@
 		08C6A68F2C5AC8640001A26D = {
 			isa = PBXGroup;
 			children = (
-				08C6A69A2C5AC8640001A26D /* simpleHabitTracker */,
-				08C6A6AB2C5AC8660001A26D /* simpleHabitTrackerTests */,
-				08C6A6B52C5AC8660001A26D /* simpleHabitTrackerUITests */,
+				08C6A69A2C5AC8640001A26D /* SimpleHabitTracker */,
+				08C6A6AB2C5AC8660001A26D /* SimpleHabitTrackerTests */,
+				08C6A6B52C5AC8660001A26D /* SimpleHabitTrackerUITests */,
 				08C6A6992C5AC8640001A26D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -84,22 +84,22 @@
 		08C6A6992C5AC8640001A26D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				08C6A6982C5AC8640001A26D /* simpleHabitTracker.app */,
-				08C6A6A82C5AC8660001A26D /* simpleHabitTrackerTests.xctest */,
-				08C6A6B22C5AC8660001A26D /* simpleHabitTrackerUITests.xctest */,
+				08C6A6982C5AC8640001A26D /* SimpleHabitTracker.app */,
+				08C6A6A82C5AC8660001A26D /* SimpleHabitTrackerTests.xctest */,
+				08C6A6B22C5AC8660001A26D /* SimpleHabitTrackerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		08C6A69A2C5AC8640001A26D /* simpleHabitTracker */ = {
+		08C6A69A2C5AC8640001A26D /* SimpleHabitTracker */ = {
 			isa = PBXGroup;
 			children = (
-				08C6A69B2C5AC8640001A26D /* simpleHabitTrackerApp.swift */,
+				08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */,
 				08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */,
 				08C6A69F2C5AC8660001A26D /* Assets.xcassets */,
 				08C6A6A12C5AC8660001A26D /* Preview Content */,
 			);
-			path = simpleHabitTracker;
+			path = SimpleHabitTracker;
 			sourceTree = "<group>";
 		};
 		08C6A6A12C5AC8660001A26D /* Preview Content */ = {
@@ -110,29 +110,29 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		08C6A6AB2C5AC8660001A26D /* simpleHabitTrackerTests */ = {
+		08C6A6AB2C5AC8660001A26D /* SimpleHabitTrackerTests */ = {
 			isa = PBXGroup;
 			children = (
-				08C6A6AC2C5AC8660001A26D /* simpleHabitTrackerTests.swift */,
+				08C6A6AC2C5AC8660001A26D /* SimpleHabitTrackerTests.swift */,
 			);
-			path = simpleHabitTrackerTests;
+			path = SimpleHabitTrackerTests;
 			sourceTree = "<group>";
 		};
-		08C6A6B52C5AC8660001A26D /* simpleHabitTrackerUITests */ = {
+		08C6A6B52C5AC8660001A26D /* SimpleHabitTrackerUITests */ = {
 			isa = PBXGroup;
 			children = (
-				08C6A6B62C5AC8660001A26D /* simpleHabitTrackerUITests.swift */,
-				08C6A6B82C5AC8660001A26D /* simpleHabitTrackerUITestsLaunchTests.swift */,
+				08C6A6B62C5AC8660001A26D /* SimpleHabitTrackerUITests.swift */,
+				08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */,
 			);
-			path = simpleHabitTrackerUITests;
+			path = SimpleHabitTrackerUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		08C6A6972C5AC8640001A26D /* simpleHabitTracker */ = {
+		08C6A6972C5AC8640001A26D /* SimpleHabitTracker */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 08C6A6BC2C5AC8660001A26D /* Build configuration list for PBXNativeTarget "simpleHabitTracker" */;
+			buildConfigurationList = 08C6A6BC2C5AC8660001A26D /* Build configuration list for PBXNativeTarget "SimpleHabitTracker" */;
 			buildPhases = (
 				08C6A6942C5AC8640001A26D /* Sources */,
 				08C6A6952C5AC8640001A26D /* Frameworks */,
@@ -142,14 +142,14 @@
 			);
 			dependencies = (
 			);
-			name = simpleHabitTracker;
+			name = SimpleHabitTracker;
 			productName = simpleHabitTracker;
-			productReference = 08C6A6982C5AC8640001A26D /* simpleHabitTracker.app */;
+			productReference = 08C6A6982C5AC8640001A26D /* SimpleHabitTracker.app */;
 			productType = "com.apple.product-type.application";
 		};
-		08C6A6A72C5AC8660001A26D /* simpleHabitTrackerTests */ = {
+		08C6A6A72C5AC8660001A26D /* SimpleHabitTrackerTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 08C6A6BF2C5AC8660001A26D /* Build configuration list for PBXNativeTarget "simpleHabitTrackerTests" */;
+			buildConfigurationList = 08C6A6BF2C5AC8660001A26D /* Build configuration list for PBXNativeTarget "SimpleHabitTrackerTests" */;
 			buildPhases = (
 				08C6A6A42C5AC8660001A26D /* Sources */,
 				08C6A6A52C5AC8660001A26D /* Frameworks */,
@@ -160,14 +160,14 @@
 			dependencies = (
 				08C6A6AA2C5AC8660001A26D /* PBXTargetDependency */,
 			);
-			name = simpleHabitTrackerTests;
+			name = SimpleHabitTrackerTests;
 			productName = simpleHabitTrackerTests;
-			productReference = 08C6A6A82C5AC8660001A26D /* simpleHabitTrackerTests.xctest */;
+			productReference = 08C6A6A82C5AC8660001A26D /* SimpleHabitTrackerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		08C6A6B12C5AC8660001A26D /* simpleHabitTrackerUITests */ = {
+		08C6A6B12C5AC8660001A26D /* SimpleHabitTrackerUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 08C6A6C22C5AC8660001A26D /* Build configuration list for PBXNativeTarget "simpleHabitTrackerUITests" */;
+			buildConfigurationList = 08C6A6C22C5AC8660001A26D /* Build configuration list for PBXNativeTarget "SimpleHabitTrackerUITests" */;
 			buildPhases = (
 				08C6A6AE2C5AC8660001A26D /* Sources */,
 				08C6A6AF2C5AC8660001A26D /* Frameworks */,
@@ -178,9 +178,9 @@
 			dependencies = (
 				08C6A6B42C5AC8660001A26D /* PBXTargetDependency */,
 			);
-			name = simpleHabitTrackerUITests;
+			name = SimpleHabitTrackerUITests;
 			productName = simpleHabitTrackerUITests;
-			productReference = 08C6A6B22C5AC8660001A26D /* simpleHabitTrackerUITests.xctest */;
+			productReference = 08C6A6B22C5AC8660001A26D /* SimpleHabitTrackerUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -206,7 +206,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 08C6A6932C5AC8640001A26D /* Build configuration list for PBXProject "simpleHabitTracker" */;
+			buildConfigurationList = 08C6A6932C5AC8640001A26D /* Build configuration list for PBXProject "SimpleHabitTracker" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -219,9 +219,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				08C6A6972C5AC8640001A26D /* simpleHabitTracker */,
-				08C6A6A72C5AC8660001A26D /* simpleHabitTrackerTests */,
-				08C6A6B12C5AC8660001A26D /* simpleHabitTrackerUITests */,
+				08C6A6972C5AC8640001A26D /* SimpleHabitTracker */,
+				08C6A6A72C5AC8660001A26D /* SimpleHabitTrackerTests */,
+				08C6A6B12C5AC8660001A26D /* SimpleHabitTrackerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,7 +258,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08C6A69E2C5AC8640001A26D /* HabitTrackerView.swift in Sources */,
-				08C6A69C2C5AC8640001A26D /* simpleHabitTrackerApp.swift in Sources */,
+				08C6A69C2C5AC8640001A26D /* SimpleHabitTrackerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08C6A6AD2C5AC8660001A26D /* simpleHabitTrackerTests.swift in Sources */,
+				08C6A6AD2C5AC8660001A26D /* SimpleHabitTrackerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,8 +274,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08C6A6B92C5AC8660001A26D /* simpleHabitTrackerUITestsLaunchTests.swift in Sources */,
-				08C6A6B72C5AC8660001A26D /* simpleHabitTrackerUITests.swift in Sources */,
+				08C6A6B92C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift in Sources */,
+				08C6A6B72C5AC8660001A26D /* SimpleHabitTrackerUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,12 +284,12 @@
 /* Begin PBXTargetDependency section */
 		08C6A6AA2C5AC8660001A26D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 08C6A6972C5AC8640001A26D /* simpleHabitTracker */;
+			target = 08C6A6972C5AC8640001A26D /* SimpleHabitTracker */;
 			targetProxy = 08C6A6A92C5AC8660001A26D /* PBXContainerItemProxy */;
 		};
 		08C6A6B42C5AC8660001A26D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 08C6A6972C5AC8640001A26D /* simpleHabitTracker */;
+			target = 08C6A6972C5AC8640001A26D /* SimpleHabitTracker */;
 			targetProxy = 08C6A6B32C5AC8660001A26D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -435,7 +435,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.simpleHabitTracker;
+				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -464,7 +464,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.simpleHabitTracker;
+				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -483,12 +483,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.simpleHabitTrackerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTrackerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/simpleHabitTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/simpleHabitTracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SimpleHabitTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SimpleHabitTracker";
 			};
 			name = Debug;
 		};
@@ -503,12 +503,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.simpleHabitTrackerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTrackerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/simpleHabitTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/simpleHabitTracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SimpleHabitTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SimpleHabitTracker";
 			};
 			name = Release;
 		};
@@ -521,7 +521,7 @@
 				DEVELOPMENT_TEAM = 228DC29L7W;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.simpleHabitTrackerUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTrackerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -539,7 +539,7 @@
 				DEVELOPMENT_TEAM = 228DC29L7W;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.simpleHabitTrackerUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTrackerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -551,7 +551,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		08C6A6932C5AC8640001A26D /* Build configuration list for PBXProject "simpleHabitTracker" */ = {
+		08C6A6932C5AC8640001A26D /* Build configuration list for PBXProject "SimpleHabitTracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08C6A6BA2C5AC8660001A26D /* Debug */,
@@ -560,7 +560,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		08C6A6BC2C5AC8660001A26D /* Build configuration list for PBXNativeTarget "simpleHabitTracker" */ = {
+		08C6A6BC2C5AC8660001A26D /* Build configuration list for PBXNativeTarget "SimpleHabitTracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08C6A6BD2C5AC8660001A26D /* Debug */,
@@ -569,7 +569,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		08C6A6BF2C5AC8660001A26D /* Build configuration list for PBXNativeTarget "simpleHabitTrackerTests" */ = {
+		08C6A6BF2C5AC8660001A26D /* Build configuration list for PBXNativeTarget "SimpleHabitTrackerTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08C6A6C02C5AC8660001A26D /* Debug */,
@@ -578,7 +578,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		08C6A6C22C5AC8660001A26D /* Build configuration list for PBXNativeTarget "simpleHabitTrackerUITests" */ = {
+		08C6A6C22C5AC8660001A26D /* Build configuration list for PBXNativeTarget "SimpleHabitTrackerUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08C6A6C32C5AC8660001A26D /* Debug */,
