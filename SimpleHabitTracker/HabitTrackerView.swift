@@ -72,17 +72,25 @@ struct HabitTrackerView: View {
                         Text(habit.name)
                             .font(.headline)
 
-                        HStack {
-                            ForEach(0..<7) { index in
-                                Circle()
-                                    .fill(color(for: habit.completedDays[index]))
-                                    .shadow(color: borderColor(isToday: index), radius: 8, x: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/, y: /*@START_MENU_TOKEN@*/0.0/*@END_MENU_TOKEN@*/)
-                                    .frame(width: 30, height: 30)
-                                    .onTapGesture {
-                                        handleTap(index: index, for: &habit.completedDays)
+                        GeometryReader { geometry in
+                            VStack {
+                                HStack {
+                                    ForEach(0..<7) { index in
+                                        Circle()
+                                            .fill(color(for: habit.completedDays[index]))
+                                            .shadow(color: borderColor(isToday: index), radius: 8, x: 0.0, y: 0.0)
+                                            .frame(width: 30, height: 30)
+                                            .onTapGesture {
+                                                handleTap(index: index, for: &habit.completedDays)
+                                            }
                                     }
+                                }
+                                .overlay(
+                                    LineConnectingConsecutiveDays(days: habit.completedDays, geometry: geometry)
+                                )
                             }
                         }
+                        .frame(height: 50) // Adjust the height as needed
                     }
                     .padding(.vertical)
                 }
@@ -122,8 +130,7 @@ struct HabitTrackerView: View {
     func borderColor(isToday: Int) -> Color {
         if isToday == currentDayIndex {
             return Color.accentColor.opacity(0.45)
-        }
-        else {
+        } else {
             return Color.accentColor.opacity(0.1)
         }
     }
@@ -156,6 +163,36 @@ struct HabitTrackerView: View {
 
     func markAsFailed(index: Int, in days: inout [Habit.HabitState]) {
         days[index] = .failed
+    }
+}
+
+struct LineConnectingConsecutiveDays: View {
+    let days: [Habit.HabitState]
+    let geometry: GeometryProxy
+
+    private var dayPositions: [CGPoint] {
+        let diameter: CGFloat = 30
+        let spacing: CGFloat = 10 // Adjust spacing between days if needed
+        let circleWidth = diameter + spacing
+
+        return (0..<7).map { index in
+            CGPoint(x: CGFloat(index) * circleWidth + diameter / 2,
+                    y: geometry.size.height / 3 - 1.5)
+        }
+    }
+
+    var body: some View {
+        Path { path in
+            let positions = dayPositions
+
+            for i in 0..<positions.count - 1 {
+                if days[i] == .completed && days[i + 1] == .completed {
+                    path.move(to: positions[i])
+                    path.addLine(to: positions[i + 1])
+                }
+            }
+        }
+        .stroke(Color.green, lineWidth: 4) // Adjust the line color and width
     }
 }
 
