@@ -20,6 +20,10 @@ class HabitViewModel: ObservableObject {
         }
     }
 
+    private var deletedHabit: Habit?
+    private var deletedHabitIndex: Int?
+    private var undoTimer: Timer?
+
     init() {
         loadHabits()
     }
@@ -47,7 +51,24 @@ class HabitViewModel: ObservableObject {
     }
 
     func removeHabit(at indexSet: IndexSet) {
+        guard let index = indexSet.first else { return }
+        deletedHabit = habits[index]
+        deletedHabitIndex = index
         habits.remove(atOffsets: indexSet)
+
+        // Show undo button
+        undoTimer?.invalidate()
+        undoTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
+            self?.undoDeletion()
+        }
+    }
+
+    func undoDeletion() {
+        guard let habit = deletedHabit, let index = deletedHabitIndex else { return }
+        habits.insert(habit, at: index)
+        deletedHabit = nil
+        deletedHabitIndex = nil
+        undoTimer?.invalidate()
     }
 }
 
@@ -55,6 +76,10 @@ struct HabitTrackerView: View {
     @StateObject private var viewModel = HabitViewModel()
     @State private var showingAddHabitAlert = false
     @State private var newHabitName = ""
+    @State private var showingDeleteConfirmation = false
+    @State private var deleteIndexSet: IndexSet?
+
+    @State private var undoButtonVisible = false
 
     // Initialize lastTapTime
     @State private var lastTapTime: Date?
@@ -66,50 +91,79 @@ struct HabitTrackerView: View {
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach($viewModel.habits) { $habit in
-                    VStack(alignment: .leading) {
-                        Text(habit.name)
-                            .font(.headline)
+            VStack {
+                List {
+                    ForEach($viewModel.habits) { $habit in
+                        VStack(alignment: .leading) {
+                            Text(habit.name)
+                                .font(.headline)
 
-                        GeometryReader { geometry in
-                            VStack {
-                                HStack {
-                                    ForEach(0..<7) { index in
-                                        Circle()
-                                            .fill(color(for: habit.completedDays[index]))
-                                            .shadow(color: borderColor(isToday: index), radius: 8, x: 0.0, y: 0.0)
-                                            .frame(width: 30, height: 30)
-                                            .onTapGesture {
-                                                handleTap(index: index, for: &habit.completedDays)
-                                            }
+                            GeometryReader { geometry in
+                                VStack {
+                                    HStack {
+                                        ForEach(0..<7) { index in
+                                            Circle()
+                                                .fill(color(for: habit.completedDays[index]))
+                                                .shadow(color: borderColor(isToday: index), radius: 8, x: 0.0, y: 0.0)
+                                                .frame(width: 30, height: 30)
+                                                .onTapGesture {
+                                                    handleTap(index: index, for: &habit.completedDays)
+                                                }
+                                        }
                                     }
+                                    .overlay(
+                                        LineConnectingConsecutiveDays(days: habit.completedDays, geometry: geometry)
+                                    )
                                 }
-                                .overlay(
-                                    LineConnectingConsecutiveDays(days: habit.completedDays, geometry: geometry)
-                                )
+                            }
+                            .frame(height: 50) // Adjust the height as needed
+                        }
+                        .padding(.vertical)
+                    }
+                    .onDelete { indexSet in
+                        deleteIndexSet = indexSet
+                        showingDeleteConfirmation = true
+                    }
+                }
+                .navigationTitle("Habit Tracker")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            showingAddHabitAlert = true
+                        }) {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
+                .alert("Add New Habit", isPresented: $showingAddHabitAlert) {
+                    TextField("Habit Name", text: $newHabitName)
+                    Button("Add", action: addNewHabit)
+                    Button("Cancel", role: .cancel, action: {})
+                }
+                .confirmationDialog(
+                    "Are you sure you want to delete this habit?",
+                    isPresented: $showingDeleteConfirmation,
+                    actions: {
+                        Button("Delete", role: .destructive) {
+                            if let indexSet = deleteIndexSet {
+                                viewModel.removeHabit(at: indexSet)
+                                undoButtonVisible = true
                             }
                         }
-                        .frame(height: 50) // Adjust the height as needed
+                        Button("Cancel", role: .cancel) {}
                     }
-                    .padding(.vertical)
-                }
-                .onDelete(perform: viewModel.removeHabit)
-            }
-            .navigationTitle("Habit Tracker")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        showingAddHabitAlert = true
-                    }) {
-                        Image(systemName: "plus")
+                )
+
+                if undoButtonVisible {
+                    Button("Undo Deletion") {
+                        viewModel.undoDeletion()
+                        undoButtonVisible = false
                     }
+                    .padding()
+                    .background(Color.yellow)
+                    .cornerRadius(8)
+                    .shadow(radius: 10)
                 }
-            }
-            .alert("Add New Habit", isPresented: $showingAddHabitAlert) {
-                TextField("Habit Name", text: $newHabitName)
-                Button("Add", action: addNewHabit)
-                Button("Cancel", role: .cancel, action: {})
             }
         }
     }
