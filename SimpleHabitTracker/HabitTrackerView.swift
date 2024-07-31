@@ -3,7 +3,7 @@ import SwiftUI
 // Habit model with completion and failure states
 struct Habit: Identifiable, Codable {
     let id: UUID
-    let name: String
+    var name: String
     var completedDays: [HabitState]
 
     enum HabitState: String, Codable {
@@ -70,6 +70,12 @@ class HabitViewModel: ObservableObject {
         deletedHabitIndex = nil
         undoTimer?.invalidate()
     }
+
+    func renameHabit(id: UUID, newName: String) {
+        if let index = habits.firstIndex(where: { $0.id == id }) {
+            habits[index].name = newName
+        }
+    }
 }
 
 struct HabitTrackerView: View {
@@ -78,6 +84,9 @@ struct HabitTrackerView: View {
     @State private var newHabitName = ""
     @State private var showingDeleteConfirmation = false
     @State private var deleteIndexSet: IndexSet?
+    @State private var showingRenameAlert = false
+    @State private var renameHabitID: UUID?
+    @State private var newHabitNameForRename = ""
 
     @State private var undoButtonVisible = false
 
@@ -97,6 +106,13 @@ struct HabitTrackerView: View {
                         VStack(alignment: .leading) {
                             Text(habit.name)
                                 .font(.headline)
+                                .contextMenu {
+                                    Button(action: {
+                                        renameHabit(id: habit.id, currentName: habit.name)
+                                    }) {
+                                        Label("Rename", systemImage: "pencil")
+                                    }
+                                }
 
                             GeometryReader { geometry in
                                 VStack {
@@ -166,6 +182,16 @@ struct HabitTrackerView: View {
                 }
             }
         }
+        .alert("Rename Habit", isPresented: $showingRenameAlert) {
+            TextField("New Habit Name", text: $newHabitNameForRename)
+            Button("Rename") {
+                if let id = renameHabitID {
+                    viewModel.renameHabit(id: id, newName: newHabitNameForRename)
+                }
+                newHabitNameForRename = ""
+            }
+            Button("Cancel", role: .cancel, action: {})
+        }
     }
 
     // Helper functions
@@ -217,6 +243,12 @@ struct HabitTrackerView: View {
 
     func markAsFailed(index: Int, in days: inout [Habit.HabitState]) {
         days[index] = .failed
+    }
+
+    func renameHabit(id: UUID, currentName: String) {
+        newHabitNameForRename = currentName
+        renameHabitID = id
+        showingRenameAlert = true
     }
 }
 
