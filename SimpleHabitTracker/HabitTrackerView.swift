@@ -82,8 +82,8 @@ struct HabitTrackerView: View {
                                     }
                                 }
                             GeometryReader { geometry in
-                                VStack {
-                                    HStack {
+                                VStack(alignment: .center) {
+                                    HStack(alignment: .center) {
                                         ForEach(0..<7) { index in
                                             Circle()
                                                 .fill(color(for: habit.completedDays[index]))
