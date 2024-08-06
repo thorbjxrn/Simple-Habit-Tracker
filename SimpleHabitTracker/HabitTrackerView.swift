@@ -11,8 +11,9 @@ class HabitViewModel: ObservableObject {
         loadHabits()
     }
 
-    // MARK: - UserDefaults Keys
+    // UserDefaults key
     private let habitsKey = "habits"
+
     // MARK: - Data Persistence Methods
     func saveHabits() {
         if let encoded = try? JSONEncoder().encode(habits) {
@@ -37,7 +38,7 @@ class HabitViewModel: ObservableObject {
     }
 
     func removeHabit(at indexSet: IndexSet) {
-        guard let index = indexSet.first else { return }
+//        guard let index = indexSet.first else { return }
         habits.remove(atOffsets: indexSet)
     }
 
@@ -60,10 +61,22 @@ struct HabitTrackerView: View {
 
     @State private var undoButtonVisible = false
 
-    // Get the current day of the week (0 = Sunday, 1 = Monday, etc.)
     private var currentDayIndex: Int {
-        Calendar.current.component(.weekday, from: Date()) - 1
+        var calendar = Calendar.current
+        calendar.locale = Locale.current
+
+        // Get the first day of the week (1 for Sunday, 2 for Monday, etc.)
+        let firstWeekday = calendar.firstWeekday
+
+        // Get the current weekday (1 for Sunday, 2 for Monday, etc.)
+        let weekday = calendar.component(.weekday, from: Date())
+
+        // Calculate the index based on the locale's first weekday
+        let index = (weekday - firstWeekday + 7) % 7
+
+        return index
     }
+
 
     var body: some View {
         NavigationView {
@@ -85,13 +98,18 @@ struct HabitTrackerView: View {
                                 VStack(alignment: .center) {
                                     HStack(alignment: .center) {
                                         ForEach(0..<7) { index in
-                                            Circle()
-                                                .fill(color(for: habit.completedDays[index]))
-                                                .shadow(color: borderColor(for: habit.completedDays[index], isToday: index), radius: 3, x: 0.0, y: 0.0)
-                                                .frame(width: 33, height: 33)
-                                                .onTapGesture {
-                                                    handleTap(index: index, for: &habit.completedDays)
-                                                }
+                                            VStack(alignment: .center, spacing: 4.5) {
+                                                Circle()
+                                                    .fill(color(for: habit.completedDays[index]))
+                                                    .frame(width: 33, height: 33)
+                                                    .onTapGesture {
+                                                        handleTap(index: index, for: &habit.completedDays)
+                                                    }
+                                                Circle()
+                                                    .fill(todaysColor(day: index))
+                                                    .frame(width: 3, height: 3, alignment: .center)
+                                                    .shadow(color: .yellow, radius: 0.5)
+                                            }
                                         }
                                     }
                                     .overlay(
@@ -163,11 +181,11 @@ struct HabitTrackerView: View {
     }
 
     // perhaps I could make a circle class that can be adjusted by parameters instead of doing it all in functional programming
-    func borderColor(for state: Habit.HabitState, isToday: Int) -> Color {
-        if isToday == currentDayIndex {
-            return color(for: state).opacity(0.425)
+    func todaysColor(day: Int) -> Color {
+        if day == currentDayIndex {
+            Color(.yellow).opacity(1)
         } else {
-            return color(for: state).opacity(0.15)
+            Color(.yellow).opacity(0)
         }
     }
 
