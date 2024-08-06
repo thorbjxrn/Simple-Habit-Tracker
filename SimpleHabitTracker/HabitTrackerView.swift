@@ -9,10 +9,12 @@ class HabitViewModel: ObservableObject {
 
     init() {
         loadHabits()
+        checkWeekNr()
     }
 
     // UserDefaults key
     private let habitsKey = "habits"
+    private let lastSeenKey = "date"
 
     // MARK: - Data Persistence Methods
     func saveHabits() {
@@ -26,6 +28,29 @@ class HabitViewModel: ObservableObject {
            let decoded = try? JSONDecoder().decode([Habit].self, from: data) {
             habits = decoded
         }
+    }
+
+    func saveDate() {
+        if let encoded = try? JSONEncoder().encode(Date()) {
+            UserDefaults.standard.set(encoded, forKey: lastSeenKey)
+        }
+    }
+
+    func checkWeekNr() {
+        guard let data = UserDefaults.standard.data(forKey: lastSeenKey),
+           let lastSeenDate = try? JSONDecoder().decode(Date.self, from: data) else {
+            return
+        }
+
+        if Calendar.current.component(.weekOfYear, from: lastSeenDate) != Calendar.current.component(.weekOfYear, from: Date()) {
+            print("new week!")
+            for i in habits.indices {
+                for j in habits[i].completedDays.indices {
+                    habits[i].completedDays[j] = .notCompleted
+                }
+            }
+        }
+
     }
 
     func addHabit(name: String) {
@@ -77,10 +102,9 @@ struct HabitTrackerView: View {
         return index
     }
 
-
     var body: some View {
         NavigationView {
-            VStack {
+            VStack() {
                 List {
                     ForEach($viewModel.habits) { $habit in
                         VStack(alignment: .leading) {
@@ -95,7 +119,7 @@ struct HabitTrackerView: View {
                                     }
                                 }
                             GeometryReader { geometry in
-                                VStack(alignment: .center) {
+                                VStack(alignment: .center, spacing:0) {
                                     HStack(alignment: .center) {
                                         ForEach(0..<7) { index in
                                             VStack(alignment: .center, spacing: 4.5) {
@@ -108,7 +132,7 @@ struct HabitTrackerView: View {
                                                 Circle()
                                                     .fill(todaysColor(day: index))
                                                     .frame(width: 3, height: 3, alignment: .center)
-                                                    .shadow(color: .yellow, radius: 0.5)
+                                                    .shadow(color: .yellow, radius: 0.5, y: 0.25)
                                             }
                                         }
                                     }
@@ -118,7 +142,7 @@ struct HabitTrackerView: View {
                                 }
                             }
                         }
-                        .padding(.vertical)
+                        .padding(.vertical, 25)
                     }
                     .onDelete { indexSet in
                         deleteIndexSet = indexSet
@@ -223,7 +247,7 @@ struct LineConnectingConsecutiveDays: View {
 
         return (0..<7).map { index in
             CGPoint(x: CGFloat(index) * circleWidth + diameter / 2,
-                    y: geometry.size.height / 2 + 4.5)
+                    y: geometry.size.height / 2 + 4.78)
         }
     }
 
@@ -239,7 +263,7 @@ struct LineConnectingConsecutiveDays: View {
                 }
             }
         }
-        .stroke(Color.green, lineWidth: 11) // Adjust the line color and width
+        .stroke(Color.green, lineWidth: 9.2) // Adjust the line color and width
         .shadow(color: Color.green.opacity(0.15), radius: 3)
     }
 }
