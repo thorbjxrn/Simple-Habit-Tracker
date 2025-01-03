@@ -1,79 +1,5 @@
 import SwiftUI
 
-class HabitViewModel: ObservableObject {
-    @Published var habits: [Habit] = [] {
-        didSet {
-            saveHabits()
-        }
-    }
-
-    init() {
-        loadHabits()
-        checkWeekNr()
-    }
-
-    // UserDefaults key
-    private let habitsKey = "habits"
-    private let lastSeenKey = "date"
-
-    // MARK: - Data Persistence Methods
-    func saveHabits() {
-        if let encoded = try? JSONEncoder().encode(habits) {
-            UserDefaults.standard.set(encoded, forKey: habitsKey)
-        }
-    }
-
-    func loadHabits() {
-        if let data = UserDefaults.standard.data(forKey: habitsKey),
-           let decoded = try? JSONDecoder().decode([Habit].self, from: data) {
-            habits = decoded
-        }
-    }
-
-    func saveDate() {
-        if let encoded = try? JSONEncoder().encode(Date()) {
-            UserDefaults.standard.set(encoded, forKey: lastSeenKey)
-        }
-    }
-
-    func checkWeekNr() {
-        guard let data = UserDefaults.standard.data(forKey: lastSeenKey),
-           let lastSeenDate = try? JSONDecoder().decode(Date.self, from: data) else {
-            return
-        }
-
-        if Calendar.current.component(.weekOfYear, from: lastSeenDate) != Calendar.current.component(.weekOfYear, from: Date()) {
-            print("new week!")
-            for i in habits.indices {
-                for j in habits[i].completedDays.indices {
-                    habits[i].completedDays[j] = .notCompleted
-                }
-            }
-        }
-
-    }
-
-    func addHabit(name: String) {
-        let newHabit = Habit(
-            id: UUID(),
-            name: name,
-            completedDays: Array(repeating: .notCompleted, count: 7)
-        )
-        habits.append(newHabit)
-    }
-
-    func removeHabit(at indexSet: IndexSet) {
-//        guard let index = indexSet.first else { return }
-        habits.remove(atOffsets: indexSet)
-    }
-
-    func renameHabit(id: UUID, newName: String) {
-        if let index = habits.firstIndex(where: { $0.id == id }) {
-            habits[index].name = newName
-        }
-    }
-}
-
 struct HabitTrackerView: View {
     @StateObject private var viewModel = HabitViewModel()
     @State private var showingAddHabitAlert = false
@@ -84,22 +10,14 @@ struct HabitTrackerView: View {
     @State private var renameHabitID: UUID?
     @State private var newHabitNameForRename = ""
 
-    @State private var undoButtonVisible = false
-
     private var currentDayIndex: Int {
         var calendar = Calendar.current
         calendar.locale = Locale.current
-
-        // Get the first day of the week (1 for Sunday, 2 for Monday, etc.)
         let firstWeekday = calendar.firstWeekday
-
         // Get the current weekday (1 for Sunday, 2 for Monday, etc.)
         let weekday = calendar.component(.weekday, from: Date())
-
         // Calculate the index based on the locale's first weekday
-        let index = (weekday - firstWeekday + 7) % 7
-
-        return index
+        return (weekday - firstWeekday + 7) % 7
     }
 
     var body: some View {
@@ -171,7 +89,6 @@ struct HabitTrackerView: View {
                         Button("Delete", role: .destructive) {
                             if let indexSet = deleteIndexSet {
                                 viewModel.removeHabit(at: indexSet)
-                                undoButtonVisible = true
                             }
                         }
                         Button("Cancel", role: .cancel) {}

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0811AC1D2C5AE48A003E752D /* readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 0811AC1C2C5AE48A003E752D /* readme.md */; };
+		087672852D28603500683FA2 /* HabitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087672842D28603500683FA2 /* HabitViewModel.swift */; };
 		08C6A69C2C5AC8640001A26D /* SimpleHabitTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */; };
 		08C6A69E2C5AC8640001A26D /* HabitTrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */; };
 		08C6A6A02C5AC8660001A26D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08C6A69F2C5AC8660001A26D /* Assets.xcassets */; };
@@ -37,6 +38,7 @@
 
 /* Begin PBXFileReference section */
 		0811AC1C2C5AE48A003E752D /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = SOURCE_ROOT; };
+		087672842D28603500683FA2 /* HabitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewModel.swift; sourceTree = "<group>"; };
 		08C6A6982C5AC8640001A26D /* SimpleHabitTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleHabitTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerApp.swift; sourceTree = "<group>"; };
 		08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitTrackerView.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				08E202532C5E9D6F0054A4AD /* HabitModel.swift */,
 				08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */,
 				08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */,
+				087672842D28603500683FA2 /* HabitViewModel.swift */,
 				0811AC1C2C5AE48A003E752D /* readme.md */,
 				08C6A69F2C5AC8660001A26D /* Assets.xcassets */,
 				08C6A6A12C5AC8660001A26D /* Preview Content */,
@@ -267,6 +270,7 @@
 				08E202542C5E9D6F0054A4AD /* HabitModel.swift in Sources */,
 				08C6A69E2C5AC8640001A26D /* HabitTrackerView.swift in Sources */,
 				08C6A69C2C5AC8640001A26D /* SimpleHabitTrackerApp.swift in Sources */,
+				087672852D28603500683FA2 /* HabitViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,7 +434,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"simpleHabitTracker/Preview Content\"";
-				DEVELOPMENT_TEAM = D34XZHQLE3;
+				DEVELOPMENT_TEAM = 228DC29L7W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -459,7 +463,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"simpleHabitTracker/Preview Content\"";
-				DEVELOPMENT_TEAM = D34XZHQLE3;
+				DEVELOPMENT_TEAM = 228DC29L7W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
