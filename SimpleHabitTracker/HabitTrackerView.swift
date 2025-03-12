@@ -10,14 +10,33 @@ struct HabitTrackerView: View {
     @State private var renameHabitID: UUID?
     @State private var newHabitNameForRename = ""
 
+    @State private var weekNumber = -1
+    @State private var weekday = -1
+    
+    private func debugLocale() {
+        let locale = Calendar.current.locale ?? Locale.current
+        print("Locale Identifier: \(locale.identifier)")
+        print("First Weekday: \(Calendar.current.firstWeekday)") // 1 = Sunday, 2 = Monday, etc.
+        print("Region: \(locale.region?.identifier ?? "Unknown")")
+        print("Language: \(locale.language.languageCode?.identifier ?? "Unknown")")
+    }
+    
     private var currentDayIndex: Int {
         var calendar = Calendar.current
         calendar.locale = Locale.current
         let firstWeekday = calendar.firstWeekday
         // Get the current weekday (1 for Sunday, 2 for Monday, etc.)
-        let weekday = calendar.component(.weekday, from: Date())
+//        weekday = calendar.component(.weekday, from: Date())
         // Calculate the index based on the locale's first weekday
         return (weekday - firstWeekday + 7) % 7
+    }
+    
+    private func calculateCalendar() {
+        let calendar = Calendar.current
+        let currentDate = Date()
+        weekNumber = calendar.component(.weekOfYear, from: currentDate)
+        weekday = calendar.component(.weekday, from: Date())
+        debugLocale()
     }
 
     var body: some View {
@@ -67,6 +86,7 @@ struct HabitTrackerView: View {
                         showingDeleteConfirmation = true
                     }
                 }
+//                .navigationTitle("Week \(weekNumber), day \(weekday)")
                 .navigationTitle("Habit Tracker")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -106,11 +126,10 @@ struct HabitTrackerView: View {
             }
             Button("Cancel", role: .cancel, action: {})
         }
+        .onAppear(perform: calculateCalendar)
     }
 
-    // Helper functions
-
-    func color(for state: Habit.HabitState) -> Color {
+    private func color(for state: Habit.HabitState) -> Color {
         switch state {
         case .notCompleted:
             return Color.gray
@@ -122,7 +141,7 @@ struct HabitTrackerView: View {
     }
 
     // perhaps I could make a circle class that can be adjusted by parameters instead of doing it all in functional programming
-    func todaysColor(day: Int) -> Color {
+    private func todaysColor(day: Int) -> Color {
         if day == currentDayIndex {
             Color(.yellow).opacity(1)
         } else {
@@ -130,7 +149,7 @@ struct HabitTrackerView: View {
         }
     }
 
-    func handleTap(index: Int, for days: inout [Habit.HabitState]) {
+    private func handleTap(index: Int, for days: inout [Habit.HabitState]) {
         if days[index] == .completed {
             days[index] = .failed
         } else if days[index] == .failed {
