@@ -19,6 +19,23 @@ struct OnboardingView: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
+
+            // "Get Started" button pinned below the TabView
+            Button(action: onComplete) {
+                Text("Get Started")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 14)
+                            .fill(theme.accentColor)
+                    )
+            }
+            .padding(.horizontal, 32)
+            .padding(.bottom, 16)
+            .opacity(currentPage == 1 ? 1 : 0)
+            .animation(.easeInOut(duration: 0.25), value: currentPage)
         }
         .background(Color(.systemGroupedBackground).ignoresSafeArea())
     }
@@ -29,14 +46,11 @@ struct OnboardingView: View {
         VStack(spacing: 32) {
             Spacer()
 
-            // Illustration using SF Symbols
             ZStack {
-                // Calendar backdrop
                 Image(systemName: "calendar")
                     .font(.system(size: 100, weight: .thin))
                     .foregroundStyle(theme.accentColor.opacity(0.3))
 
-                // Checkmark overlay
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 48, weight: .medium))
                     .foregroundStyle(theme.completedColor)
@@ -75,7 +89,6 @@ struct OnboardingView: View {
                 .font(.title2)
                 .fontWeight(.bold)
 
-            // Tap-to-toggle cycle demonstration
             VStack(spacing: 20) {
                 tutorialRow(
                     icon: "hand.tap",
@@ -83,7 +96,6 @@ struct OnboardingView: View {
                     description: "Tap each day to cycle through states"
                 )
 
-                // Visual cycle: gray -> green -> red -> gray
                 HStack(spacing: 12) {
                     stateBubble(color: theme.notCompletedColor, label: "Skip")
                     Image(systemName: "arrow.right")
@@ -114,20 +126,7 @@ struct OnboardingView: View {
             )
 
             Spacer()
-
-            // Get Started button
-            Button(action: onComplete) {
-                Text("Get Started")
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 14)
-                            .fill(theme.accentColor)
-                    )
-            }
-            .padding(.bottom, 32)
+            Spacer()
         }
         .padding(.horizontal, 32)
     }
