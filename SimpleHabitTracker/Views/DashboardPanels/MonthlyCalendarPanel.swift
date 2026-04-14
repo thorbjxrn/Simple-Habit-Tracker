@@ -4,15 +4,58 @@ struct MonthlyCalendarPanel: View {
     let viewModel: HabitViewModel
     let habits: [Habit]
     @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.defaultTheme.rawValue
+    @State private var selectedHabitIndex: Int = 0
 
     private var theme: AppTheme {
         AppTheme.from(rawValue: selectedThemeRaw)
     }
 
+    private var selectedHabit: Habit? {
+        guard !habits.isEmpty, selectedHabitIndex < habits.count else { return nil }
+        return habits[selectedHabitIndex]
+    }
+
     private let monthsBack = 24
 
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
+            // Habit picker
+            if habits.count > 1 {
+                HStack(spacing: 12) {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedHabitIndex = (selectedHabitIndex - 1 + habits.count) % habits.count
+                        }
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+
+                    Text(selectedHabit?.name ?? "")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .lineLimit(1)
+
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedHabitIndex = (selectedHabitIndex + 1) % habits.count
+                        }
+                    } label: {
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                }
+            } else if let habit = habits.first {
+                Text(habit.name)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+            }
+
+            // Calendar
             Spacer()
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(alignment: .top, spacing: 32) {
@@ -20,7 +63,7 @@ struct MonthlyCalendarPanel: View {
                         SingleMonthView(
                             monthOffset: offset,
                             viewModel: viewModel,
-                            habits: habits,
+                            habit: selectedHabit,
                             theme: theme
                         )
                         .containerRelativeFrame(.horizontal, count: 2, spacing: 32)
@@ -42,7 +85,7 @@ struct MonthlyCalendarPanel: View {
 private struct SingleMonthView: View {
     let monthOffset: Int
     let viewModel: HabitViewModel
-    let habits: [Habit]
+    let habit: Habit?
     let theme: AppTheme
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
@@ -75,7 +118,7 @@ private struct SingleMonthView: View {
             LazyVGrid(columns: columns, spacing: 2) {
                 ForEach(Array(data.days.enumerated()), id: \.offset) { _, info in
                     if info.isPlaceholder {
-                        Color.clear.frame(height: 30)
+                        Color.clear.frame(height: 24)
                     } else {
                         dayCell(info)
                     }
@@ -86,48 +129,36 @@ private struct SingleMonthView: View {
 
     @ViewBuilder
     private func dayCell(_ info: DayInfo) -> some View {
-        VStack(spacing: 1) {
+        VStack(spacing: 2) {
             Text("\(info.day)")
                 .font(.system(size: 9, weight: info.isToday ? .bold : .regular))
                 .foregroundStyle(info.isFuture ? .quaternary : (info.isToday ? .primary : .secondary))
 
-            if !info.isFuture && !info.habitStates.isEmpty {
-                HStack(spacing: 2) {
-                    ForEach(Array(info.habitStates.prefix(5).enumerated()), id: \.offset) { _, state in
-                        Circle()
-                            .fill(calendarDotColor(for: state))
-                            .frame(width: 6, height: 6)
-                    }
-                }
-            }
+            Circle()
+                .fill(dotColor(for: info))
+                .frame(width: 8, height: 8)
+                .opacity(info.isFuture ? 0 : 1)
         }
-        .frame(height: 30)
+        .frame(height: 24)
         .frame(maxWidth: .infinity)
         .contentShape(Rectangle())
         .onTapGesture {
-            guard !info.isFuture, let date = info.date else { return }
-            toggleAllHabits(for: date)
+            guard !info.isFuture, let date = info.date, let habit else { return }
+            let weekOff = weekOffset(for: date)
+            let record = viewModel.weekRecord(for: habit, weekOffset: weekOff)
+            let calendar = Calendar.current
+            let dayOfWeek = calendar.component(.weekday, from: date)
+            let dayIndex = (dayOfWeek - calendar.firstWeekday + 7) % 7
+            guard dayIndex >= 0, dayIndex < record.completedDays.count else { return }
+            viewModel.toggleDay(weekRecord: record, dayIndex: dayIndex)
         }
     }
 
-    private func calendarDotColor(for state: HabitState) -> Color {
-        switch state {
+    private func dotColor(for info: DayInfo) -> Color {
+        switch info.state {
         case .completed: return theme.completedColor
         case .failed: return theme.failedColor
         case .notCompleted: return .gray.opacity(0.5)
-        }
-    }
-
-    private func toggleAllHabits(for date: Date) {
-        let calendar = Calendar.current
-        let dayOfWeek = calendar.component(.weekday, from: date)
-        let dayIndex = (dayOfWeek - calendar.firstWeekday + 7) % 7
-
-        for habit in habits {
-            if habit.createdDate > date { continue }
-            let weekRecord = viewModel.weekRecord(for: habit, weekOffset: weekOffset(for: date))
-            guard dayIndex >= 0 && dayIndex < weekRecord.completedDays.count else { continue }
-            viewModel.toggleDay(weekRecord: weekRecord, dayIndex: dayIndex)
         }
     }
 
@@ -177,16 +208,11 @@ private struct SingleMonthView: View {
 
             let isFuture = date > today
             let isToday = calendar.isDateInToday(date)
+            let state: HabitState = isFuture ? .notCompleted : habitState(for: date)
 
-            if isFuture {
-                days.append(DayInfo(day: day, isPlaceholder: false, isFuture: true, isToday: false, habitStates: [], date: date))
-            } else {
-                let states = habitStates(for: date)
-                days.append(DayInfo(day: day, isPlaceholder: false, isFuture: false, isToday: isToday, habitStates: states, date: date))
-            }
+            days.append(DayInfo(day: day, isPlaceholder: false, isFuture: isFuture, isToday: isToday, state: state, date: date))
         }
 
-        // Pad to 42 cells (6 rows of 7) so all months have equal height
         while days.count < 42 {
             days.append(.placeholder)
         }
@@ -194,25 +220,20 @@ private struct SingleMonthView: View {
         return (title, days)
     }
 
-    private func habitStates(for date: Date) -> [HabitState] {
+    private func habitState(for date: Date) -> HabitState {
+        guard let habit else { return .notCompleted }
         let calendar = Calendar.current
         let dayOfWeek = calendar.component(.weekday, from: date)
         let dayIndex = (dayOfWeek - calendar.firstWeekday + 7) % 7
         let weekStart = viewModel.weekStartDate(for: date)
 
-        var states: [HabitState] = []
-        for habit in habits {
-            if habit.createdDate > date { continue }
-            if let record = habit.weekRecords.first(where: {
-                calendar.isDate($0.weekStartDate, equalTo: weekStart, toGranularity: .day)
-            }), dayIndex >= 0, dayIndex < record.completedDays.count {
-                states.append(record.completedDays[dayIndex])
-            } else {
-                // No record for this week — show as not completed
-                states.append(.notCompleted)
-            }
+        guard let record = habit.weekRecords.first(where: {
+            calendar.isDate($0.weekStartDate, equalTo: weekStart, toGranularity: .day)
+        }), dayIndex >= 0, dayIndex < record.completedDays.count else {
+            return .notCompleted
         }
-        return states
+
+        return record.completedDays[dayIndex]
     }
 }
 
@@ -221,8 +242,8 @@ private struct DayInfo {
     let isPlaceholder: Bool
     let isFuture: Bool
     let isToday: Bool
-    let habitStates: [HabitState]
+    let state: HabitState
     let date: Date?
 
-    static let placeholder = DayInfo(day: 0, isPlaceholder: true, isFuture: false, isToday: false, habitStates: [], date: nil)
+    static let placeholder = DayInfo(day: 0, isPlaceholder: true, isFuture: false, isToday: false, state: .notCompleted, date: nil)
 }
