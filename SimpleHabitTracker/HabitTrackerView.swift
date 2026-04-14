@@ -173,7 +173,12 @@ struct HabitTrackerView: View {
             }
             Button("Cancel", role: .cancel, action: {})
         }
-        .sheet(isPresented: $showPaywall) {
+        .sheet(isPresented: $showPaywall, onDismiss: {
+            // Snap back from the hidden limit page if still there
+            if !purchaseManager.isPremium && displayedWeekOffset == minWeekOffset {
+                withAnimation { displayedWeekOffset = minWeekOffset + 1 }
+            }
+        }) {
             PaywallView(purchaseManager: purchaseManager)
         }
         .sheet(isPresented: $showingWeeklyGoalSheet) {
