@@ -79,14 +79,9 @@ final class HabitViewModel {
     func weekRecord(for habit: Habit, weekOffset: Int) -> WeekRecord {
         let targetDate = dateForWeekOffset(weekOffset)
         let startOfWeek = weekStartDate(for: targetDate)
-        let calendar = Calendar.current
 
-        // Fetch all WeekRecords and filter in memory
-        // (SwiftData predicates on optional relationships are unreliable)
-        let allRecords = (try? modelContext.fetch(FetchDescriptor<WeekRecord>())) ?? []
-        if let existing = allRecords.first(where: { record in
-            record.habit?.id == habit.id &&
-            calendar.isDate(record.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
+        if let existing = habit.weekRecords.first(where: {
+            Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
         }) {
             return existing
         }
