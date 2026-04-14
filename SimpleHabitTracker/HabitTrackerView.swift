@@ -9,6 +9,7 @@ struct HabitTrackerView: View {
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
 
     @State private var viewModel: HabitViewModel?
+    @State private var isLandscape = false
     @State private var addHabitAlertID = UUID()
     @State private var showingAddHabitAlert = false
     @State private var newHabitName = ""
@@ -62,8 +63,8 @@ struct HabitTrackerView: View {
     }
 
     var body: some View {
-        GeometryReader { geo in
-            if geo.size.width > geo.size.height, let vm = viewModel {
+        Group {
+            if isLandscape, let vm = viewModel {
                 DashboardView(
                     viewModel: vm,
                     habits: habits,
@@ -83,6 +84,11 @@ struct HabitTrackerView: View {
                 hasCheckedInterstitialOnAppear = true
                 adManager.requestTrackingPermissionIfNeeded()
             }
+
+            updateOrientation()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+            updateOrientation()
         }
     }
 
@@ -245,6 +251,20 @@ struct HabitTrackerView: View {
             return WeekRecord(weekStartDate: vm.weekStartDate(for: Date()))
         }
         return vm.weekRecord(for: habit, weekOffset: offset)
+    }
+
+    // MARK: - Orientation
+
+    private func updateOrientation() {
+        let orientation = UIDevice.current.orientation
+        switch orientation {
+        case .landscapeLeft, .landscapeRight:
+            isLandscape = true
+        case .portrait, .portraitUpsideDown:
+            isLandscape = false
+        default:
+            break
+        }
     }
 
     // MARK: - Helpers
