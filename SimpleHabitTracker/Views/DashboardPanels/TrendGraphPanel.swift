@@ -12,106 +12,118 @@ struct TrendGraphPanel: View {
     }
 
     private var weeksToShow: Int {
-        isPremium ? 16 : 4
+        isPremium ? 26 : 4
     }
 
     var body: some View {
-        VStack(spacing: 12) {
-            Text("Activity")
-                .font(.title3)
-                .fontWeight(.bold)
+        GeometryReader { geo in
+            let cellSize = max(16, min(28, (geo.size.height - 100) / CGFloat(max(habits.count, 1) + 1)))
+            let nameWidth: CGFloat = 80
+            let spacing: CGFloat = 3
 
-            if habits.isEmpty {
+            VStack(spacing: 16) {
                 Spacer()
-                Text("Add habits to see your activity")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                Spacer()
-            } else {
-                heatMapView
-                legend
-                if !isPremium {
-                    Text("Upgrade for full history")
-                        .font(.caption)
+
+                Text("Heatmap")
+                    .font(.title3)
+                    .fontWeight(.bold)
+
+                if habits.isEmpty {
+                    Text("Add habits to see your heatmap")
+                        .font(.subheadline)
                         .foregroundStyle(.secondary)
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding()
-    }
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        VStack(alignment: .leading, spacing: spacing) {
+                            // Week header row
+                            HStack(spacing: spacing) {
+                                Color.clear.frame(width: nameWidth, height: cellSize * 0.6)
+                                ForEach(heatMapWeeks, id: \.self) { weekStart in
+                                    Text(weekLabel(for: weekStart))
+                                        .font(.system(size: 8))
+                                        .foregroundStyle(.tertiary)
+                                        .frame(width: cellSize, height: cellSize * 0.6)
+                                }
 
-    // MARK: - Heat Map
+                                if !isPremium {
+                                    Color.clear.frame(width: cellSize, height: cellSize * 0.6)
+                                }
+                            }
 
-    private var heatMapView: some View {
-        let data = heatMapData
+                            // One row per habit
+                            ForEach(habits) { habit in
+                                HStack(spacing: spacing) {
+                                    Text(habit.name)
+                                        .font(.system(size: 10))
+                                        .foregroundStyle(.secondary)
+                                        .frame(width: nameWidth, alignment: .trailing)
+                                        .lineLimit(1)
 
-        return ScrollView(.horizontal, showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 3) {
-                // Week header row
-                HStack(spacing: 3) {
-                    Color.clear.frame(width: 60, height: 12) // spacer for habit names
-                    ForEach(data.weeks, id: \.self) { weekStart in
-                        Text(weekLabel(for: weekStart))
-                            .font(.system(size: 7))
-                            .foregroundStyle(.tertiary)
-                            .frame(width: 14, height: 12)
-                    }
-                }
+                                    ForEach(heatMapWeeks, id: \.self) { weekStart in
+                                        let count = completionCount(habit: habit, weekStart: weekStart)
+                                        RoundedRectangle(cornerRadius: 3)
+                                            .fill(heatColor(count: count))
+                                            .frame(width: cellSize, height: cellSize)
+                                    }
 
-                // One row per habit
-                ForEach(habits) { habit in
-                    HStack(spacing: 3) {
-                        Text(habit.name)
-                            .font(.system(size: 9))
-                            .foregroundStyle(.secondary)
-                            .frame(width: 60, alignment: .trailing)
-                            .lineLimit(1)
-
-                        ForEach(data.weeks, id: \.self) { weekStart in
-                            let count = completionCount(habit: habit, weekStart: weekStart)
-                            RoundedRectangle(cornerRadius: 2)
-                                .fill(heatColor(count: count))
-                                .frame(width: 14, height: 14)
+                                    // Upgrade teaser column
+                                    if !isPremium {
+                                        RoundedRectangle(cornerRadius: 3)
+                                            .fill(.clear)
+                                            .frame(width: cellSize, height: cellSize)
+                                            .overlay {
+                                                Image(systemName: "lock.fill")
+                                                    .font(.system(size: 8))
+                                                    .foregroundStyle(.secondary)
+                                            }
+                                    }
+                                }
+                            }
                         }
                     }
+
+                    // Legend
+                    HStack(spacing: 6) {
+                        Text("Less")
+                            .font(.system(size: 9))
+                            .foregroundStyle(.tertiary)
+                        ForEach(0..<5) { level in
+                            RoundedRectangle(cornerRadius: 2)
+                                .fill(heatColor(count: level * 2))
+                                .frame(width: 12, height: 12)
+                        }
+                        Text("More")
+                            .font(.system(size: 9))
+                            .foregroundStyle(.tertiary)
+                    }
+
+                    if !isPremium {
+                        Text("Upgrade for full history")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
-            }
-        }
-    }
 
-    // MARK: - Legend
-
-    private var legend: some View {
-        HStack(spacing: 4) {
-            Text("Less")
-                .font(.system(size: 8))
-                .foregroundStyle(.tertiary)
-            ForEach(0..<5) { level in
-                RoundedRectangle(cornerRadius: 2)
-                    .fill(heatColor(count: level * 2))
-                    .frame(width: 10, height: 10)
+                Spacer()
             }
-            Text("More")
-                .font(.system(size: 8))
-                .foregroundStyle(.tertiary)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 24)
         }
     }
 
     // MARK: - Data
 
-    private var heatMapData: HeatMapData {
+    private var heatMapWeeks: [Date] {
         let calendar = Calendar.current
-        var weeks: [Date] = []
         let today = Date()
+        var weeks: [Date] = []
 
         for i in stride(from: -(weeksToShow - 1), through: 0, by: 1) {
             if let weekDate = calendar.date(byAdding: .weekOfYear, value: i, to: today) {
                 weeks.append(viewModel.weekStartDate(for: weekDate))
             }
         }
-
-        return HeatMapData(weeks: weeks)
+        return weeks
     }
 
     private func completionCount(habit: Habit, weekStart: Date) -> Int {
@@ -141,8 +153,4 @@ struct TrendGraphPanel: View {
         formatter.dateFormat = "d/M"
         return formatter.string(from: date)
     }
-}
-
-private struct HeatMapData {
-    let weeks: [Date]
 }
