@@ -8,7 +8,38 @@ struct MonthlyCalendarPanel: View {
         AppTheme.from(rawValue: selectedThemeRaw)
     }
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 2), count: 7)
+    /// How many months back to allow scrolling
+    private let monthsBack = 24
+
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHStack(spacing: 16) {
+                ForEach((-monthsBack)...0, id: \.self) { offset in
+                    SingleMonthView(
+                        monthOffset: offset,
+                        viewModel: viewModel,
+                        theme: theme
+                    )
+                    .containerRelativeFrame(.horizontal, count: 2, spacing: 16)
+                }
+            }
+            .scrollTargetLayout()
+        }
+        .scrollTargetBehavior(.viewAligned)
+        .defaultScrollAnchor(.trailing)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+    }
+}
+
+// MARK: - Single Month
+
+private struct SingleMonthView: View {
+    let monthOffset: Int
+    let viewModel: HabitViewModel
+    let theme: AppTheme
+
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
 
     private var weekdaySymbols: [String] {
         var calendar = Calendar.current
@@ -19,65 +50,64 @@ struct MonthlyCalendarPanel: View {
     }
 
     var body: some View {
-        let data = calendarData
-        VStack(spacing: 8) {
+        let data = monthData
+        VStack(spacing: 4) {
             Text(data.title)
-                .font(.title3)
+                .font(.caption)
                 .fontWeight(.bold)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-            // Weekday headers
             HStack(spacing: 0) {
                 ForEach(weekdaySymbols, id: \.self) { symbol in
                     Text(symbol)
-                        .font(.system(size: 10))
-                        .foregroundStyle(.secondary)
+                        .font(.system(size: 8))
+                        .foregroundStyle(.tertiary)
                         .frame(maxWidth: .infinity)
                 }
             }
 
-            // Day grid
-            LazyVGrid(columns: columns, spacing: 6) {
-                ForEach(Array(data.days.enumerated()), id: \.offset) { _, dayInfo in
-                    if dayInfo.isPlaceholder {
-                        Color.clear.frame(height: 28)
+            LazyVGrid(columns: columns, spacing: 2) {
+                ForEach(Array(data.days.enumerated()), id: \.offset) { _, info in
+                    if info.isPlaceholder {
+                        Color.clear.frame(height: 18)
                     } else {
-                        dayCell(dayInfo)
+                        dayCell(info)
                     }
                 }
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
     }
-
-    // MARK: - Day Cell
 
     @ViewBuilder
     private func dayCell(_ info: DayInfo) -> some View {
-        let isToday = info.isToday
-        VStack(spacing: 2) {
+        VStack(spacing: 1) {
             Text("\(info.day)")
-                .font(.system(size: 11, weight: isToday ? .bold : .regular))
-                .foregroundStyle(info.isFuture ? .tertiary : (isToday ? .primary : .secondary))
+                .font(.system(size: 8, weight: info.isToday ? .bold : .regular))
+                .foregroundStyle(info.isFuture ? .quaternary : (info.isToday ? .primary : .secondary))
 
             Circle()
                 .fill(info.color)
-                .frame(width: 8, height: 8)
+                .frame(width: 6, height: 6)
                 .opacity(info.isFuture ? 0 : 1)
         }
-        .frame(height: 28)
+        .frame(height: 18)
     }
 
-    // MARK: - Calendar Data
+    // MARK: - Data
 
-    private var calendarData: (title: String, days: [DayInfo]) {
+    private var monthData: (title: String, days: [DayInfo]) {
         let calendar = Calendar.current
         let today = Date()
-        let year = calendar.component(.year, from: today)
-        let month = calendar.component(.month, from: today)
+
+        guard let targetMonth = calendar.date(byAdding: .month, value: monthOffset, to: today) else {
+            return ("", [])
+        }
+
+        let year = calendar.component(.year, from: targetMonth)
+        let month = calendar.component(.month, from: targetMonth)
 
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM yyyy"
+        formatter.dateFormat = "MMM yyyy"
 
         guard let firstOfMonth = calendar.date(from: DateComponents(year: year, month: month, day: 1)),
               let range = calendar.range(of: .day, in: .month, for: firstOfMonth) else {
@@ -86,12 +116,12 @@ struct MonthlyCalendarPanel: View {
 
         let title = formatter.string(from: firstOfMonth)
         let firstWeekday = calendar.component(.weekday, from: firstOfMonth)
-        let offset = (firstWeekday - calendar.firstWeekday + 7) % 7
+        let leadingOffset = (firstWeekday - calendar.firstWeekday + 7) % 7
         let habits = viewModel.fetchHabits()
 
         var days: [DayInfo] = []
 
-        for _ in 0..<offset {
+        for _ in 0..<leadingOffset {
             days.append(DayInfo(day: 0, color: .clear, isPlaceholder: true, isFuture: false, isToday: false))
         }
 
@@ -113,8 +143,6 @@ struct MonthlyCalendarPanel: View {
 
         return (title, days)
     }
-
-    // MARK: - Aggregate Color
 
     private func aggregateColor(for date: Date, habits: [Habit]) -> Color {
         let calendar = Calendar.current
