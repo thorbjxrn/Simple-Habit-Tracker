@@ -185,9 +185,12 @@ struct HabitTrackerView: View {
                     adManager?.showInterstitialIfReady()
                 }
             }
-            // Show paywall when hitting the free tier limit
+            // Show paywall when swiping past the free tier limit
             if !purchaseManager.isPremium && newValue == minWeekOffset {
                 showPaywall = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    withAnimation { displayedWeekOffset = minWeekOffset + 1 }
+                }
             }
         }
     }
@@ -195,7 +198,7 @@ struct HabitTrackerView: View {
     // MARK: - Week Page View
 
     private var minWeekOffset: Int {
-        purchaseManager.isPremium ? -52 : -1
+        purchaseManager.isPremium ? -52 : -2
     }
 
     private var weekPageView: some View {
