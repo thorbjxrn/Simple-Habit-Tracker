@@ -22,17 +22,17 @@ final class HabitViewModel {
         weekRecord.habit = habit
         modelContext.insert(weekRecord)
 
-        try? modelContext.save()
+        save()
     }
 
     func removeHabit(_ habit: Habit) {
         modelContext.delete(habit)
-        try? modelContext.save()
+        save()
     }
 
     func renameHabit(_ habit: Habit, newName: String) {
         habit.name = newName
-        try? modelContext.save()
+        save()
     }
 
     // MARK: - Day Toggle
@@ -50,7 +50,7 @@ final class HabitViewModel {
             days[dayIndex] = .notCompleted
         }
         weekRecord.completedDays = days
-        try? modelContext.save()
+        save()
     }
 
     // MARK: - Week Record Access
@@ -59,7 +59,7 @@ final class HabitViewModel {
         let startOfWeek = weekStartDate(for: Date())
 
         if let existing = habit.weekRecords.first(where: {
-            Calendar.current.isDate($0.weekStartDate, inSameDayAs: startOfWeek)
+            Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
         }) {
             return existing
         }
@@ -67,7 +67,7 @@ final class HabitViewModel {
         let weekRecord = WeekRecord(weekStartDate: startOfWeek)
         weekRecord.habit = habit
         modelContext.insert(weekRecord)
-        try? modelContext.save()
+        save()
         return weekRecord
     }
 
@@ -91,5 +91,15 @@ final class HabitViewModel {
     func fetchHabits() -> [Habit] {
         let descriptor = FetchDescriptor<Habit>(sortBy: [SortDescriptor(\.sortOrder)])
         return (try? modelContext.fetch(descriptor)) ?? []
+    }
+
+    // MARK: - Persistence
+
+    private func save() {
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save: \(error)")
+        }
     }
 }
