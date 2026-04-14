@@ -7,12 +7,9 @@ struct HabitRowView: View {
     let onToggle: (Int) -> Void
     let onRename: (UUID, String) -> Void
 
-    private let circleSize: CGFloat = 33
-
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             Text(habit.name)
-                .lineLimit(nil)
                 .font(.headline)
                 .contextMenu {
                     Button(action: {
@@ -22,71 +19,37 @@ struct HabitRowView: View {
                     }
                 }
 
-            HStack(spacing: 0) {
-                ForEach(0..<7) { index in
-                    ZStack {
-                        // Streak connector - draws behind the circle
-                        HStack(spacing: 0) {
-                            // Left half connector
-                            Rectangle()
-                                .fill(shouldConnectLeft(index: index) ? Color.green : Color.clear)
-                                .frame(height: 6)
-                                .frame(maxWidth: .infinity)
+            HStack {
+                ForEach(0..<7, id: \.self) { index in
+                    let state = weekRecord.completedDays[index]
+                    let isToday = currentDayIndex == index
 
-                            // Right half connector
-                            Rectangle()
-                                .fill(shouldConnectRight(index: index) ? Color.green : Color.clear)
-                                .frame(height: 6)
-                                .frame(maxWidth: .infinity)
+                    Circle()
+                        .fill(color(for: state))
+                        .frame(maxWidth: .infinity)
+                        .aspectRatio(1, contentMode: .fit)
+                        .overlay {
+                            if isToday {
+                                Circle()
+                                    .strokeBorder(Color.yellow, lineWidth: 2.5)
+                            }
                         }
-
-                        // Circle
-                        VStack(spacing: 4) {
-                            Circle()
-                                .fill(color(for: weekRecord.completedDays[index]))
-                                .frame(width: circleSize, height: circleSize)
-                                .onTapGesture {
-                                    onToggle(index)
-                                }
-
-                            // Today indicator
-                            Circle()
-                                .fill(Color.yellow)
-                                .frame(width: 4, height: 4)
-                                .opacity(currentDayIndex == index ? 1 : 0)
+                        .onTapGesture {
+                            onToggle(index)
                         }
-                    }
-                    .frame(maxWidth: .infinity)
                 }
             }
         }
-        .padding(.vertical, 12)
-    }
-
-    // MARK: - Streak Logic
-
-    private func shouldConnectLeft(index: Int) -> Bool {
-        guard index > 0 else { return false }
-        return weekRecord.completedDays[index] == .completed
-            && weekRecord.completedDays[index - 1] == .completed
-    }
-
-    private func shouldConnectRight(index: Int) -> Bool {
-        guard index < 6 else { return false }
-        return weekRecord.completedDays[index] == .completed
-            && weekRecord.completedDays[index + 1] == .completed
+        .padding(.vertical, 6)
     }
 
     // MARK: - Helpers
 
-    func color(for state: HabitState) -> Color {
+    private func color(for state: HabitState) -> Color {
         switch state {
-        case .notCompleted:
-            return Color.gray
-        case .completed:
-            return Color.green
-        case .failed:
-            return Color.red
+        case .notCompleted: return .gray.opacity(0.3)
+        case .completed: return .green
+        case .failed: return .red
         }
     }
 }
