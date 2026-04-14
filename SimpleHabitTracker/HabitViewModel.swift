@@ -81,16 +81,12 @@ final class HabitViewModel {
         let startOfWeek = weekStartDate(for: targetDate)
         let calendar = Calendar.current
 
-        // Use explicit fetch instead of lazy-loaded relationship
-        let habitID = habit.persistentModelID
-        let descriptor = FetchDescriptor<WeekRecord>(
-            predicate: #Predicate<WeekRecord> { record in
-                record.habit?.persistentModelID == habitID
-            }
-        )
-        let records = (try? modelContext.fetch(descriptor)) ?? []
-        if let existing = records.first(where: {
-            calendar.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
+        // Fetch all WeekRecords and filter in memory
+        // (SwiftData predicates on optional relationships are unreliable)
+        let allRecords = (try? modelContext.fetch(FetchDescriptor<WeekRecord>())) ?? []
+        if let existing = allRecords.first(where: { record in
+            record.habit?.id == habit.id &&
+            calendar.isDate(record.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
         }) {
             return existing
         }
