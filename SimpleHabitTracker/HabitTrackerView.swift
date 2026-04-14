@@ -243,10 +243,13 @@ struct HabitTrackerView: View {
 
     private func updateOrientation() {
         let orientation = UIDevice.current.orientation
-        if orientation.isLandscape {
+        switch orientation {
+        case .landscapeLeft, .landscapeRight:
             isLandscape = true
-        } else if orientation.isPortrait {
+        case .portrait, .portraitUpsideDown:
             isLandscape = false
+        default:
+            break // .unknown, .faceUp, .faceDown: keep current
         }
         // .unknown / .faceUp / .faceDown: keep current value
     }
