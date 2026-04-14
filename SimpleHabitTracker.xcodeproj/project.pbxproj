@@ -22,6 +22,8 @@
 		AA0001052D00000100000003 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001042D00000100000003 /* MigrationManager.swift */; };
 		BB0002012E00000200000001 /* HabitRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0002002E00000200000001 /* HabitRowView.swift */; };
 		BB0002032E00000200000002 /* WeekNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0002022E00000200000002 /* WeekNavigationView.swift */; };
+		CC0003012F00000300000001 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0003002F00000300000001 /* PurchaseManager.swift */; };
+		CC0003032F00000300000002 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0003022F00000300000002 /* PaywallView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +62,8 @@
 		AA0001042D00000100000003 /* MigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
 		BB0002002E00000200000001 /* HabitRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitRowView.swift; sourceTree = "<group>"; };
 		BB0002022E00000200000002 /* WeekNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekNavigationView.swift; sourceTree = "<group>"; };
+		CC0003002F00000300000001 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		CC0003022F00000300000002 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				BB0002002E00000200000001 /* HabitRowView.swift */,
+				CC0003022F00000300000002 /* PaywallView.swift */,
 				BB0002022E00000200000002 /* WeekNavigationView.swift */,
 			);
 			path = Views;
@@ -143,6 +148,7 @@
 				08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */,
 				08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */,
 				087672842D28603500683FA2 /* HabitViewModel.swift */,
+				CC0003002F00000300000001 /* PurchaseManager.swift */,
 				0811AC1C2C5AE48A003E752D /* readme.md */,
 				08C6A69F2C5AC8660001A26D /* Assets.xcassets */,
 				08C6A6A12C5AC8660001A26D /* Preview Content */,
@@ -315,6 +321,8 @@
 				AA0001052D00000100000003 /* MigrationManager.swift in Sources */,
 				BB0002012E00000200000001 /* HabitRowView.swift in Sources */,
 				BB0002032E00000200000002 /* WeekNavigationView.swift in Sources */,
+				CC0003012F00000300000001 /* PurchaseManager.swift in Sources */,
+				CC0003032F00000300000002 /* PaywallView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

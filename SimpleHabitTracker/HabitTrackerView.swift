@@ -3,6 +3,7 @@ import SwiftData
 
 struct HabitTrackerView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(PurchaseManager.self) private var purchaseManager
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
 
     @State private var viewModel: HabitViewModel?
@@ -34,9 +35,9 @@ struct HabitTrackerView: View {
             VStack(spacing: 0) {
                 WeekNavigationView(
                     weekOffset: $displayedWeekOffset,
-                    isPremium: false,
+                    isPremium: purchaseManager.isPremium,
                     canNavigate: { offset in
-                        viewModel?.canNavigateToWeek(offset: offset, isPremium: false) ?? false
+                        viewModel?.canNavigateToWeek(offset: offset, isPremium: purchaseManager.isPremium) ?? false
                     },
                     showPaywall: $showPaywall
                 )
@@ -70,7 +71,11 @@ struct HabitTrackerView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
-                            showingAddHabitAlert = true
+                            if viewModel?.canAddHabit(isPremium: purchaseManager.isPremium) == true {
+                                showingAddHabitAlert = true
+                            } else {
+                                showPaywall = true
+                            }
                         }) {
                             Image(systemName: "plus")
                         }
@@ -109,10 +114,8 @@ struct HabitTrackerView: View {
             }
             Button("Cancel", role: .cancel, action: {})
         }
-        .alert("Premium Feature", isPresented: $showPaywall) {
-            Button("OK", role: .cancel, action: {})
-        } message: {
-            Text("Viewing weeks beyond last week requires Premium. Upgrade to unlock full history.")
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(purchaseManager: purchaseManager)
         }
         .onAppear {
             if viewModel == nil {
@@ -177,5 +180,6 @@ struct LineConnectingConsecutiveDays: View {
 
 #Preview {
     HabitTrackerView()
+        .environment(PurchaseManager())
         .modelContainer(for: Habit.self, inMemory: true)
 }

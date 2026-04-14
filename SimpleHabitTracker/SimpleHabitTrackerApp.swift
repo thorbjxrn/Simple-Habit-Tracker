@@ -4,6 +4,7 @@ import SwiftData
 @main
 struct SimpleHabitTrackerApp: App {
     let modelContainer: ModelContainer
+    @State private var purchaseManager = PurchaseManager()
 
     init() {
         do {
@@ -18,6 +19,7 @@ struct SimpleHabitTrackerApp: App {
     var body: some Scene {
         WindowGroup {
             HabitTrackerView()
+                .environment(purchaseManager)
         }
         .modelContainer(modelContainer)
     }
