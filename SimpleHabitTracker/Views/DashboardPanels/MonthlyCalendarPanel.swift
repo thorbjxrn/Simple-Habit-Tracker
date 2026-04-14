@@ -43,6 +43,7 @@ struct MonthlyCalendarPanel: View {
                     Text(selectedHabit?.name ?? "Select Habit")
                         .font(.subheadline)
                         .fontWeight(.semibold)
+                        .animation(nil, value: selectedHabitIndex)
                     Image(systemName: "chevron.up.chevron.down")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
@@ -51,7 +52,6 @@ struct MonthlyCalendarPanel: View {
             .buttonStyle(.plain)
 
             // Calendar
-            Spacer()
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(alignment: .top, spacing: 32) {
                     ForEach((-monthsBack)...0, id: \.self) { offset in
@@ -68,9 +68,8 @@ struct MonthlyCalendarPanel: View {
             }
             .scrollTargetBehavior(.viewAligned)
             .defaultScrollAnchor(.trailing)
-            .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, 24)
-            Spacer()
+            .frame(maxHeight: .infinity)
         }
     }
 }
