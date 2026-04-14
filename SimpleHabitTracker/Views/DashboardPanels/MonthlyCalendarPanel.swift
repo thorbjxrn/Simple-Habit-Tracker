@@ -2,17 +2,73 @@ import SwiftUI
 
 struct MonthlyCalendarPanel: View {
     let viewModel: HabitViewModel
+    @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.defaultTheme.rawValue
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
-    private let weekdaySymbols: [String] = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale.current
-        // Short weekday symbols starting from the calendar's first weekday
-        let symbols = formatter.veryShortWeekdaySymbols ?? ["S", "M", "T", "W", "T", "F", "S"]
-        let calendar = Calendar.current
+    private var theme: AppTheme {
+        AppTheme.from(rawValue: selectedThemeRaw)
+    }
+
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 2), count: 7)
+
+    private var weekdaySymbols: [String] {
+        var calendar = Calendar.current
+        calendar.locale = Locale.current
+        let symbols = calendar.veryShortWeekdaySymbols
         let offset = calendar.firstWeekday - 1
         return Array(symbols[offset...]) + Array(symbols[..<offset])
-    }()
+    }
+
+    var body: some View {
+        let data = calendarData
+        VStack(spacing: 8) {
+            Text(data.title)
+                .font(.title3)
+                .fontWeight(.bold)
+
+            // Weekday headers
+            HStack(spacing: 0) {
+                ForEach(weekdaySymbols, id: \.self) { symbol in
+                    Text(symbol)
+                        .font(.system(size: 10))
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+
+            // Day grid
+            LazyVGrid(columns: columns, spacing: 6) {
+                ForEach(Array(data.days.enumerated()), id: \.offset) { _, dayInfo in
+                    if dayInfo.isPlaceholder {
+                        Color.clear.frame(height: 28)
+                    } else {
+                        dayCell(dayInfo)
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 12)
+    }
+
+    // MARK: - Day Cell
+
+    @ViewBuilder
+    private func dayCell(_ info: DayInfo) -> some View {
+        let isToday = info.isToday
+        VStack(spacing: 2) {
+            Text("\(info.day)")
+                .font(.system(size: 11, weight: isToday ? .bold : .regular))
+                .foregroundStyle(info.isFuture ? .tertiary : (isToday ? .primary : .secondary))
+
+            Circle()
+                .fill(info.color)
+                .frame(width: 8, height: 8)
+                .opacity(info.isFuture ? 0 : 1)
+        }
+        .frame(height: 28)
+    }
+
+    // MARK: - Calendar Data
 
     private var calendarData: (title: String, days: [DayInfo]) {
         let calendar = Calendar.current
@@ -29,103 +85,46 @@ struct MonthlyCalendarPanel: View {
         }
 
         let title = formatter.string(from: firstOfMonth)
-
-        // Determine the weekday of the first day (adjusted for calendar's first weekday)
         let firstWeekday = calendar.component(.weekday, from: firstOfMonth)
         let offset = (firstWeekday - calendar.firstWeekday + 7) % 7
+        let habits = viewModel.fetchHabits()
 
         var days: [DayInfo] = []
 
-        // Add empty cells for days before the 1st
         for _ in 0..<offset {
-            days.append(DayInfo(day: 0, color: .clear, isPlaceholder: true))
+            days.append(DayInfo(day: 0, color: .clear, isPlaceholder: true, isFuture: false, isToday: false))
         }
-
-        let habits = viewModel.fetchHabits()
 
         for day in range {
             guard let date = calendar.date(from: DateComponents(year: year, month: month, day: day)) else {
-                days.append(DayInfo(day: day, color: .gray.opacity(0.3), isPlaceholder: false))
                 continue
             }
 
-            if date > today {
-                // Future day
-                days.append(DayInfo(day: day, color: .clear, isPlaceholder: false))
-                continue
-            }
+            let isFuture = date > today
+            let isToday = calendar.isDateInToday(date)
 
-            let color = aggregateColor(for: date, habits: habits)
-            days.append(DayInfo(day: day, color: color, isPlaceholder: false))
+            if isFuture {
+                days.append(DayInfo(day: day, color: .clear, isPlaceholder: false, isFuture: true, isToday: false))
+            } else {
+                let color = aggregateColor(for: date, habits: habits)
+                days.append(DayInfo(day: day, color: color, isPlaceholder: false, isFuture: false, isToday: isToday))
+            }
         }
 
         return (title, days)
     }
 
-    var body: some View {
-        let data = calendarData
-        VStack(spacing: 12) {
-            Text(data.title)
-                .font(.title2)
-                .fontWeight(.bold)
-                .padding(.top, 16)
-
-            // Weekday headers
-            LazyVGrid(columns: columns, spacing: 4) {
-                ForEach(weekdaySymbols, id: \.self) { symbol in
-                    Text(symbol)
-                        .font(.caption2)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity)
-                }
-            }
-            .padding(.horizontal, 16)
-
-            // Day cells
-            LazyVGrid(columns: columns, spacing: 4) {
-                ForEach(Array(data.days.enumerated()), id: \.offset) { _, dayInfo in
-                    if dayInfo.isPlaceholder {
-                        Color.clear
-                            .aspectRatio(1, contentMode: .fit)
-                    } else {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(dayInfo.color)
-                                .aspectRatio(1, contentMode: .fit)
-                            if dayInfo.day > 0 && dayInfo.color != .clear {
-                                Text("\(dayInfo.day)")
-                                    .font(.caption2)
-                                    .foregroundStyle(.white)
-                            } else if dayInfo.day > 0 {
-                                Text("\(dayInfo.day)")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                    }
-                }
-            }
-            .padding(.horizontal, 16)
-
-            Spacer()
-        }
-        .padding()
-    }
-
-    // MARK: - Helpers
+    // MARK: - Aggregate Color
 
     private func aggregateColor(for date: Date, habits: [Habit]) -> Color {
         let calendar = Calendar.current
-
-        guard !habits.isEmpty else { return .gray.opacity(0.3) }
+        guard !habits.isEmpty else { return theme.notCompletedColor }
 
         var completedCount = 0
         var failedCount = 0
         var totalTracked = 0
 
         for habit in habits {
-            // Only count habits that existed on this date
             if habit.createdDate > date { continue }
 
             let weekStart = viewModel.weekStartDate(for: date)
@@ -134,40 +133,29 @@ struct MonthlyCalendarPanel: View {
             }) else { continue }
 
             let dayOfWeek = calendar.component(.weekday, from: date)
-            let firstWeekday = calendar.firstWeekday
-            let dayIndex = (dayOfWeek - firstWeekday + 7) % 7
-
+            let dayIndex = (dayOfWeek - calendar.firstWeekday + 7) % 7
             guard dayIndex >= 0 && dayIndex < record.completedDays.count else { continue }
 
             totalTracked += 1
             switch record.completedDays[dayIndex] {
-            case .completed:
-                completedCount += 1
-            case .failed:
-                failedCount += 1
-            case .notCompleted:
-                break
+            case .completed: completedCount += 1
+            case .failed: failedCount += 1
+            case .notCompleted: break
             }
         }
 
-        if totalTracked == 0 { return .gray.opacity(0.3) }
-
-        if completedCount > failedCount && completedCount > 0 {
-            return .green
-        } else if failedCount > completedCount && failedCount > 0 {
-            return .red
-        } else if completedCount > 0 && failedCount > 0 {
-            // Tie goes to green
-            return .green
-        }
-        return .gray.opacity(0.3)
+        if totalTracked == 0 { return theme.notCompletedColor }
+        if completedCount > failedCount { return theme.completedColor }
+        if failedCount > completedCount { return theme.failedColor }
+        if completedCount > 0 { return theme.completedColor }
+        return theme.notCompletedColor
     }
 }
-
-// MARK: - Day Info Model
 
 private struct DayInfo {
     let day: Int
     let color: Color
     let isPlaceholder: Bool
+    let isFuture: Bool
+    let isToday: Bool
 }
