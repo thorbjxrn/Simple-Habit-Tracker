@@ -21,14 +21,23 @@ final class AdManager {
     @ObservationIgnored
     private static let appOpenCountKey = "adManager_appOpenCount"
 
-    /// Number of grace opens before any ads appear (banner or interstitial)
+    /// Number of app opens before any ads appear (banner or interstitial)
     private static let gracePeriodOpens = 5
-    /// Show an interstitial every Nth open after the grace period
+    /// Show an interstitial every Nth history navigation after the grace period
     private static let interstitialFrequency = 5
+
+    @ObservationIgnored
+    private static let historyNavCountKey = "adManager_historyNavCount"
 
     var appOpenCount: Int {
         didSet {
             UserDefaults.standard.set(appOpenCount, forKey: Self.appOpenCountKey)
+        }
+    }
+
+    private(set) var historyNavCount: Int {
+        didSet {
+            UserDefaults.standard.set(historyNavCount, forKey: Self.historyNavCountKey)
         }
     }
 
@@ -42,11 +51,12 @@ final class AdManager {
         !purchaseManager.isPremium && !isInGracePeriod
     }
 
-    var shouldShowInterstitial: Bool {
+    /// Call when the user navigates to a past week. Returns true if an interstitial should show.
+    func onHistoryNavigation() -> Bool {
         guard !purchaseManager.isPremium else { return false }
         guard !isInGracePeriod else { return false }
-        let opensAfterGrace = appOpenCount - Self.gracePeriodOpens
-        return opensAfterGrace > 0 && opensAfterGrace % Self.interstitialFrequency == 0
+        historyNavCount += 1
+        return historyNavCount % Self.interstitialFrequency == 0
     }
 
     // MARK: - Dependencies
@@ -61,6 +71,7 @@ final class AdManager {
 
         self.appOpenCount = UserDefaults.standard.integer(forKey: Self.appOpenCountKey)
         self.appOpenCount += 1
+        self.historyNavCount = UserDefaults.standard.integer(forKey: Self.historyNavCountKey)
 
         if !isInGracePeriod {
             loadInterstitial()
@@ -120,7 +131,7 @@ final class AdManager {
 
     /// Convenience: find the root view controller and show interstitial
     func showInterstitialIfReady() {
-        guard shouldShowInterstitial || interstitialAd != nil else { return }
+        guard interstitialAd != nil else { return }
         guard !purchaseManager.isPremium else { return }
 
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,

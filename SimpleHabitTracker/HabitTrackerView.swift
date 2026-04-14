@@ -53,12 +53,8 @@ struct HabitTrackerView: View {
                 viewModel = HabitViewModel(modelContext: modelContext)
             }
 
-            // Show interstitial on app open (only once per appear)
             if !hasCheckedInterstitialOnAppear {
                 hasCheckedInterstitialOnAppear = true
-                if let adManager, adManager.shouldShowInterstitial {
-                    adManager.showInterstitialIfReady()
-                }
                 adManager?.requestTrackingPermissionIfNeeded()
             }
 
@@ -190,6 +186,13 @@ struct HabitTrackerView: View {
         }
         .sheet(isPresented: $showingWeeklyGoalSheet) {
             weeklyGoalSheet
+        }
+        .onChange(of: displayedWeekOffset) { oldValue, newValue in
+            if newValue < oldValue, newValue < 0 {
+                if adManager?.onHistoryNavigation() == true {
+                    adManager?.showInterstitialIfReady()
+                }
+            }
         }
     }
 
