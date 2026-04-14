@@ -132,50 +132,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		AA0001062D00000100000004 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				08E202532C5E9D6F0054A4AD /* HabitModel.swift */,
-				AA0001002D00000100000001 /* HabitState.swift */,
-				AA0001022D00000100000002 /* WeekRecord.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		AA0001072D00000100000005 /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-				AA0001042D00000100000003 /* MigrationManager.swift */,
-				FF0006003200000600000001 /* ThemeManager.swift */,
-			);
-			path = Utilities;
-			sourceTree = "<group>";
-		};
-		GG0007083300000700000005 /* DashboardPanels */ = {
-			isa = PBXGroup;
-			children = (
-				GG0007023300000700000002 /* MonthlyCalendarPanel.swift */,
-				GG0007043300000700000003 /* TrendGraphPanel.swift */,
-				GG0007063300000700000004 /* StatsPanel.swift */,
-			);
-			path = DashboardPanels;
-			sourceTree = "<group>";
-		};
-		BB0002042E00000200000003 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				GG0007083300000700000005 /* DashboardPanels */,
-				EE0005023100000500000002 /* BannerAdView.swift */,
-				GG0007003300000700000001 /* DashboardView.swift */,
-				BB0002002E00000200000001 /* HabitRowView.swift */,
-				HH0008003400000800000001 /* OnboardingView.swift */,
-				CC0003022F00000300000002 /* PaywallView.swift */,
-				DD0004003000000400000001 /* SettingsView.swift */,
-				BB0002022E00000200000002 /* WeekNavigationView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		08C6A69A2C5AC8640001A26D /* SimpleHabitTracker */ = {
 			isa = PBXGroup;
 			children = (
@@ -219,6 +175,50 @@
 				08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */,
 			);
 			path = SimpleHabitTrackerUITests;
+			sourceTree = "<group>";
+		};
+		AA0001062D00000100000004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				08E202532C5E9D6F0054A4AD /* HabitModel.swift */,
+				AA0001002D00000100000001 /* HabitState.swift */,
+				AA0001022D00000100000002 /* WeekRecord.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AA0001072D00000100000005 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				AA0001042D00000100000003 /* MigrationManager.swift */,
+				FF0006003200000600000001 /* ThemeManager.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		BB0002042E00000200000003 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				GG0007083300000700000005 /* DashboardPanels */,
+				EE0005023100000500000002 /* BannerAdView.swift */,
+				GG0007003300000700000001 /* DashboardView.swift */,
+				BB0002002E00000200000001 /* HabitRowView.swift */,
+				HH0008003400000800000001 /* OnboardingView.swift */,
+				CC0003022F00000300000002 /* PaywallView.swift */,
+				DD0004003000000400000001 /* SettingsView.swift */,
+				BB0002022E00000200000002 /* WeekNavigationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		GG0007083300000700000005 /* DashboardPanels */ = {
+			isa = PBXGroup;
+			children = (
+				GG0007023300000700000002 /* MonthlyCalendarPanel.swift */,
+				GG0007043300000700000003 /* TrendGraphPanel.swift */,
+				GG0007063300000700000004 /* StatsPanel.swift */,
+			);
+			path = DashboardPanels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -309,6 +309,9 @@
 				Base,
 			);
 			mainGroup = 08C6A68F2C5AC8640001A26D;
+			packageReferences = (
+				2864A8C92F8ED25100725303 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			productRefGroup = 08C6A6992C5AC8640001A26D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -704,6 +707,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2864A8C92F8ED25100725303 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 08C6A6902C5AC8640001A26D /* Project object */;
 }

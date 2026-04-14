@@ -25,7 +25,7 @@ struct SimpleHabitTrackerApp: App {
             fatalError("Failed to create ModelContainer: \(error)")
         }
 
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        MobileAds.shared.start()
     }
 
     var body: some Scene {
