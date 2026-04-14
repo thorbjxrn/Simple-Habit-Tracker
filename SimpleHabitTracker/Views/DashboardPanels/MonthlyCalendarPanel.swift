@@ -22,54 +22,41 @@ struct MonthlyCalendarPanel: View {
     }
 
     var body: some View {
-        VStack(spacing: 12) {
-            // Habit picker
-            Menu {
-                ForEach(Array(habits.enumerated()), id: \.element.id) { index, habit in
-                    Button {
-                        selectedHabitIndex = index
-                    } label: {
-                        if index == selectedHabitIndex {
-                            Label(habit.name, systemImage: "checkmark")
-                        } else {
-                            Text(habit.name)
+        VStack {
+            Spacer()
+
+            VStack(spacing: 12) {
+                // Habit picker
+                Picker("Habit", selection: $selectedHabitIndex) {
+                    ForEach(Array(habits.enumerated()), id: \.element.id) { index, habit in
+                        Text(habit.name).tag(index)
+                    }
+                }
+                .pickerStyle(.menu)
+                .labelsHidden()
+
+                // Calendar
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack(alignment: .top, spacing: 32) {
+                        ForEach((-monthsBack)...0, id: \.self) { offset in
+                            SingleMonthView(
+                                monthOffset: offset,
+                                viewModel: viewModel,
+                                habit: selectedHabit,
+                                theme: theme
+                            )
+                            .containerRelativeFrame(.horizontal, count: 2, spacing: 32)
                         }
                     }
+                    .scrollTargetLayout()
                 }
-            } label: {
-                HStack(spacing: 6) {
-                    Text(selectedHabit?.name ?? "Select Habit")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    Image(systemName: "chevron.up.chevron.down")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
-                .fixedSize()
+                .scrollTargetBehavior(.viewAligned)
+                .defaultScrollAnchor(.trailing)
+                .padding(.horizontal, 24)
             }
-            .buttonStyle(.plain)
 
-            // Calendar
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(alignment: .top, spacing: 32) {
-                    ForEach((-monthsBack)...0, id: \.self) { offset in
-                        SingleMonthView(
-                            monthOffset: offset,
-                            viewModel: viewModel,
-                            habit: selectedHabit,
-                            theme: theme
-                        )
-                        .containerRelativeFrame(.horizontal, count: 2, spacing: 32)
-                    }
-                }
-                .scrollTargetLayout()
-            }
-            .scrollTargetBehavior(.viewAligned)
-            .defaultScrollAnchor(.trailing)
-            .padding(.horizontal, 24)
+            Spacer()
         }
-        .frame(maxHeight: .infinity)
-        .padding(.vertical, 12)
     }
 }
 

@@ -23,7 +23,6 @@ struct HabitTrackerView: View {
     @State private var showingWeeklyGoalSheet = false
     @State private var weeklyGoalHabit: Habit?
     @State private var selectedWeeklyGoal: Int = 0
-    @State private var isLandscape: Bool = false
     @State private var habitPlaceholder: String = ""
 
     private static let placeholders = [
@@ -63,16 +62,19 @@ struct HabitTrackerView: View {
     }
 
     var body: some View {
-        Group {
-            if isLandscape, let vm = viewModel {
-                DashboardView(
-                    viewModel: vm,
-                    habits: habits,
-                    isPremium: purchaseManager.isPremium
-                )
-            } else {
-                habitListView
+        GeometryReader { geo in
+            Group {
+                if geo.size.width > geo.size.height, let vm = viewModel {
+                    DashboardView(
+                        viewModel: vm,
+                        habits: habits,
+                        isPremium: purchaseManager.isPremium
+                    )
+                } else {
+                    habitListView
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .onAppear {
             if viewModel == nil {
@@ -83,11 +85,6 @@ struct HabitTrackerView: View {
                 hasCheckedInterstitialOnAppear = true
                 adManager?.requestTrackingPermissionIfNeeded()
             }
-
-            updateOrientation()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
-            updateOrientation()
         }
     }
 
@@ -239,19 +236,7 @@ struct HabitTrackerView: View {
         }
     }
 
-    // MARK: - Orientation
-
-    private func updateOrientation() {
-        let orientation = UIDevice.current.orientation
-        switch orientation {
-        case .landscapeLeft, .landscapeRight:
-            isLandscape = true
-        case .portrait, .portraitUpsideDown:
-            isLandscape = false
-        default:
-            break // .unknown, .faceUp, .faceDown: keep current
-        }
-        // .unknown / .faceUp / .faceDown: keep current value
+    // MARK: - Orientation (unused, kept for reference)
     }
 
     // MARK: - Helpers
