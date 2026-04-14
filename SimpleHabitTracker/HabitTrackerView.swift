@@ -9,6 +9,7 @@ struct HabitTrackerView: View {
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
 
     @State private var viewModel: HabitViewModel?
+    @State private var addHabitAlertID = UUID()
     @State private var showingAddHabitAlert = false
     @State private var newHabitName = ""
     @State private var showingDeleteConfirmation = false
@@ -166,6 +167,7 @@ struct HabitTrackerView: View {
                     Button(action: {
                         if viewModel?.canAddHabit(isPremium: purchaseManager.isPremium) == true {
                             habitPlaceholder = Self.placeholders.filter { $0 != habitPlaceholder }.randomElement() ?? "Habit Name"
+                            addHabitAlertID = UUID()
                             showingAddHabitAlert = true
                         } else {
                             showPaywall = true
@@ -180,6 +182,7 @@ struct HabitTrackerView: View {
                 Button("Add", action: addNewHabit)
                 Button("Cancel", role: .cancel, action: {})
             }
+            .id(addHabitAlertID)
             .confirmationDialog(
                 "Are you sure you want to delete this habit?",
                 isPresented: $showingDeleteConfirmation,
