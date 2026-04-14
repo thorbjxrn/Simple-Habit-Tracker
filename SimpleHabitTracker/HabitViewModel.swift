@@ -1,75 +1,95 @@
-import SwiftUI
+import Foundation
+import SwiftData
 
-class HabitViewModel: ObservableObject {
-    @Published var habits: [Habit] = [] {
-        didSet {
-            saveHabits()
-        }
+@Observable
+final class HabitViewModel {
+    private let modelContext: ModelContext
+
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
     }
 
-    init() {
-        loadHabits()
-        checkWeekNr()
-    }
-
-    // UserDefaults key
-    private let habitsKey = "habits"
-    private let lastSeenKey = "date"
-
-    // MARK: - Data Persistence Methods
-    func saveHabits() {
-        if let encoded = try? JSONEncoder().encode(habits) {
-            UserDefaults.standard.set(encoded, forKey: habitsKey)
-        }
-    }
-
-    func loadHabits() {
-        if let data = UserDefaults.standard.data(forKey: habitsKey),
-           let decoded = try? JSONDecoder().decode([Habit].self, from: data) {
-            habits = decoded
-        }
-    }
-
-    func saveDate() {
-        if let encoded = try? JSONEncoder().encode(Date()) {
-            UserDefaults.standard.set(encoded, forKey: lastSeenKey)
-        }
-    }
-
-    func checkWeekNr() {
-        guard let data = UserDefaults.standard.data(forKey: lastSeenKey),
-           let lastSeenDate = try? JSONDecoder().decode(Date.self, from: data) else {
-            return
-        }
-
-        if Calendar.current.component(.weekOfYear, from: lastSeenDate) != Calendar.current.component(.weekOfYear, from: Date()) {
-            print("new week!")
-            for i in habits.indices {
-                for j in habits[i].completedDays.indices {
-                    habits[i].completedDays[j] = .notCompleted
-                }
-            }
-        }
-
-    }
+    // MARK: - Habit CRUD
 
     func addHabit(name: String) {
-        let newHabit = Habit(
-            id: UUID(),
-            name: name,
-            completedDays: Array(repeating: .notCompleted, count: 7)
-        )
-        habits.append(newHabit)
+        let existingHabits = fetchHabits()
+        let nextSortOrder = (existingHabits.map(\.sortOrder).max() ?? -1) + 1
+
+        let habit = Habit(name: name, sortOrder: nextSortOrder)
+        modelContext.insert(habit)
+
+        let weekRecord = WeekRecord(weekStartDate: weekStartDate(for: Date()))
+        weekRecord.habit = habit
+        modelContext.insert(weekRecord)
+
+        try? modelContext.save()
     }
 
-    func removeHabit(at indexSet: IndexSet) {
-//        guard let index = indexSet.first else { return }
-        habits.remove(atOffsets: indexSet)
+    func removeHabit(_ habit: Habit) {
+        modelContext.delete(habit)
+        try? modelContext.save()
     }
 
-    func renameHabit(id: UUID, newName: String) {
-        if let index = habits.firstIndex(where: { $0.id == id }) {
-            habits[index].name = newName
+    func renameHabit(_ habit: Habit, newName: String) {
+        habit.name = newName
+        try? modelContext.save()
+    }
+
+    // MARK: - Day Toggle
+
+    func toggleDay(weekRecord: WeekRecord, dayIndex: Int) {
+        guard dayIndex >= 0 && dayIndex < weekRecord.completedDays.count else { return }
+
+        var days = weekRecord.completedDays
+        switch days[dayIndex] {
+        case .notCompleted:
+            days[dayIndex] = .completed
+        case .completed:
+            days[dayIndex] = .failed
+        case .failed:
+            days[dayIndex] = .notCompleted
         }
+        weekRecord.completedDays = days
+        try? modelContext.save()
+    }
+
+    // MARK: - Week Record Access
+
+    func currentWeekRecord(for habit: Habit) -> WeekRecord {
+        let startOfWeek = weekStartDate(for: Date())
+
+        if let existing = habit.weekRecords.first(where: {
+            Calendar.current.isDate($0.weekStartDate, inSameDayAs: startOfWeek)
+        }) {
+            return existing
+        }
+
+        let weekRecord = WeekRecord(weekStartDate: startOfWeek)
+        weekRecord.habit = habit
+        modelContext.insert(weekRecord)
+        try? modelContext.save()
+        return weekRecord
+    }
+
+    // MARK: - Week Utilities
+
+    func weekStartDate(for date: Date) -> Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+        return calendar.date(from: components) ?? date
+    }
+
+    // MARK: - Business Rules
+
+    func canAddHabit(isPremium: Bool) -> Bool {
+        if isPremium { return true }
+        return fetchHabits().count < 5
+    }
+
+    // MARK: - Fetching
+
+    func fetchHabits() -> [Habit] {
+        let descriptor = FetchDescriptor<Habit>(sortBy: [SortDescriptor(\.sortOrder)])
+        return (try? modelContext.fetch(descriptor)) ?? []
     }
 }

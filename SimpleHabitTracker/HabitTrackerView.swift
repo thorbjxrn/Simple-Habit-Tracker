@@ -1,33 +1,37 @@
 import SwiftUI
+import SwiftData
 
 struct HabitTrackerView: View {
-    @StateObject private var viewModel = HabitViewModel()
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \Habit.sortOrder) private var habits: [Habit]
+
+    @State private var viewModel: HabitViewModel?
     @State private var showingAddHabitAlert = false
     @State private var newHabitName = ""
     @State private var showingDeleteConfirmation = false
-    @State private var deleteIndexSet: IndexSet?
+    @State private var habitToDelete: Habit?
     @State private var showingRenameAlert = false
     @State private var renameHabitID: UUID?
     @State private var newHabitNameForRename = ""
+    @State private var hasMigrated = false
 
     private var currentDayIndex: Int {
         var calendar = Calendar.current
         calendar.locale = Locale.current
         let firstWeekday = calendar.firstWeekday
-        // Get the current weekday (1 for Sunday, 2 for Monday, etc.)
         let weekday = calendar.component(.weekday, from: Date())
-        // Calculate the index based on the locale's first weekday
         return (weekday - firstWeekday + 7) % 7
     }
 
     var body: some View {
-        NavigationView {
-            VStack() {
+        NavigationStack {
+            VStack {
                 List {
-                    ForEach($viewModel.habits) { $habit in
+                    ForEach(habits) { habit in
+                        let weekRecord = resolvedWeekRecord(for: habit)
                         VStack(alignment: .leading) {
                             Text(habit.name)
-                                .lineLimit(0)
+                                .lineLimit(nil)
                                 .font(.headline)
                                 .contextMenu {
                                     Button(action: {
@@ -37,15 +41,15 @@ struct HabitTrackerView: View {
                                     }
                                 }
                             GeometryReader { geometry in
-                                VStack(alignment: .center, spacing:0) {
+                                VStack(alignment: .center, spacing: 0) {
                                     HStack(alignment: .center) {
                                         ForEach(0..<7) { index in
                                             VStack(alignment: .center, spacing: 4.5) {
                                                 Circle()
-                                                    .fill(color(for: habit.completedDays[index]))
+                                                    .fill(color(for: weekRecord.completedDays[index]))
                                                     .frame(width: 33, height: 33)
                                                     .onTapGesture {
-                                                        handleTap(index: index, for: &habit.completedDays)
+                                                        viewModel?.toggleDay(weekRecord: weekRecord, dayIndex: index)
                                                     }
                                                 Circle()
                                                     .fill(todaysColor(day: index))
@@ -55,7 +59,7 @@ struct HabitTrackerView: View {
                                         }
                                     }
                                     .overlay(
-                                        LineConnectingConsecutiveDays(days: habit.completedDays, geometry: geometry)
+                                        LineConnectingConsecutiveDays(days: weekRecord.completedDays, geometry: geometry)
                                     )
                                 }
                             }
@@ -63,8 +67,10 @@ struct HabitTrackerView: View {
                         .padding(.vertical, 25)
                     }
                     .onDelete { indexSet in
-                        deleteIndexSet = indexSet
-                        showingDeleteConfirmation = true
+                        if let index = indexSet.first, index < habits.count {
+                            habitToDelete = habits[index]
+                            showingDeleteConfirmation = true
+                        }
                     }
                 }
                 .navigationTitle("Habit Tracker")
@@ -87,11 +93,14 @@ struct HabitTrackerView: View {
                     isPresented: $showingDeleteConfirmation,
                     actions: {
                         Button("Delete", role: .destructive) {
-                            if let indexSet = deleteIndexSet {
-                                viewModel.removeHabit(at: indexSet)
+                            if let habit = habitToDelete {
+                                viewModel?.removeHabit(habit)
                             }
+                            habitToDelete = nil
                         }
-                        Button("Cancel", role: .cancel) {}
+                        Button("Cancel", role: .cancel) {
+                            habitToDelete = nil
+                        }
                     }
                 )
             }
@@ -99,18 +108,36 @@ struct HabitTrackerView: View {
         .alert("Rename Habit", isPresented: $showingRenameAlert) {
             TextField("New Habit Name", text: $newHabitNameForRename)
             Button("Rename") {
-                if let id = renameHabitID {
-                    viewModel.renameHabit(id: id, newName: newHabitNameForRename)
+                if let id = renameHabitID,
+                   let habit = habits.first(where: { $0.id == id }) {
+                    viewModel?.renameHabit(habit, newName: newHabitNameForRename)
                 }
                 newHabitNameForRename = ""
             }
             Button("Cancel", role: .cancel, action: {})
         }
+        .onAppear {
+            if viewModel == nil {
+                viewModel = HabitViewModel(modelContext: modelContext)
+            }
+            if !hasMigrated {
+                MigrationManager.migrateIfNeeded(context: modelContext)
+                hasMigrated = true
+            }
+        }
     }
 
-    // Helper functions
+    // MARK: - Helpers
 
-    func color(for state: Habit.HabitState) -> Color {
+    private func resolvedWeekRecord(for habit: Habit) -> WeekRecord {
+        guard let vm = viewModel else {
+            // Fallback: should not happen after onAppear
+            return WeekRecord(weekStartDate: Date())
+        }
+        return vm.currentWeekRecord(for: habit)
+    }
+
+    func color(for state: HabitState) -> Color {
         switch state {
         case .notCompleted:
             return Color.gray
@@ -121,7 +148,6 @@ struct HabitTrackerView: View {
         }
     }
 
-    // perhaps I could make a circle class that can be adjusted by parameters instead of doing it all in functional programming
     func todaysColor(day: Int) -> Color {
         if day == currentDayIndex {
             Color(.yellow).opacity(1)
@@ -130,19 +156,9 @@ struct HabitTrackerView: View {
         }
     }
 
-    func handleTap(index: Int, for days: inout [Habit.HabitState]) {
-        if days[index] == .completed {
-            days[index] = .failed
-        } else if days[index] == .failed {
-            days[index] = .notCompleted
-        } else {
-            days[index] = .completed
-        }
-    }
-
     func addNewHabit() {
         guard !newHabitName.isEmpty else { return }
-        viewModel.addHabit(name: newHabitName)
+        viewModel?.addHabit(name: newHabitName)
         newHabitName = ""
     }
 
@@ -154,12 +170,12 @@ struct HabitTrackerView: View {
 }
 
 struct LineConnectingConsecutiveDays: View {
-    let days: [Habit.HabitState]
+    let days: [HabitState]
     let geometry: GeometryProxy
 
     private var dayPositions: [CGPoint] {
         let diameter: CGFloat = 30
-        let spacing: CGFloat = 10 // Adjust spacing between days if needed
+        let spacing: CGFloat = 10
         let circleWidth = diameter + spacing
 
         return (0..<7).map { index in
@@ -167,7 +183,6 @@ struct LineConnectingConsecutiveDays: View {
                     y: geometry.size.height / 2 + 4.78)
         }
     }
-
 
     var body: some View {
         Path { path in
@@ -180,18 +195,12 @@ struct LineConnectingConsecutiveDays: View {
                 }
             }
         }
-        .stroke(Color.green, lineWidth: 9.2) // Adjust the line color and width
+        .stroke(Color.green, lineWidth: 9.2)
         .shadow(color: Color.green.opacity(0.15), radius: 3)
-    }
-}
-
-// Preview
-struct HabitTrackerView_Previews: PreviewProvider {
-    static var previews: some View {
-        HabitTrackerView()
     }
 }
 
 #Preview {
     HabitTrackerView()
+        .modelContainer(for: Habit.self, inMemory: true)
 }

@@ -17,6 +17,9 @@
 		08C6A6B72C5AC8660001A26D /* SimpleHabitTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B62C5AC8660001A26D /* SimpleHabitTrackerUITests.swift */; };
 		08C6A6B92C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */; };
 		08E202542C5E9D6F0054A4AD /* HabitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E202532C5E9D6F0054A4AD /* HabitModel.swift */; };
+		AA0001012D00000100000001 /* HabitState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001002D00000100000001 /* HabitState.swift */; };
+		AA0001032D00000100000002 /* WeekRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001022D00000100000002 /* WeekRecord.swift */; };
+		AA0001052D00000100000003 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001042D00000100000003 /* MigrationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +53,9 @@
 		08C6A6B62C5AC8660001A26D /* SimpleHabitTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerUITests.swift; sourceTree = "<group>"; };
 		08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		08E202532C5E9D6F0054A4AD /* HabitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitModel.swift; sourceTree = "<group>"; };
+		AA0001002D00000100000001 /* HabitState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitState.swift; sourceTree = "<group>"; };
+		AA0001022D00000100000002 /* WeekRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekRecord.swift; sourceTree = "<group>"; };
+		AA0001042D00000100000003 /* MigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,9 +103,28 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		AA0001062D00000100000004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AA0001002D00000100000001 /* HabitState.swift */,
+				AA0001022D00000100000002 /* WeekRecord.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AA0001072D00000100000005 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				AA0001042D00000100000003 /* MigrationManager.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		08C6A69A2C5AC8640001A26D /* SimpleHabitTracker */ = {
 			isa = PBXGroup;
 			children = (
+				AA0001062D00000100000004 /* Models */,
+				AA0001072D00000100000005 /* Utilities */,
 				08E202532C5E9D6F0054A4AD /* HabitModel.swift */,
 				08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */,
 				08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */,
@@ -271,6 +296,9 @@
 				08C6A69E2C5AC8640001A26D /* HabitTrackerView.swift in Sources */,
 				08C6A69C2C5AC8640001A26D /* SimpleHabitTrackerApp.swift in Sources */,
 				087672852D28603500683FA2 /* HabitViewModel.swift in Sources */,
+				AA0001012D00000100000001 /* HabitState.swift in Sources */,
+				AA0001032D00000100000002 /* WeekRecord.swift in Sources */,
+				AA0001052D00000100000003 /* MigrationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
