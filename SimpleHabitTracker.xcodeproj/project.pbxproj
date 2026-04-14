@@ -24,6 +24,7 @@
 		BB0002032E00000200000002 /* WeekNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0002022E00000200000002 /* WeekNavigationView.swift */; };
 		CC0003012F00000300000001 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0003002F00000300000001 /* PurchaseManager.swift */; };
 		CC0003032F00000300000002 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0003022F00000300000002 /* PaywallView.swift */; };
+		DD0004013000000400000001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0004003000000400000001 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		BB0002022E00000200000002 /* WeekNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekNavigationView.swift; sourceTree = "<group>"; };
 		CC0003002F00000300000001 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		CC0003022F00000300000002 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		DD0004003000000400000001 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 			children = (
 				BB0002002E00000200000001 /* HabitRowView.swift */,
 				CC0003022F00000300000002 /* PaywallView.swift */,
+				DD0004003000000400000001 /* SettingsView.swift */,
 				BB0002022E00000200000002 /* WeekNavigationView.swift */,
 			);
 			path = Views;
@@ -323,6 +326,7 @@
 				BB0002032E00000200000002 /* WeekNavigationView.swift in Sources */,
 				CC0003012F00000300000001 /* PurchaseManager.swift in Sources */,
 				CC0003032F00000300000002 /* PaywallView.swift in Sources */,
+				DD0004013000000400000001 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

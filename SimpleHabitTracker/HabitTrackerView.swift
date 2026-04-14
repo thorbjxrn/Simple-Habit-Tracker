@@ -69,6 +69,13 @@ struct HabitTrackerView: View {
                 }
                 .navigationTitle("Habit Tracker")
                 .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        NavigationLink {
+                            SettingsView()
+                        } label: {
+                            Image(systemName: "gearshape")
+                        }
+                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
                             if viewModel?.canAddHabit(isPremium: purchaseManager.isPremium) == true {

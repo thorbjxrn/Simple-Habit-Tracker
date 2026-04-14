@@ -149,4 +149,12 @@ final class PurchaseManager {
         isPremium = newValue
         UserDefaults.standard.set(newValue, forKey: Self.isPremiumKey)
     }
+
+    // MARK: - Debug
+
+    #if DEBUG
+    func debugTogglePremium() {
+        updatePremiumStatus(!isPremium)
+    }
+    #endif
 }
