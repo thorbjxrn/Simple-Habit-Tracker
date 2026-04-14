@@ -89,7 +89,8 @@ struct TrendGraphPanel: View {
                                 }
                             }
                         }
-                        .frame(minWidth: geo.size.width - 48, alignment: .center)
+                        .padding(.trailing, nameWidth)
+                        .frame(minWidth: geo.size.width, alignment: .center)
                     }
                     // Legend
                     HStack(spacing: 6) {
