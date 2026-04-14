@@ -16,8 +16,8 @@ final class PurchaseManager {
     private var transactionListener: Task<Void, Never>?
 
     init() {
-        // Load cached value for fast startup
-        isPremium = UserDefaults.standard.bool(forKey: Self.isPremiumKey)
+        // Start with false - don't trust cache until verified
+        isPremium = false
 
         // Start listening for transaction updates
         transactionListener = listenForTransactions()

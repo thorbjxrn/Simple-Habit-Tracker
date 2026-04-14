@@ -5,7 +5,7 @@ struct HabitTrackerView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(PurchaseManager.self) private var purchaseManager
-    @Environment(AdManager.self) private var adManager: AdManager?
+    @Environment(AdManager.self) private var adManager
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
 
     @State private var viewModel: HabitViewModel?
@@ -83,7 +83,7 @@ struct HabitTrackerView: View {
 
             if !hasCheckedInterstitialOnAppear {
                 hasCheckedInterstitialOnAppear = true
-                adManager?.requestTrackingPermissionIfNeeded()
+                adManager.requestTrackingPermissionIfNeeded()
             }
         }
     }
@@ -113,7 +113,7 @@ struct HabitTrackerView: View {
                 }
 
                 // MARK: - Banner Ad
-                if adManager?.shouldShowBanner == true {
+                if adManager.shouldShowBanner {
                     BannerAdView()
                         .frame(height: 50)
                 }
@@ -184,8 +184,8 @@ struct HabitTrackerView: View {
         }
         .onChange(of: displayedWeekOffset) { oldValue, newValue in
             if newValue < oldValue, newValue < 0 {
-                if adManager?.onHistoryNavigation() == true {
-                    adManager?.showInterstitialIfReady()
+                if adManager.onHistoryNavigation() {
+                    adManager.showInterstitialIfReady()
                 }
             }
             // Show paywall when swiping past the free tier limit
@@ -241,6 +241,10 @@ struct HabitTrackerView: View {
     private func weekRecordForOffset(habit: Habit, offset: Int) -> WeekRecord {
         guard let vm = viewModel else {
             return WeekRecord(weekStartDate: Date())
+        }
+        // Don't create records for the hidden paywall page
+        if !purchaseManager.isPremium && offset == minWeekOffset {
+            return WeekRecord(weekStartDate: vm.weekStartDate(for: Date()))
         }
         return vm.weekRecord(for: habit, weekOffset: offset)
     }

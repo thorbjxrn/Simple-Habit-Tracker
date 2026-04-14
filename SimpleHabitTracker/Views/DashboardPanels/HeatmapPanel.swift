@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-struct TrendGraphPanel: View {
+struct HeatmapPanel: View {
     let viewModel: HabitViewModel
     let isPremium: Bool
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]

@@ -5,7 +5,8 @@ struct BannerAdView: UIViewRepresentable {
     #if DEBUG
     private let adUnitID = "ca-app-pub-3940256099942544/2435281174"
     #else
-    private let adUnitID = "ca-app-pub-3940256099942544/2435281174" // Replace with real ID before release
+    #warning("Replace with real AdMob banner ad unit ID before release")
+    private let adUnitID = "ca-app-pub-3940256099942544/2435281174"
     #endif
 
     func makeUIView(context: Context) -> BannerView {

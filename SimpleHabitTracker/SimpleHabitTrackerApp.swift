@@ -5,12 +5,16 @@ import GoogleMobileAds
 @main
 struct SimpleHabitTrackerApp: App {
     let modelContainer: ModelContainer
-    @State private var purchaseManager = PurchaseManager()
-    @State private var adManager: AdManager?
+    @State private var purchaseManager: PurchaseManager
+    @State private var adManager: AdManager
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @State private var showOnboarding = false
 
     init() {
+        let pm = PurchaseManager()
+        _purchaseManager = State(initialValue: pm)
+        _adManager = State(initialValue: AdManager(purchaseManager: pm))
+
         let iCloudEnabled = UserDefaults.standard.bool(forKey: "iCloudSyncEnabled")
         let isPremium = UserDefaults.standard.bool(forKey: "isPremiumCached")
 
@@ -25,6 +29,9 @@ struct SimpleHabitTrackerApp: App {
             fatalError("Failed to create ModelContainer: \(error)")
         }
 
+        #if !DEBUG
+        #warning("Replace GADApplicationIdentifier in Info.plist with real AdMob App ID before release")
+        #endif
         MobileAds.shared.start()
     }
 
@@ -32,11 +39,6 @@ struct SimpleHabitTrackerApp: App {
         WindowGroup {
             HabitTrackerView()
                 .environment(purchaseManager)
-                .task {
-                    if adManager == nil {
-                        adManager = AdManager(purchaseManager: purchaseManager)
-                    }
-                }
                 .environment(adManager)
                 .onAppear {
                     if !hasCompletedOnboarding {

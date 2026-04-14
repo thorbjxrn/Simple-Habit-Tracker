@@ -2,6 +2,7 @@ import Foundation
 import SwiftData
 
 @Observable
+@MainActor
 final class HabitViewModel {
     private let modelContext: ModelContext
 

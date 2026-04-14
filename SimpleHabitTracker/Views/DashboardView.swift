@@ -13,7 +13,7 @@ struct DashboardView: View {
         if hasAnyData {
             TabView {
                 MonthlyCalendarPanel(viewModel: viewModel, habits: habits, isPremium: isPremium)
-                TrendGraphPanel(viewModel: viewModel, isPremium: isPremium)
+                HeatmapPanel(viewModel: viewModel, isPremium: isPremium)
                 StatsPanel(viewModel: viewModel)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
