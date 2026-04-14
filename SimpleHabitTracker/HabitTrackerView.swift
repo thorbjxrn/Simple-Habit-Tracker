@@ -165,7 +165,7 @@ struct HabitTrackerView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         if viewModel?.canAddHabit(isPremium: purchaseManager.isPremium) == true {
-                            habitPlaceholder = Self.placeholders.randomElement() ?? "Habit Name"
+                            habitPlaceholder = Self.placeholders.filter { $0 != habitPlaceholder }.randomElement() ?? "Habit Name"
                             showingAddHabitAlert = true
                         } else {
                             showPaywall = true
