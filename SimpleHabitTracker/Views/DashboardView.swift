@@ -16,8 +16,8 @@ struct DashboardView: View {
                 TrendGraphPanel(viewModel: viewModel, isPremium: isPremium)
                 StatsPanel(viewModel: viewModel)
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .indexViewStyle(.page(backgroundDisplayMode: .always))
+            .tabViewStyle(.page(indexDisplayMode: .automatic))
+            .indexViewStyle(.page(backgroundDisplayMode: .automatic))
         } else {
             VStack(spacing: 16) {
                 Image(systemName: "chart.bar.fill")
