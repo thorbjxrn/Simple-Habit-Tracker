@@ -7,6 +7,8 @@ struct SimpleHabitTrackerApp: App {
     let modelContainer: ModelContainer
     @State private var purchaseManager = PurchaseManager()
     @State private var adManager: AdManager?
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @State private var showOnboarding = false
 
     init() {
         let iCloudEnabled = UserDefaults.standard.bool(forKey: "iCloudSyncEnabled")
@@ -36,6 +38,17 @@ struct SimpleHabitTrackerApp: App {
                     }
                 }
                 .environment(adManager)
+                .onAppear {
+                    if !hasCompletedOnboarding {
+                        showOnboarding = true
+                    }
+                }
+                .fullScreenCover(isPresented: $showOnboarding) {
+                    OnboardingView {
+                        hasCompletedOnboarding = true
+                        showOnboarding = false
+                    }
+                }
         }
         .modelContainer(modelContainer)
     }

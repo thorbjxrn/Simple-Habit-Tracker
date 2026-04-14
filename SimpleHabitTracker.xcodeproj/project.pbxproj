@@ -33,6 +33,7 @@
 		GG0007033300000700000002 /* MonthlyCalendarPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007023300000700000002 /* MonthlyCalendarPanel.swift */; };
 		GG0007053300000700000003 /* TrendGraphPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007043300000700000003 /* TrendGraphPanel.swift */; };
 		GG0007073300000700000004 /* StatsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007063300000700000004 /* StatsPanel.swift */; };
+		HH0008013400000800000001 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH0008003400000800000001 /* OnboardingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +84,7 @@
 		GG0007023300000700000002 /* MonthlyCalendarPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyCalendarPanel.swift; sourceTree = "<group>"; };
 		GG0007043300000700000003 /* TrendGraphPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendGraphPanel.swift; sourceTree = "<group>"; };
 		GG0007063300000700000004 /* StatsPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsPanel.swift; sourceTree = "<group>"; };
+		HH0008003400000800000001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +168,7 @@
 				EE0005023100000500000002 /* BannerAdView.swift */,
 				GG0007003300000700000001 /* DashboardView.swift */,
 				BB0002002E00000200000001 /* HabitRowView.swift */,
+				HH0008003400000800000001 /* OnboardingView.swift */,
 				CC0003022F00000300000002 /* PaywallView.swift */,
 				DD0004003000000400000001 /* SettingsView.swift */,
 				BB0002022E00000200000002 /* WeekNavigationView.swift */,
@@ -369,6 +372,7 @@
 				GG0007033300000700000002 /* MonthlyCalendarPanel.swift in Sources */,
 				GG0007053300000700000003 /* TrendGraphPanel.swift in Sources */,
 				GG0007073300000700000004 /* StatsPanel.swift in Sources */,
+				HH0008013400000800000001 /* OnboardingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
