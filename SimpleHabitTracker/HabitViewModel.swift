@@ -35,6 +35,22 @@ final class HabitViewModel {
         save()
     }
 
+    // MARK: - Weekly Goals
+
+    func setWeeklyGoal(for habit: Habit, target: Int?) {
+        habit.targetDaysPerWeek = target
+        save()
+    }
+
+    func weeklyCompletionCount(for habit: Habit, weekRecord: WeekRecord) -> Int {
+        weekRecord.completedDays.filter { $0 == .completed }.count
+    }
+
+    func isWeeklyGoalMet(for habit: Habit, weekRecord: WeekRecord) -> Bool? {
+        guard let target = habit.targetDaysPerWeek else { return nil }
+        return weeklyCompletionCount(for: habit, weekRecord: weekRecord) >= target
+    }
+
     // MARK: - Day Toggle
 
     func toggleDay(weekRecord: WeekRecord, dayIndex: Int) {

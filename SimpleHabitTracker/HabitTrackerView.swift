@@ -18,6 +18,9 @@ struct HabitTrackerView: View {
     @State private var displayedWeekOffset: Int = 0
     @State private var showPaywall: Bool = false
     @State private var hasCheckedInterstitialOnAppear = false
+    @State private var showingWeeklyGoalSheet = false
+    @State private var weeklyGoalHabit: Habit?
+    @State private var selectedWeeklyGoal: Int = 0
 
     private var isCurrentWeek: Bool {
         displayedWeekOffset == 0
@@ -57,7 +60,11 @@ struct HabitTrackerView: View {
                             },
                             onRename: { id, currentName in
                                 renameHabit(id: id, currentName: currentName)
-                            }
+                            },
+                            onSetWeeklyGoal: { habit in
+                                presentWeeklyGoalSheet(for: habit)
+                            },
+                            isPremium: purchaseManager.isPremium
                         )
                     }
                     .onDelete { indexSet in
@@ -131,6 +138,9 @@ struct HabitTrackerView: View {
         .sheet(isPresented: $showPaywall) {
             PaywallView(purchaseManager: purchaseManager)
         }
+        .sheet(isPresented: $showingWeeklyGoalSheet) {
+            weeklyGoalSheet
+        }
         .onAppear {
             if viewModel == nil {
                 viewModel = HabitViewModel(modelContext: modelContext)
@@ -173,6 +183,46 @@ struct HabitTrackerView: View {
         newHabitNameForRename = currentName
         renameHabitID = id
         showingRenameAlert = true
+    }
+
+    func presentWeeklyGoalSheet(for habit: Habit) {
+        weeklyGoalHabit = habit
+        selectedWeeklyGoal = habit.targetDaysPerWeek ?? 0
+        showingWeeklyGoalSheet = true
+    }
+
+    // MARK: - Weekly Goal Sheet
+
+    private var weeklyGoalSheet: some View {
+        NavigationStack {
+            Form {
+                Picker("Days per Week", selection: $selectedWeeklyGoal) {
+                    Text("No Goal").tag(0)
+                    ForEach(1...7, id: \.self) { count in
+                        Text("\(count) \(count == 1 ? "day" : "days")").tag(count)
+                    }
+                }
+                .pickerStyle(.inline)
+            }
+            .navigationTitle("Weekly Goal")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        showingWeeklyGoalSheet = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        if let habit = weeklyGoalHabit {
+                            viewModel?.setWeeklyGoal(for: habit, target: selectedWeeklyGoal == 0 ? nil : selectedWeeklyGoal)
+                        }
+                        showingWeeklyGoalSheet = false
+                    }
+                }
+            }
+        }
+        .presentationDetents([.medium])
     }
 }
 
