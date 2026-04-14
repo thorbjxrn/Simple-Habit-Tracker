@@ -39,60 +39,68 @@ struct TrendGraphPanel: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 } else {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        VStack(alignment: .leading, spacing: spacing) {
-                            // Week header row
-                            HStack(spacing: spacing) {
-                                Color.clear.frame(width: nameWidth, height: cellSize * 0.5)
+                    HStack(spacing: 0) {
+                        // Habit names column (fixed)
+                        VStack(alignment: .trailing, spacing: spacing) {
+                            Color.clear.frame(height: cellSize * 0.5) // header spacer
 
-                                if !isPremium {
-                                    ForEach(0..<lockedColumns, id: \.self) { _ in
-                                        Color.clear.frame(width: cellSize, height: cellSize * 0.5)
-                                    }
-                                }
-
-                                ForEach(heatMapWeeks, id: \.self) { weekStart in
-                                    Text(weekLabel(for: weekStart))
-                                        .font(.system(size: min(10, cellSize * 0.4)))
-                                        .foregroundStyle(.tertiary)
-                                        .frame(width: cellSize, height: cellSize * 0.5)
-                                }
-                            }
-
-                            // One row per habit
                             ForEach(habits) { habit in
-                                HStack(spacing: spacing) {
-                                    Text(habit.name)
-                                        .font(.system(size: min(12, cellSize * 0.5)))
-                                        .foregroundStyle(.secondary)
-                                        .frame(width: nameWidth, alignment: .trailing)
+                                Text(habit.name)
+                                    .font(.system(size: min(12, cellSize * 0.5)))
+                                    .foregroundStyle(.secondary)
+                                    .frame(height: cellSize)
+                            }
+                        }
+                        .frame(width: nameWidth)
+                        .padding(.trailing, 8)
 
-                                    // Locked columns on the left (older history)
+                        // Tiles (scrollable, centered)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            VStack(alignment: .leading, spacing: spacing) {
+                                // Week header row
+                                HStack(spacing: spacing) {
                                     if !isPremium {
                                         ForEach(0..<lockedColumns, id: \.self) { _ in
-                                            RoundedRectangle(cornerRadius: 3)
-                                                .fill(Color.gray.opacity(0.1))
-                                                .frame(width: cellSize, height: cellSize)
-                                                .overlay {
-                                                    Image(systemName: "lock.fill")
-                                                        .font(.system(size: min(10, cellSize * 0.3)))
-                                                        .foregroundStyle(.secondary.opacity(0.4))
-                                                }
+                                            Color.clear.frame(width: cellSize, height: cellSize * 0.5)
                                         }
                                     }
 
                                     ForEach(heatMapWeeks, id: \.self) { weekStart in
-                                        let count = completionCount(habit: habit, weekStart: weekStart)
-                                        RoundedRectangle(cornerRadius: 3)
-                                            .fill(heatColor(count: count))
-                                            .frame(width: cellSize, height: cellSize)
+                                        Text(weekLabel(for: weekStart))
+                                            .font(.system(size: min(10, cellSize * 0.4)))
+                                            .foregroundStyle(.tertiary)
+                                            .frame(width: cellSize, height: cellSize * 0.5)
+                                    }
+                                }
+
+                                // Tile rows
+                                ForEach(habits) { habit in
+                                    HStack(spacing: spacing) {
+                                        if !isPremium {
+                                            ForEach(0..<lockedColumns, id: \.self) { _ in
+                                                RoundedRectangle(cornerRadius: 3)
+                                                    .fill(Color.gray.opacity(0.1))
+                                                    .frame(width: cellSize, height: cellSize)
+                                                    .overlay {
+                                                        Image(systemName: "lock.fill")
+                                                            .font(.system(size: min(10, cellSize * 0.3)))
+                                                            .foregroundStyle(.secondary.opacity(0.4))
+                                                    }
+                                            }
+                                        }
+
+                                        ForEach(heatMapWeeks, id: \.self) { weekStart in
+                                            let count = completionCount(habit: habit, weekStart: weekStart)
+                                            RoundedRectangle(cornerRadius: 3)
+                                                .fill(heatColor(count: count))
+                                                .frame(width: cellSize, height: cellSize)
+                                        }
                                     }
                                 }
                             }
                         }
-                        .frame(minWidth: geo.size.width - 48)
+                        .defaultScrollAnchor(.trailing)
                     }
-                    .defaultScrollAnchor(.trailing)
 
                     // Legend
                     HStack(spacing: 6) {
