@@ -79,9 +79,18 @@ final class HabitViewModel {
     func weekRecord(for habit: Habit, weekOffset: Int) -> WeekRecord {
         let targetDate = dateForWeekOffset(weekOffset)
         let startOfWeek = weekStartDate(for: targetDate)
+        let calendar = Calendar.current
 
-        if let existing = habit.weekRecords.first(where: {
-            Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
+        // Use explicit fetch instead of lazy-loaded relationship
+        let habitID = habit.persistentModelID
+        let descriptor = FetchDescriptor<WeekRecord>(
+            predicate: #Predicate<WeekRecord> { record in
+                record.habit?.persistentModelID == habitID
+            }
+        )
+        let records = (try? modelContext.fetch(descriptor)) ?? []
+        if let existing = records.first(where: {
+            calendar.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
         }) {
             return existing
         }
