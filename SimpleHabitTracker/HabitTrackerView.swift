@@ -124,8 +124,13 @@ struct HabitTrackerView: View {
 
                 // MARK: - Banner Ad
                 if !purchaseManager.isPremium {
-                    BannerAdView()
-                        .frame(height: 50)
+                    VStack(spacing: 0) {
+                        BannerAdView()
+                            .frame(height: 50)
+                        Color(.systemBackground)
+                            .frame(height: 34)
+                    }
+                    .ignoresSafeArea(edges: .bottom)
                 }
             }
             .toolbar {
