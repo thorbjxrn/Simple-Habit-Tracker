@@ -12,7 +12,7 @@ struct DashboardView: View {
     var body: some View {
         if hasAnyData {
             TabView {
-                MonthlyCalendarPanel(viewModel: viewModel, habits: habits)
+                MonthlyCalendarPanel(viewModel: viewModel, habits: habits, isPremium: isPremium)
                 TrendGraphPanel(viewModel: viewModel, isPremium: isPremium)
                 StatsPanel(viewModel: viewModel)
             }

@@ -3,6 +3,7 @@ import SwiftUI
 struct MonthlyCalendarPanel: View {
     let viewModel: HabitViewModel
     let habits: [Habit]
+    let isPremium: Bool
     @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.defaultTheme.rawValue
     @State private var selectedHabitIndex: Int = 0
 
@@ -15,7 +16,10 @@ struct MonthlyCalendarPanel: View {
         return habits[selectedHabitIndex]
     }
 
-    private let monthsBack = 24
+    /// Free: current + last month. Premium: 24 months back.
+    private var monthsBack: Int {
+        isPremium ? 24 : 1
+    }
 
     var body: some View {
         VStack(spacing: 8) {
