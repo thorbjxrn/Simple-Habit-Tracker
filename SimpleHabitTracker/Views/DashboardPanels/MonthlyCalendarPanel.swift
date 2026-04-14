@@ -1,10 +1,9 @@
 import SwiftUI
-import SwiftData
 
 struct MonthlyCalendarPanel: View {
     let viewModel: HabitViewModel
+    let habits: [Habit]
     @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.defaultTheme.rawValue
-    @Query(sort: \Habit.sortOrder) private var habits: [Habit]
 
     private var theme: AppTheme {
         AppTheme.from(rawValue: selectedThemeRaw)

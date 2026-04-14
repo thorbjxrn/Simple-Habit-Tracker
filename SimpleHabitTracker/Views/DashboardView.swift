@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DashboardView: View {
     let viewModel: HabitViewModel
+    let habits: [Habit]
     let isPremium: Bool
 
     private var hasAnyData: Bool {
@@ -11,7 +12,7 @@ struct DashboardView: View {
     var body: some View {
         if hasAnyData {
             TabView {
-                MonthlyCalendarPanel(viewModel: viewModel)
+                MonthlyCalendarPanel(viewModel: viewModel, habits: habits)
                 TrendGraphPanel(viewModel: viewModel, isPremium: isPremium)
                 StatsPanel(viewModel: viewModel)
             }

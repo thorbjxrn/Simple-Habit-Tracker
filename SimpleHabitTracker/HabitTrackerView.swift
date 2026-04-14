@@ -66,6 +66,7 @@ struct HabitTrackerView: View {
             if isLandscape, let vm = viewModel {
                 DashboardView(
                     viewModel: vm,
+                    habits: habits,
                     isPremium: purchaseManager.isPremium
                 )
             } else {
