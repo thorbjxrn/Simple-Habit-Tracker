@@ -22,50 +22,48 @@ struct MonthlyCalendarPanel: View {
 
     var body: some View {
         GeometryReader { geo in
-            let monthWidth = (geo.size.width - 80) / 2 // 24px padding each side + 32px gap
+            let padding: CGFloat = 16
+            let gap: CGFloat = 24
+            let monthWidth = (geo.size.width - padding * 2 - gap) / 2
 
-            VStack {
+            VStack(spacing: 16) {
                 Spacer()
 
-                VStack(spacing: 12) {
-                    // Habit picker
-                    Picker("Habit", selection: $selectedHabitIndex) {
-                        ForEach(Array(habits.enumerated()), id: \.element.id) { index, habit in
-                            Text(habit.name).tag(index)
-                        }
+                // Habit picker
+                Picker("Habit", selection: $selectedHabitIndex) {
+                    ForEach(Array(habits.enumerated()), id: \.element.id) { index, habit in
+                        Text(habit.name).tag(index)
                     }
-                    .pickerStyle(.menu)
-                    .labelsHidden()
-
-                    // Calendar
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        LazyHStack(alignment: .top, spacing: 32) {
-                            if !isPremium {
-                                upgradeCard
-                                    .frame(width: monthWidth)
-                            }
-                            ForEach((-monthsBack)...0, id: \.self) { offset in
-                                SingleMonthView(
-                                    monthOffset: offset,
-                                    viewModel: viewModel,
-                                    habit: selectedHabit,
-                                    theme: theme
-                                )
-                                .frame(width: monthWidth)
-                                .id(offset)
-                            }
-                        }
-                        .scrollTargetLayout()
-                    }
-                    .scrollTargetBehavior(.viewAligned)
-                    .defaultScrollAnchor(.trailing)
-                    .padding(.horizontal, 24)
                 }
-                .frame(maxWidth: .infinity)
+                .pickerStyle(.menu)
+                .labelsHidden()
+
+                // Calendar
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack(alignment: .top, spacing: gap) {
+                        if !isPremium {
+                            upgradeCard
+                                .frame(width: monthWidth)
+                        }
+                        ForEach((-monthsBack)...0, id: \.self) { offset in
+                            SingleMonthView(
+                                monthOffset: offset,
+                                viewModel: viewModel,
+                                habit: selectedHabit,
+                                theme: theme
+                            )
+                            .frame(width: monthWidth)
+                            .id(offset)
+                        }
+                    }
+                    .scrollTargetLayout()
+                }
+                .scrollTargetBehavior(.viewAligned)
+                .defaultScrollAnchor(.trailing)
+                .padding(.horizontal, padding)
 
                 Spacer()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 
@@ -110,14 +108,14 @@ private struct SingleMonthView: View {
         let data = monthData
         VStack(spacing: 4) {
             Text(data.title)
-                .font(.caption)
+                .font(.subheadline)
                 .fontWeight(.bold)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             HStack(spacing: 0) {
                 ForEach(weekdaySymbols, id: \.self) { symbol in
                     Text(symbol)
-                        .font(.system(size: 8))
+                        .font(.system(size: 10))
                         .foregroundStyle(.tertiary)
                         .frame(maxWidth: .infinity)
                 }
@@ -126,7 +124,7 @@ private struct SingleMonthView: View {
             LazyVGrid(columns: columns, spacing: 2) {
                 ForEach(Array(data.days.enumerated()), id: \.offset) { _, info in
                     if info.isPlaceholder {
-                        Color.clear.frame(height: 24)
+                        Color.clear.frame(height: 30)
                     } else {
                         dayCell(info)
                     }
@@ -139,15 +137,15 @@ private struct SingleMonthView: View {
     private func dayCell(_ info: DayInfo) -> some View {
         VStack(spacing: 2) {
             Text("\(info.day)")
-                .font(.system(size: 9, weight: info.isToday ? .bold : .regular))
+                .font(.system(size: 10, weight: info.isToday ? .bold : .regular))
                 .foregroundStyle(info.isFuture ? .quaternary : (info.isToday ? .primary : .secondary))
 
             Circle()
                 .fill(dotColor(for: info))
-                .frame(width: 8, height: 8)
+                .frame(width: 10, height: 10)
                 .opacity(info.isFuture ? 0 : 1)
         }
-        .frame(height: 24)
+        .frame(height: 30)
         .frame(maxWidth: .infinity)
         .contentShape(Rectangle())
         .onTapGesture {
