@@ -106,6 +106,7 @@
 		AA0001062D00000100000004 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				08E202532C5E9D6F0054A4AD /* HabitModel.swift */,
 				AA0001002D00000100000001 /* HabitState.swift */,
 				AA0001022D00000100000002 /* WeekRecord.swift */,
 			);
@@ -125,7 +126,6 @@
 			children = (
 				AA0001062D00000100000004 /* Models */,
 				AA0001072D00000100000005 /* Utilities */,
-				08E202532C5E9D6F0054A4AD /* HabitModel.swift */,
 				08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */,
 				08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */,
 				087672842D28603500683FA2 /* HabitViewModel.swift */,

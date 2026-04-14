@@ -13,8 +13,6 @@ struct HabitTrackerView: View {
     @State private var showingRenameAlert = false
     @State private var renameHabitID: UUID?
     @State private var newHabitNameForRename = ""
-    @State private var hasMigrated = false
-
     private var currentDayIndex: Int {
         var calendar = Calendar.current
         calendar.locale = Locale.current
@@ -119,10 +117,6 @@ struct HabitTrackerView: View {
         .onAppear {
             if viewModel == nil {
                 viewModel = HabitViewModel(modelContext: modelContext)
-            }
-            if !hasMigrated {
-                MigrationManager.migrateIfNeeded(context: modelContext)
-                hasMigrated = true
             }
         }
     }
