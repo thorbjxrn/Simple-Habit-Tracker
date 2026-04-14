@@ -188,9 +188,6 @@ struct HabitTrackerView: View {
             // Show paywall when swiping past the free tier limit
             if !purchaseManager.isPremium && newValue == minWeekOffset {
                 showPaywall = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    withAnimation { displayedWeekOffset = minWeekOffset + 1 }
-                }
             }
         }
     }
