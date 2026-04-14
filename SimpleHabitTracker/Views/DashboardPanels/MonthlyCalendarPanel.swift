@@ -17,7 +17,7 @@ struct MonthlyCalendarPanel: View {
     }
 
     private var monthsBack: Int {
-        isPremium ? 24 : 1
+        isPremium ? 24 : 0
     }
 
     var body: some View {
