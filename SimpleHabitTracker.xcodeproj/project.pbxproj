@@ -29,6 +29,10 @@
 		EE0005033100000500000002 /* BannerAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0005023100000500000002 /* BannerAdView.swift */; };
 		EE0005053100000500000003 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EE0005043100000500000003 /* PrivacyInfo.xcprivacy */; };
 		FF0006013200000600000001 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0006003200000600000001 /* ThemeManager.swift */; };
+		GG0007013300000700000001 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007003300000700000001 /* DashboardView.swift */; };
+		GG0007033300000700000002 /* MonthlyCalendarPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007023300000700000002 /* MonthlyCalendarPanel.swift */; };
+		GG0007053300000700000003 /* TrendGraphPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007043300000700000003 /* TrendGraphPanel.swift */; };
+		GG0007073300000700000004 /* StatsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007063300000700000004 /* StatsPanel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +79,10 @@
 		EE0005043100000500000003 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		EE0005063100000500000004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FF0006003200000600000001 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		GG0007003300000700000001 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		GG0007023300000700000002 /* MonthlyCalendarPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyCalendarPanel.swift; sourceTree = "<group>"; };
+		GG0007043300000700000003 /* TrendGraphPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendGraphPanel.swift; sourceTree = "<group>"; };
+		GG0007063300000700000004 /* StatsPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsPanel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,10 +149,22 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
+		GG0007083300000700000005 /* DashboardPanels */ = {
+			isa = PBXGroup;
+			children = (
+				GG0007023300000700000002 /* MonthlyCalendarPanel.swift */,
+				GG0007043300000700000003 /* TrendGraphPanel.swift */,
+				GG0007063300000700000004 /* StatsPanel.swift */,
+			);
+			path = DashboardPanels;
+			sourceTree = "<group>";
+		};
 		BB0002042E00000200000003 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				GG0007083300000700000005 /* DashboardPanels */,
 				EE0005023100000500000002 /* BannerAdView.swift */,
+				GG0007003300000700000001 /* DashboardView.swift */,
 				BB0002002E00000200000001 /* HabitRowView.swift */,
 				CC0003022F00000300000002 /* PaywallView.swift */,
 				DD0004003000000400000001 /* SettingsView.swift */,
@@ -345,6 +365,10 @@
 				EE0005013100000500000001 /* AdManager.swift in Sources */,
 				EE0005033100000500000002 /* BannerAdView.swift in Sources */,
 				FF0006013200000600000001 /* ThemeManager.swift in Sources */,
+				GG0007013300000700000001 /* DashboardView.swift in Sources */,
+				GG0007033300000700000002 /* MonthlyCalendarPanel.swift in Sources */,
+				GG0007053300000700000003 /* TrendGraphPanel.swift in Sources */,
+				GG0007073300000700000004 /* StatsPanel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

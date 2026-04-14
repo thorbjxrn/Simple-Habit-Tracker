@@ -3,6 +3,7 @@ import SwiftData
 
 struct HabitTrackerView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(PurchaseManager.self) private var purchaseManager
     @Environment(AdManager.self) private var adManager: AdManager?
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
@@ -21,6 +22,7 @@ struct HabitTrackerView: View {
     @State private var showingWeeklyGoalSheet = false
     @State private var weeklyGoalHabit: Habit?
     @State private var selectedWeeklyGoal: Int = 0
+    @State private var isLandscape: Bool = false
 
     private var isCurrentWeek: Bool {
         displayedWeekOffset == 0
@@ -36,6 +38,40 @@ struct HabitTrackerView: View {
     }
 
     var body: some View {
+        Group {
+            if isLandscape, let vm = viewModel {
+                DashboardView(
+                    viewModel: vm,
+                    isPremium: purchaseManager.isPremium
+                )
+            } else {
+                habitListView
+            }
+        }
+        .onAppear {
+            if viewModel == nil {
+                viewModel = HabitViewModel(modelContext: modelContext)
+            }
+
+            // Show interstitial on app open (only once per appear)
+            if !hasCheckedInterstitialOnAppear {
+                hasCheckedInterstitialOnAppear = true
+                if let adManager, adManager.shouldShowInterstitial {
+                    adManager.showInterstitialIfReady()
+                }
+                adManager?.requestTrackingPermissionIfNeeded()
+            }
+
+            updateOrientation()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+            updateOrientation()
+        }
+    }
+
+    // MARK: - Habit List View (Portrait)
+
+    private var habitListView: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 WeekNavigationView(
@@ -141,26 +177,24 @@ struct HabitTrackerView: View {
         .sheet(isPresented: $showingWeeklyGoalSheet) {
             weeklyGoalSheet
         }
-        .onAppear {
-            if viewModel == nil {
-                viewModel = HabitViewModel(modelContext: modelContext)
-            }
-
-            // Show interstitial on app open (only once per appear)
-            if !hasCheckedInterstitialOnAppear {
-                hasCheckedInterstitialOnAppear = true
-                if let adManager, adManager.shouldShowInterstitial {
-                    adManager.showInterstitialIfReady()
-                }
-                adManager?.requestTrackingPermissionIfNeeded()
-            }
-        }
         .onChange(of: displayedWeekOffset) { oldValue, newValue in
             // Show interstitial when navigating to past weeks
             if newValue < oldValue, newValue < 0 {
                 adManager?.showInterstitialIfReady()
             }
         }
+    }
+
+    // MARK: - Orientation
+
+    private func updateOrientation() {
+        let orientation = UIDevice.current.orientation
+        if orientation.isLandscape {
+            isLandscape = true
+        } else if orientation.isPortrait {
+            isLandscape = false
+        }
+        // .unknown / .faceUp / .faceDown: keep current value
     }
 
     // MARK: - Helpers
