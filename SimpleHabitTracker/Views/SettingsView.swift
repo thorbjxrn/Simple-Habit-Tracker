@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(PurchaseManager.self) private var purchaseManager
     @Environment(\.modelContext) private var modelContext
     @State private var showPaywall = false
+    @AppStorage("todayIndicatorStyle") private var useDotIndicator = false
 
     private var appVersion: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -60,6 +61,10 @@ struct SettingsView: View {
 
     private var appearanceSection: some View {
         Section("Appearance") {
+            Toggle(isOn: $useDotIndicator) {
+                Label("Dot Today Indicator", systemImage: "circle.fill")
+            }
+
             HStack {
                 Label("Themes", systemImage: "paintbrush")
                 Spacer()
@@ -73,7 +78,6 @@ struct SettingsView: View {
                 if !purchaseManager.isPremium {
                     showPaywall = true
                 }
-                // Phase 7 will add actual theme selection
             }
         }
     }

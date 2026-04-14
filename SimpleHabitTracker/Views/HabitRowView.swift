@@ -6,6 +6,7 @@ struct HabitRowView: View {
     let currentDayIndex: Int?
     let onToggle: (Int) -> Void
     let onRename: (UUID, String) -> Void
+    @AppStorage("todayIndicatorStyle") private var useDotIndicator = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -24,19 +25,28 @@ struct HabitRowView: View {
                     let state = weekRecord.completedDays[index]
                     let isToday = currentDayIndex == index
 
-                    Circle()
-                        .fill(color(for: state))
-                        .frame(maxWidth: .infinity)
-                        .aspectRatio(1, contentMode: .fit)
-                        .overlay {
-                            if isToday {
-                                Circle()
-                                    .strokeBorder(Color.yellow, lineWidth: 2.5)
+                    VStack(spacing: 4) {
+                        Circle()
+                            .fill(color(for: state))
+                            .frame(maxWidth: .infinity)
+                            .aspectRatio(1, contentMode: .fit)
+                            .overlay {
+                                if isToday && !useDotIndicator {
+                                    Circle()
+                                        .strokeBorder(Color.yellow, lineWidth: 2.5)
+                                }
                             }
+                            .onTapGesture {
+                                onToggle(index)
+                            }
+
+                        if useDotIndicator {
+                            Circle()
+                                .fill(Color.yellow)
+                                .frame(width: 4, height: 4)
+                                .opacity(isToday ? 1 : 0)
                         }
-                        .onTapGesture {
-                            onToggle(index)
-                        }
+                    }
                 }
             }
         }
