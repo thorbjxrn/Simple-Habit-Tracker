@@ -190,11 +190,13 @@ struct HabitTrackerView: View {
 
     // MARK: - Week Page View
 
-    private var weekPageView: some View {
-        let minOffset = purchaseManager.isPremium ? -52 : -1
+    private var minWeekOffset: Int {
+        purchaseManager.isPremium ? -52 : -1
+    }
 
+    private var weekPageView: some View {
         TabView(selection: $displayedWeekOffset) {
-            ForEach(minOffset...0, id: \.self) { offset in
+            ForEach(minWeekOffset...0, id: \.self) { offset in
                 List {
                     Section {
                         ForEach(habits) { habit in
