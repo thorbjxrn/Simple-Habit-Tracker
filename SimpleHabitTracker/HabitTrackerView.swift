@@ -146,13 +146,8 @@ struct HabitTrackerView: View {
 
                 // MARK: - Banner Ad
                 if adManager?.shouldShowBanner == true {
-                    VStack(spacing: 0) {
-                        BannerAdView()
-                            .frame(height: 50)
-                        Color(.systemBackground)
-                            .frame(height: 34)
-                    }
-                    .ignoresSafeArea(edges: .bottom)
+                    BannerAdView()
+                        .frame(height: 50)
                 }
             }
             .toolbar {
