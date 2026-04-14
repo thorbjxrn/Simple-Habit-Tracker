@@ -90,6 +90,7 @@ struct TrendGraphPanel: View {
                                 }
                             }
                         }
+                        .frame(minWidth: geo.size.width - 48)
                     }
                     .defaultScrollAnchor(.trailing)
 
