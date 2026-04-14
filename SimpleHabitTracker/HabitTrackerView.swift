@@ -83,82 +83,91 @@ struct HabitTrackerView: View {
                     showPaywall: $showPaywall
                 )
 
-                List {
-                    Section {
-                        ForEach(habits) { habit in
-                        let weekRecord = resolvedWeekRecord(for: habit)
-                        HabitRowView(
-                            habit: habit,
-                            weekRecord: weekRecord,
-                            currentDayIndex: currentDayIndex,
-                            onToggle: { dayIndex in
-                                viewModel?.toggleDay(weekRecord: weekRecord, dayIndex: dayIndex)
-                            },
-                            onRename: { id, currentName in
-                                renameHabit(id: id, currentName: currentName)
-                            },
-                            onSetWeeklyGoal: { habit in
-                                presentWeeklyGoalSheet(for: habit)
-                            },
-                            isPremium: purchaseManager.isPremium
-                        )
+                if habits.isEmpty {
+                    ContentUnavailableView {
+                        Label("No Habits", systemImage: "checkmark.circle.badge.plus")
+                    } description: {
+                        Text("Tap + to add your first habit")
                     }
-                    .onDelete { indexSet in
-                        if let index = indexSet.first, index < habits.count {
-                            habitToDelete = habits[index]
-                            showingDeleteConfirmation = true
+                } else {
+                    List {
+                        Section {
+                            ForEach(habits) { habit in
+                            let weekRecord = resolvedWeekRecord(for: habit)
+                            HabitRowView(
+                                habit: habit,
+                                weekRecord: weekRecord,
+                                currentDayIndex: currentDayIndex,
+                                onToggle: { dayIndex in
+                                    viewModel?.toggleDay(weekRecord: weekRecord, dayIndex: dayIndex)
+                                },
+                                onRename: { id, currentName in
+                                    renameHabit(id: id, currentName: currentName)
+                                },
+                                onSetWeeklyGoal: { habit in
+                                    presentWeeklyGoalSheet(for: habit)
+                                },
+                                isPremium: purchaseManager.isPremium
+                            )
                         }
-                    }
-                    } header: {
-                        DayOfWeekHeaderView()
-                    }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        NavigationLink {
-                            SettingsView()
-                        } label: {
-                            Image(systemName: "gearshape")
-                        }
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            if viewModel?.canAddHabit(isPremium: purchaseManager.isPremium) == true {
-                                showingAddHabitAlert = true
-                            } else {
-                                showPaywall = true
+                        .onDelete { indexSet in
+                            if let index = indexSet.first, index < habits.count {
+                                habitToDelete = habits[index]
+                                showingDeleteConfirmation = true
                             }
-                        }) {
-                            Image(systemName: "plus")
+                        }
+                        } header: {
+                            DayOfWeekHeaderView()
                         }
                     }
                 }
-                .alert("Add New Habit", isPresented: $showingAddHabitAlert) {
-                    TextField("Habit Name", text: $newHabitName)
-                    Button("Add", action: addNewHabit)
-                    Button("Cancel", role: .cancel, action: {})
-                }
-                .confirmationDialog(
-                    "Are you sure you want to delete this habit?",
-                    isPresented: $showingDeleteConfirmation,
-                    actions: {
-                        Button("Delete", role: .destructive) {
-                            if let habit = habitToDelete {
-                                viewModel?.removeHabit(habit)
-                            }
-                            habitToDelete = nil
-                        }
-                        Button("Cancel", role: .cancel) {
-                            habitToDelete = nil
-                        }
-                    }
-                )
+
                 // MARK: - Banner Ad
                 if !purchaseManager.isPremium {
                     BannerAdView()
                         .frame(height: 50)
                 }
             }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    NavigationLink {
+                        SettingsView()
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        if viewModel?.canAddHabit(isPremium: purchaseManager.isPremium) == true {
+                            showingAddHabitAlert = true
+                        } else {
+                            showPaywall = true
+                        }
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .alert("Add New Habit", isPresented: $showingAddHabitAlert) {
+                TextField("Habit Name", text: $newHabitName)
+                Button("Add", action: addNewHabit)
+                Button("Cancel", role: .cancel, action: {})
+            }
+            .confirmationDialog(
+                "Are you sure you want to delete this habit?",
+                isPresented: $showingDeleteConfirmation,
+                actions: {
+                    Button("Delete", role: .destructive) {
+                        if let habit = habitToDelete {
+                            viewModel?.removeHabit(habit)
+                        }
+                        habitToDelete = nil
+                    }
+                    Button("Cancel", role: .cancel) {
+                        habitToDelete = nil
+                    }
+                }
+            )
         }
         .alert("Rename Habit", isPresented: $showingRenameAlert) {
             TextField("New Habit Name", text: $newHabitNameForRename)

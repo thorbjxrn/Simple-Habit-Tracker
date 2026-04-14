@@ -86,6 +86,7 @@ struct HabitRowView: View {
                                 }
                             }
                             .onTapGesture {
+                                triggerHaptic(for: state)
                                 onToggle(index)
                             }
 
@@ -124,6 +125,24 @@ struct HabitRowView: View {
             Capsule()
                 .fill(met ? theme.completedColor.opacity(0.15) : Color.secondary.opacity(0.1))
         )
+    }
+
+    // MARK: - Haptics
+
+    private func triggerHaptic(for currentState: HabitState) {
+        switch currentState {
+        case .notCompleted:
+            // Next state will be .completed
+            let generator = UIImpactFeedbackGenerator(style: .light)
+            generator.impactOccurred()
+        case .completed:
+            // Next state will be .failed
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+        case .failed:
+            // Next state will be .notCompleted (reset) — no haptic
+            break
+        }
     }
 
     // MARK: - Helpers

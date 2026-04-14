@@ -5,6 +5,11 @@ struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
     var purchaseManager: PurchaseManager
 
+    private func triggerPurchaseSuccessHaptic() {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -32,6 +37,12 @@ struct PaywallView: View {
                             .font(.title2)
                     }
                 }
+            }
+        }
+        .onChange(of: purchaseManager.isPremium) { _, isPremium in
+            if isPremium {
+                triggerPurchaseSuccessHaptic()
+                dismiss()
             }
         }
     }
