@@ -17,9 +17,14 @@ struct TrendGraphPanel: View {
 
     var body: some View {
         GeometryReader { geo in
-            let cellSize = max(16, min(28, (geo.size.height - 100) / CGFloat(max(habits.count, 1) + 1)))
-            let nameWidth: CGFloat = 80
             let spacing: CGFloat = 3
+            let columnCount = CGFloat(weeksToShow + (isPremium ? 0 : 1)) // +1 for lock column
+            let nameWidth: CGFloat = min(140, geo.size.width * 0.2)
+            let availableWidth = geo.size.width - nameWidth - 48 // padding
+            let availableHeight = geo.size.height - 120 // title, legend, spacing
+            let cellFromWidth = (availableWidth - spacing * columnCount) / columnCount
+            let cellFromHeight = (availableHeight - spacing * CGFloat(max(habits.count, 1))) / CGFloat(max(habits.count, 1) + 1)
+            let cellSize = max(16, min(44, min(cellFromWidth, cellFromHeight)))
 
             VStack(spacing: 16) {
                 Spacer()
@@ -45,9 +50,9 @@ struct TrendGraphPanel: View {
 
                                 ForEach(heatMapWeeks, id: \.self) { weekStart in
                                     Text(weekLabel(for: weekStart))
-                                        .font(.system(size: 8))
+                                        .font(.system(size: min(10, cellSize * 0.4)))
                                         .foregroundStyle(.tertiary)
-                                        .frame(width: cellSize, height: cellSize * 0.6)
+                                        .frame(width: cellSize, height: cellSize * 0.5)
                                 }
                             }
 
@@ -55,10 +60,9 @@ struct TrendGraphPanel: View {
                             ForEach(habits) { habit in
                                 HStack(spacing: spacing) {
                                     Text(habit.name)
-                                        .font(.system(size: 10))
+                                        .font(.system(size: min(12, cellSize * 0.5)))
                                         .foregroundStyle(.secondary)
                                         .frame(width: nameWidth, alignment: .trailing)
-                                        .lineLimit(1)
 
                                     // Lock column on the left (older history)
                                     if !isPremium {
