@@ -12,7 +12,7 @@ struct TrendGraphPanel: View {
     }
 
     private var weeksToShow: Int {
-        isPremium ? 26 : 4
+        isPremium ? 26 : 2
     }
 
     var body: some View {
