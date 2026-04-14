@@ -38,15 +38,16 @@ struct TrendGraphPanel: View {
                             // Week header row
                             HStack(spacing: spacing) {
                                 Color.clear.frame(width: nameWidth, height: cellSize * 0.6)
+
+                                if !isPremium {
+                                    Color.clear.frame(width: cellSize, height: cellSize * 0.6)
+                                }
+
                                 ForEach(heatMapWeeks, id: \.self) { weekStart in
                                     Text(weekLabel(for: weekStart))
                                         .font(.system(size: 8))
                                         .foregroundStyle(.tertiary)
                                         .frame(width: cellSize, height: cellSize * 0.6)
-                                }
-
-                                if !isPremium {
-                                    Color.clear.frame(width: cellSize, height: cellSize * 0.6)
                                 }
                             }
 
@@ -59,14 +60,7 @@ struct TrendGraphPanel: View {
                                         .frame(width: nameWidth, alignment: .trailing)
                                         .lineLimit(1)
 
-                                    ForEach(heatMapWeeks, id: \.self) { weekStart in
-                                        let count = completionCount(habit: habit, weekStart: weekStart)
-                                        RoundedRectangle(cornerRadius: 3)
-                                            .fill(heatColor(count: count))
-                                            .frame(width: cellSize, height: cellSize)
-                                    }
-
-                                    // Upgrade teaser column
+                                    // Lock column on the left (older history)
                                     if !isPremium {
                                         RoundedRectangle(cornerRadius: 3)
                                             .fill(.clear)
@@ -77,10 +71,18 @@ struct TrendGraphPanel: View {
                                                     .foregroundStyle(.secondary)
                                             }
                                     }
+
+                                    ForEach(heatMapWeeks, id: \.self) { weekStart in
+                                        let count = completionCount(habit: habit, weekStart: weekStart)
+                                        RoundedRectangle(cornerRadius: 3)
+                                            .fill(heatColor(count: count))
+                                            .frame(width: cellSize, height: cellSize)
+                                    }
                                 }
                             }
                         }
                     }
+                    .defaultScrollAnchor(.trailing)
 
                     // Legend
                     HStack(spacing: 6) {
