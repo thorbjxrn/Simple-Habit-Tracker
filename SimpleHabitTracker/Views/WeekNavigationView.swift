@@ -78,16 +78,15 @@ struct WeekNavigationView: View {
 
 struct DayOfWeekHeaderView: View {
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             ForEach(dayLabels(), id: \.self) { label in
                 Text(label)
                     .font(.caption2)
                     .fontWeight(.medium)
                     .foregroundColor(.secondary)
-                    .frame(width: 33)
+                    .frame(maxWidth: .infinity)
             }
         }
-        .padding(.horizontal)
     }
 
     private func dayLabels() -> [String] {
@@ -95,7 +94,6 @@ struct DayOfWeekHeaderView: View {
         calendar.locale = Locale.current
         let symbols = calendar.veryShortWeekdaySymbols
         let firstWeekday = calendar.firstWeekday
-        // Reorder symbols to start from the user's first day of week
         var reordered: [String] = []
         for i in 0..<7 {
             let index = (firstWeekday - 1 + i) % 7

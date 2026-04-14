@@ -7,8 +7,10 @@ struct HabitRowView: View {
     let onToggle: (Int) -> Void
     let onRename: (UUID, String) -> Void
 
+    private let circleSize: CGFloat = 33
+
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(habit.name)
                 .lineLimit(nil)
                 .font(.headline)
@@ -19,31 +21,60 @@ struct HabitRowView: View {
                         Label("Rename", systemImage: "pencil")
                     }
                 }
-            GeometryReader { geometry in
-                VStack(alignment: .center, spacing: 0) {
-                    HStack(alignment: .center) {
-                        ForEach(0..<7) { index in
-                            VStack(alignment: .center, spacing: 4.5) {
-                                Circle()
-                                    .fill(color(for: weekRecord.completedDays[index]))
-                                    .frame(width: 33, height: 33)
-                                    .onTapGesture {
-                                        onToggle(index)
-                                    }
-                                Circle()
-                                    .fill(todayIndicatorColor(day: index))
-                                    .frame(width: 3, height: 3, alignment: .center)
-                                    .shadow(color: .yellow, radius: 0.5, y: 0.25)
-                            }
+
+            HStack(spacing: 0) {
+                ForEach(0..<7) { index in
+                    ZStack {
+                        // Streak connector - draws behind the circle
+                        HStack(spacing: 0) {
+                            // Left half connector
+                            Rectangle()
+                                .fill(shouldConnectLeft(index: index) ? Color.green : Color.clear)
+                                .frame(height: 6)
+                                .frame(maxWidth: .infinity)
+
+                            // Right half connector
+                            Rectangle()
+                                .fill(shouldConnectRight(index: index) ? Color.green : Color.clear)
+                                .frame(height: 6)
+                                .frame(maxWidth: .infinity)
+                        }
+
+                        // Circle
+                        VStack(spacing: 4) {
+                            Circle()
+                                .fill(color(for: weekRecord.completedDays[index]))
+                                .frame(width: circleSize, height: circleSize)
+                                .onTapGesture {
+                                    onToggle(index)
+                                }
+
+                            // Today indicator
+                            Circle()
+                                .fill(Color.yellow)
+                                .frame(width: 4, height: 4)
+                                .opacity(currentDayIndex == index ? 1 : 0)
                         }
                     }
-                    .overlay(
-                        LineConnectingConsecutiveDays(days: weekRecord.completedDays, geometry: geometry)
-                    )
+                    .frame(maxWidth: .infinity)
                 }
             }
         }
-        .padding(.vertical, 25)
+        .padding(.vertical, 12)
+    }
+
+    // MARK: - Streak Logic
+
+    private func shouldConnectLeft(index: Int) -> Bool {
+        guard index > 0 else { return false }
+        return weekRecord.completedDays[index] == .completed
+            && weekRecord.completedDays[index - 1] == .completed
+    }
+
+    private func shouldConnectRight(index: Int) -> Bool {
+        guard index < 6 else { return false }
+        return weekRecord.completedDays[index] == .completed
+            && weekRecord.completedDays[index + 1] == .completed
     }
 
     // MARK: - Helpers
@@ -56,17 +87,6 @@ struct HabitRowView: View {
             return Color.green
         case .failed:
             return Color.red
-        }
-    }
-
-    func todayIndicatorColor(day: Int) -> Color {
-        guard let currentDay = currentDayIndex else {
-            return Color(.yellow).opacity(0)
-        }
-        if day == currentDay {
-            return Color(.yellow).opacity(1)
-        } else {
-            return Color(.yellow).opacity(0)
         }
     }
 }

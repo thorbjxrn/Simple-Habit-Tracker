@@ -42,11 +42,9 @@ struct HabitTrackerView: View {
                     showPaywall: $showPaywall
                 )
 
-                DayOfWeekHeaderView()
-                    .padding(.bottom, 4)
-
                 List {
-                    ForEach(habits) { habit in
+                    Section {
+                        ForEach(habits) { habit in
                         let weekRecord = resolvedWeekRecord(for: habit)
                         HabitRowView(
                             habit: habit,
@@ -65,6 +63,9 @@ struct HabitTrackerView: View {
                             habitToDelete = habits[index]
                             showingDeleteConfirmation = true
                         }
+                    }
+                    } header: {
+                        DayOfWeekHeaderView()
                     }
                 }
                 .navigationTitle("Habit Tracker")
@@ -151,37 +152,6 @@ struct HabitTrackerView: View {
         newHabitNameForRename = currentName
         renameHabitID = id
         showingRenameAlert = true
-    }
-}
-
-struct LineConnectingConsecutiveDays: View {
-    let days: [HabitState]
-    let geometry: GeometryProxy
-
-    private var dayPositions: [CGPoint] {
-        let diameter: CGFloat = 30
-        let spacing: CGFloat = 10
-        let circleWidth = diameter + spacing
-
-        return (0..<7).map { index in
-            CGPoint(x: CGFloat(index) * circleWidth + diameter / 2,
-                    y: geometry.size.height / 2 + 4.78)
-        }
-    }
-
-    var body: some View {
-        Path { path in
-            let positions = dayPositions
-
-            for i in 0..<positions.count - 1 {
-                if days[i] == .completed && days[i + 1] == .completed {
-                    path.move(to: positions[i])
-                    path.addLine(to: positions[i + 1])
-                }
-            }
-        }
-        .stroke(Color.green, lineWidth: 9.2)
-        .shadow(color: Color.green.opacity(0.15), radius: 3)
     }
 }
 
