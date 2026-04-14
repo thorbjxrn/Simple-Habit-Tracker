@@ -96,8 +96,8 @@ private struct SingleMonthView: View {
                 HStack(spacing: 2) {
                     ForEach(Array(info.habitStates.prefix(5).enumerated()), id: \.offset) { _, state in
                         Circle()
-                            .fill(colorForState(state))
-                            .frame(width: 5, height: 5)
+                            .fill(calendarDotColor(for: state))
+                            .frame(width: 6, height: 6)
                     }
                 }
             }
@@ -111,11 +111,11 @@ private struct SingleMonthView: View {
         }
     }
 
-    private func colorForState(_ state: HabitState) -> Color {
+    private func calendarDotColor(for state: HabitState) -> Color {
         switch state {
         case .completed: return theme.completedColor
         case .failed: return theme.failedColor
-        case .notCompleted: return theme.notCompletedColor
+        case .notCompleted: return .gray.opacity(0.5)
         }
     }
 
