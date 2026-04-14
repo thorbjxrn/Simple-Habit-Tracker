@@ -109,55 +109,7 @@ struct HabitTrackerView: View {
                         Text("Tap + to add your first habit")
                     }
                 } else {
-                    List {
-                        Section {
-                            ForEach(habits) { habit in
-                            let weekRecord = resolvedWeekRecord(for: habit)
-                            HabitRowView(
-                                habit: habit,
-                                weekRecord: weekRecord,
-                                currentDayIndex: currentDayIndex,
-                                onToggle: { dayIndex in
-                                    viewModel?.toggleDay(weekRecord: weekRecord, dayIndex: dayIndex)
-                                },
-                                onRename: { id, currentName in
-                                    renameHabit(id: id, currentName: currentName)
-                                },
-                                onDelete: { habit in
-                                    habitToDelete = habit
-                                    showingDeleteConfirmation = true
-                                },
-                                onSetWeeklyGoal: { habit in
-                                    presentWeeklyGoalSheet(for: habit)
-                                },
-                                isPremium: purchaseManager.isPremium
-                            )
-                        }
-                        } header: {
-                            DayOfWeekHeaderView()
-                        }
-                    }
-                    .gesture(
-                        DragGesture(minimumDistance: 50)
-                            .onEnded { value in
-                                let horizontal = value.translation.width
-                                guard abs(horizontal) > abs(value.translation.height) else { return }
-                                if horizontal < 0 {
-                                    // Swipe left → go to past week
-                                    let newOffset = displayedWeekOffset - 1
-                                    if viewModel?.canNavigateToWeek(offset: newOffset, isPremium: purchaseManager.isPremium) == true {
-                                        withAnimation { displayedWeekOffset = newOffset }
-                                    } else {
-                                        showPaywall = true
-                                    }
-                                } else {
-                                    // Swipe right → go to more recent week
-                                    if displayedWeekOffset < 0 {
-                                        withAnimation { displayedWeekOffset += 1 }
-                                    }
-                                }
-                            }
-                    )
+                    weekPageView
                 }
 
                 // MARK: - Banner Ad
@@ -236,15 +188,55 @@ struct HabitTrackerView: View {
         }
     }
 
-    // MARK: - Helpers
+    // MARK: - Week Page View
 
-    private func resolvedWeekRecord(for habit: Habit) -> WeekRecord {
+    private var weekPageView: some View {
+        let minOffset = purchaseManager.isPremium ? -52 : -1
+
+        TabView(selection: $displayedWeekOffset) {
+            ForEach(minOffset...0, id: \.self) { offset in
+                List {
+                    Section {
+                        ForEach(habits) { habit in
+                            let weekRecord = weekRecordForOffset(habit: habit, offset: offset)
+                            HabitRowView(
+                                habit: habit,
+                                weekRecord: weekRecord,
+                                currentDayIndex: offset == 0 ? currentDayIndex : nil,
+                                onToggle: { dayIndex in
+                                    viewModel?.toggleDay(weekRecord: weekRecord, dayIndex: dayIndex)
+                                },
+                                onRename: { id, currentName in
+                                    renameHabit(id: id, currentName: currentName)
+                                },
+                                onDelete: { habit in
+                                    habitToDelete = habit
+                                    showingDeleteConfirmation = true
+                                },
+                                onSetWeeklyGoal: { habit in
+                                    presentWeeklyGoalSheet(for: habit)
+                                },
+                                isPremium: purchaseManager.isPremium
+                            )
+                        }
+                    } header: {
+                        DayOfWeekHeaderView()
+                    }
+                }
+                .tag(offset)
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+    }
+
+    private func weekRecordForOffset(habit: Habit, offset: Int) -> WeekRecord {
         guard let vm = viewModel else {
-            // Fallback: should not happen after onAppear
             return WeekRecord(weekStartDate: Date())
         }
-        return vm.weekRecord(for: habit, weekOffset: displayedWeekOffset)
+        return vm.weekRecord(for: habit, weekOffset: offset)
     }
+
+    // MARK: - Helpers
 
     func addNewHabit() {
         guard !newHabitName.isEmpty else { return }
