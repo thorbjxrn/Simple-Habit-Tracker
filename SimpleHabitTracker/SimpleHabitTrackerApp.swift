@@ -9,8 +9,14 @@ struct SimpleHabitTrackerApp: App {
     @State private var adManager: AdManager?
 
     init() {
+        let iCloudEnabled = UserDefaults.standard.bool(forKey: "iCloudSyncEnabled")
+        let isPremium = UserDefaults.standard.bool(forKey: "isPremiumCached")
+
         do {
-            modelContainer = try ModelContainer(for: Habit.self)
+            let config = ModelConfiguration(
+                cloudKitDatabase: (isPremium && iCloudEnabled) ? .automatic : .none
+            )
+            modelContainer = try ModelContainer(for: Habit.self, configurations: config)
             let context = ModelContext(modelContainer)
             MigrationManager.migrateIfNeeded(context: context)
         } catch {

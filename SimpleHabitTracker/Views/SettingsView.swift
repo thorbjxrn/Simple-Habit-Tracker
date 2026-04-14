@@ -5,7 +5,9 @@ struct SettingsView: View {
     @Environment(PurchaseManager.self) private var purchaseManager
     @Environment(\.modelContext) private var modelContext
     @State private var showPaywall = false
+    @State private var showRestartAlert = false
     @AppStorage("todayIndicatorStyle") private var useDotIndicator = false
+    @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled = false
 
     private var appVersion: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -27,6 +29,11 @@ struct SettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPaywall) {
             PaywallView(purchaseManager: purchaseManager)
+        }
+        .alert("Restart Required", isPresented: $showRestartAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Please restart the app for iCloud Sync changes to take effect.")
         }
     }
 
@@ -86,22 +93,25 @@ struct SettingsView: View {
 
     private var dataSection: some View {
         Section("Data") {
-            HStack {
-                Label("iCloud Sync", systemImage: "icloud")
-                Spacer()
-                if purchaseManager.isPremium {
-                    // Placeholder toggle — actual implementation in Phase 6
-                    Toggle("", isOn: .constant(false))
-                        .labelsHidden()
-                        .disabled(true)
-                } else {
+            if purchaseManager.isPremium {
+                Toggle(isOn: Binding(
+                    get: { iCloudSyncEnabled },
+                    set: { newValue in
+                        iCloudSyncEnabled = newValue
+                        showRestartAlert = true
+                    }
+                )) {
+                    Label("iCloud Sync", systemImage: "icloud")
+                }
+            } else {
+                HStack {
+                    Label("iCloud Sync", systemImage: "icloud")
+                    Spacer()
                     Image(systemName: "lock.fill")
                         .foregroundStyle(.secondary)
                 }
-            }
-            .foregroundStyle(purchaseManager.isPremium ? .primary : .secondary)
-            .onTapGesture {
-                if !purchaseManager.isPremium {
+                .foregroundStyle(.secondary)
+                .onTapGesture {
                     showPaywall = true
                 }
             }
