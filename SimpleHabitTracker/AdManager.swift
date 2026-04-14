@@ -85,7 +85,7 @@ final class AdManager {
         Task { @MainActor in
             do {
                 interstitialAd = try await InterstitialAd.load(
-                    withAdUnitID: Self.interstitialAdUnitID,
+                    with: Self.interstitialAdUnitID,
                     request: AdManagerRequest()
                 )
             } catch {
@@ -106,7 +106,7 @@ final class AdManager {
             return
         }
 
-        ad.present(fromRootViewController: rootViewController)
+        ad.present(from: rootViewController)
         interstitialAd = nil
         loadInterstitial()
     }
