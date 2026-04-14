@@ -146,21 +146,19 @@ struct HabitTrackerView: View {
                 Button("Cancel", role: .cancel, action: {})
             }
             .id(addHabitAlertID)
-            .confirmationDialog(
-                "Are you sure you want to delete this habit?",
-                isPresented: $showingDeleteConfirmation,
-                actions: {
-                    Button("Delete", role: .destructive) {
-                        if let habit = habitToDelete {
-                            viewModel?.removeHabit(habit)
-                        }
-                        habitToDelete = nil
+            .alert("Delete \(habitToDelete?.name ?? "habit")?", isPresented: $showingDeleteConfirmation) {
+                Button("Delete", role: .destructive) {
+                    if let habit = habitToDelete {
+                        viewModel?.removeHabit(habit)
                     }
-                    Button("Cancel", role: .cancel) {
-                        habitToDelete = nil
-                    }
+                    habitToDelete = nil
                 }
-            )
+                Button("Cancel", role: .cancel) {
+                    habitToDelete = nil
+                }
+            } message: {
+                Text("This will remove the habit and all its history.")
+            }
         }
         .alert("Rename Habit", isPresented: $showingRenameAlert) {
             TextField("New Habit Name", text: $newHabitNameForRename)
