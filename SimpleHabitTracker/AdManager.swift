@@ -16,7 +16,7 @@ final class AdManager {
 
     // MARK: - State
 
-    private(set) var interstitialAd: GADInterstitialAd?
+    private(set) var interstitialAd: InterstitialAd?
     private(set) var isFirstSession: Bool
 
     @ObservationIgnored
@@ -84,9 +84,9 @@ final class AdManager {
 
         Task { @MainActor in
             do {
-                interstitialAd = try await GADInterstitialAd.load(
+                interstitialAd = try await InterstitialAd.load(
                     withAdUnitID: Self.interstitialAdUnitID,
-                    request: GAMRequest()
+                    request: AdManagerRequest()
                 )
             } catch {
                 print("AdManager: Failed to load interstitial: \(error.localizedDescription)")

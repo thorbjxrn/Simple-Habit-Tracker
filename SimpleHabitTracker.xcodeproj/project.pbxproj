@@ -17,6 +17,7 @@
 		08C6A6B72C5AC8660001A26D /* SimpleHabitTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B62C5AC8660001A26D /* SimpleHabitTrackerUITests.swift */; };
 		08C6A6B92C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */; };
 		08E202542C5E9D6F0054A4AD /* HabitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E202532C5E9D6F0054A4AD /* HabitModel.swift */; };
+		2864A8CC2F8ED3F100725303 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 2864A8CB2F8ED3F100725303 /* GoogleMobileAds */; };
 		AA0001012D00000100000001 /* HabitState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001002D00000100000001 /* HabitState.swift */; };
 		AA0001032D00000100000002 /* WeekRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001022D00000100000002 /* WeekRecord.swift */; };
 		AA0001052D00000100000003 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001042D00000100000003 /* MigrationManager.swift */; };
@@ -92,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2864A8CC2F8ED3F100725303 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +120,7 @@
 				08C6A69A2C5AC8640001A26D /* SimpleHabitTracker */,
 				08C6A6AB2C5AC8660001A26D /* SimpleHabitTrackerTests */,
 				08C6A6B52C5AC8660001A26D /* SimpleHabitTrackerUITests */,
+				2864A8CA2F8ED3F100725303 /* Frameworks */,
 				08C6A6992C5AC8640001A26D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -175,6 +178,13 @@
 				08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */,
 			);
 			path = SimpleHabitTrackerUITests;
+			sourceTree = "<group>";
+		};
+		2864A8CA2F8ED3F100725303 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		AA0001062D00000100000004 /* Models */ = {
@@ -718,6 +728,14 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2864A8CB2F8ED3F100725303 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2864A8C92F8ED25100725303 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 08C6A6902C5AC8640001A26D /* Project object */;
 }

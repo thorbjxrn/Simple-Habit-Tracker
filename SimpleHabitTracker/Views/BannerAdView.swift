@@ -8,23 +8,23 @@ struct BannerAdView: UIViewRepresentable {
     private let adUnitID = "ca-app-pub-3940256099942544/2435281174" // Replace with real ID before release
     #endif
 
-    func makeUIView(context: Context) -> GADBannerView {
-        let bannerView = GADBannerView()
+    func makeUIView(context: Context) -> BannerView {
+        let bannerView = BannerView()
         bannerView.adUnitID = adUnitID
 
         // Get the window scene for adaptive banner sizing
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             let viewWidth = windowScene.windows.first?.frame.width ?? UIScreen.main.bounds.width
-            bannerView.adSize = GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(viewWidth)
+            bannerView.adSize = currentOrientationAnchoredAdaptiveBanner(width: viewWidth)
 
             bannerView.rootViewController = windowScene.windows.first?.rootViewController
         }
 
-        bannerView.load(GAMRequest())
+        bannerView.load(AdManagerRequest())
         return bannerView
     }
 
-    func updateUIView(_ uiView: GADBannerView, context: Context) {
+    func updateUIView(_ uiView: BannerView, context: Context) {
         // No updates needed
     }
 }
