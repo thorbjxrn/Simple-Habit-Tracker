@@ -4,6 +4,7 @@ import SwiftData
 struct HabitTrackerView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(PurchaseManager.self) private var purchaseManager
+    @Environment(AdManager.self) private var adManager: AdManager?
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
 
     @State private var viewModel: HabitViewModel?
@@ -16,6 +17,7 @@ struct HabitTrackerView: View {
     @State private var newHabitNameForRename = ""
     @State private var displayedWeekOffset: Int = 0
     @State private var showPaywall: Bool = false
+    @State private var hasCheckedInterstitialOnAppear = false
 
     private var isCurrentWeek: Bool {
         displayedWeekOffset == 0
@@ -108,6 +110,11 @@ struct HabitTrackerView: View {
                         }
                     }
                 )
+                // MARK: - Banner Ad
+                if !purchaseManager.isPremium {
+                    BannerAdView()
+                        .frame(height: 50)
+                }
             }
         }
         .alert("Rename Habit", isPresented: $showingRenameAlert) {
@@ -127,6 +134,21 @@ struct HabitTrackerView: View {
         .onAppear {
             if viewModel == nil {
                 viewModel = HabitViewModel(modelContext: modelContext)
+            }
+
+            // Show interstitial on app open (only once per appear)
+            if !hasCheckedInterstitialOnAppear {
+                hasCheckedInterstitialOnAppear = true
+                if let adManager, adManager.shouldShowInterstitial {
+                    adManager.showInterstitialIfReady()
+                }
+                adManager?.requestTrackingPermissionIfNeeded()
+            }
+        }
+        .onChange(of: displayedWeekOffset) { oldValue, newValue in
+            // Show interstitial when navigating to past weeks
+            if newValue < oldValue, newValue < 0 {
+                adManager?.showInterstitialIfReady()
             }
         }
     }
