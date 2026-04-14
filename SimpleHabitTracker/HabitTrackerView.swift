@@ -23,6 +23,30 @@ struct HabitTrackerView: View {
     @State private var weeklyGoalHabit: Habit?
     @State private var selectedWeeklyGoal: Int = 0
     @State private var isLandscape: Bool = false
+    @State private var habitPlaceholder: String = ""
+
+    private static let placeholders = [
+        "Drink water",
+        "Read 10 pages",
+        "Go for a walk",
+        "Meditate",
+        "No phone in bed",
+        "Stretch",
+        "Call a friend",
+        "Cook at home",
+        "Journal",
+        "Touch grass",
+        "Inbox zero",
+        "Floss",
+        "Practice guitar",
+        "Learn a word",
+        "Take the stairs",
+        "No snooze",
+        "Eat a vegetable",
+        "Compliment someone",
+        "Ship something",
+        "Deep breaths",
+    ]
 
     private var isCurrentWeek: Bool {
         displayedWeekOffset == 0
@@ -140,6 +164,7 @@ struct HabitTrackerView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         if viewModel?.canAddHabit(isPremium: purchaseManager.isPremium) == true {
+                            habitPlaceholder = Self.placeholders.randomElement() ?? "Habit Name"
                             showingAddHabitAlert = true
                         } else {
                             showPaywall = true
@@ -150,7 +175,7 @@ struct HabitTrackerView: View {
                 }
             }
             .alert("Add New Habit", isPresented: $showingAddHabitAlert) {
-                TextField("Habit Name", text: $newHabitName)
+                TextField(habitPlaceholder, text: $newHabitName)
                 Button("Add", action: addNewHabit)
                 Button("Cancel", role: .cancel, action: {})
             }
