@@ -19,41 +19,32 @@ struct MonthlyCalendarPanel: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            // Habit picker
-            if habits.count > 1 {
-                HStack(spacing: 12) {
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            selectedHabitIndex = (selectedHabitIndex - 1 + habits.count) % habits.count
-                        }
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    .buttonStyle(.plain)
+            Spacer().frame(height: 8)
 
-                    Text(selectedHabit?.name ?? "")
+            // Habit picker
+            Menu {
+                ForEach(Array(habits.enumerated()), id: \.element.id) { index, habit in
+                    Button {
+                        selectedHabitIndex = index
+                    } label: {
+                        if index == selectedHabitIndex {
+                            Label(habit.name, systemImage: "checkmark")
+                        } else {
+                            Text(habit.name)
+                        }
+                    }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Text(selectedHabit?.name ?? "Select Habit")
                         .font(.subheadline)
                         .fontWeight(.semibold)
-                        .lineLimit(1)
-
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            selectedHabitIndex = (selectedHabitIndex + 1) % habits.count
-                        }
-                    } label: {
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    .buttonStyle(.plain)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
                 }
-            } else if let habit = habits.first {
-                Text(habit.name)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
             }
+            .buttonStyle(.plain)
 
             // Calendar
             Spacer()
