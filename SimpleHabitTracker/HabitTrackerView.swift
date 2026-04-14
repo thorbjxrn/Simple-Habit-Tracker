@@ -236,9 +236,6 @@ struct HabitTrackerView: View {
         }
     }
 
-    // MARK: - Orientation (unused, kept for reference)
-    }
-
     // MARK: - Helpers
 
     private func resolvedWeekRecord(for habit: Habit) -> WeekRecord {
