@@ -68,7 +68,6 @@ struct MonthlyCalendarPanel: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
-}
 
     private var upgradeCard: some View {
         VStack(spacing: 12) {
