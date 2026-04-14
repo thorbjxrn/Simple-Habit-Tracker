@@ -13,7 +13,15 @@ struct HabitTrackerView: View {
     @State private var showingRenameAlert = false
     @State private var renameHabitID: UUID?
     @State private var newHabitNameForRename = ""
-    private var currentDayIndex: Int {
+    @State private var displayedWeekOffset: Int = 0
+    @State private var showPaywall: Bool = false
+
+    private var isCurrentWeek: Bool {
+        displayedWeekOffset == 0
+    }
+
+    private var currentDayIndex: Int? {
+        guard isCurrentWeek else { return nil }
         var calendar = Calendar.current
         calendar.locale = Locale.current
         let firstWeekday = calendar.firstWeekday
@@ -23,46 +31,33 @@ struct HabitTrackerView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 0) {
+                WeekNavigationView(
+                    weekOffset: $displayedWeekOffset,
+                    isPremium: false,
+                    canNavigate: { offset in
+                        viewModel?.canNavigateToWeek(offset: offset, isPremium: false) ?? false
+                    },
+                    showPaywall: $showPaywall
+                )
+
+                DayOfWeekHeaderView()
+                    .padding(.bottom, 4)
+
                 List {
                     ForEach(habits) { habit in
                         let weekRecord = resolvedWeekRecord(for: habit)
-                        VStack(alignment: .leading) {
-                            Text(habit.name)
-                                .lineLimit(nil)
-                                .font(.headline)
-                                .contextMenu {
-                                    Button(action: {
-                                        renameHabit(id: habit.id, currentName: habit.name)
-                                    }) {
-                                        Label("Rename", systemImage: "pencil")
-                                    }
-                                }
-                            GeometryReader { geometry in
-                                VStack(alignment: .center, spacing: 0) {
-                                    HStack(alignment: .center) {
-                                        ForEach(0..<7) { index in
-                                            VStack(alignment: .center, spacing: 4.5) {
-                                                Circle()
-                                                    .fill(color(for: weekRecord.completedDays[index]))
-                                                    .frame(width: 33, height: 33)
-                                                    .onTapGesture {
-                                                        viewModel?.toggleDay(weekRecord: weekRecord, dayIndex: index)
-                                                    }
-                                                Circle()
-                                                    .fill(todaysColor(day: index))
-                                                    .frame(width: 3, height: 3, alignment: .center)
-                                                    .shadow(color: .yellow, radius: 0.5, y: 0.25)
-                                            }
-                                        }
-                                    }
-                                    .overlay(
-                                        LineConnectingConsecutiveDays(days: weekRecord.completedDays, geometry: geometry)
-                                    )
-                                }
+                        HabitRowView(
+                            habit: habit,
+                            weekRecord: weekRecord,
+                            currentDayIndex: currentDayIndex,
+                            onToggle: { dayIndex in
+                                viewModel?.toggleDay(weekRecord: weekRecord, dayIndex: dayIndex)
+                            },
+                            onRename: { id, currentName in
+                                renameHabit(id: id, currentName: currentName)
                             }
-                        }
-                        .padding(.vertical, 25)
+                        )
                     }
                     .onDelete { indexSet in
                         if let index = indexSet.first, index < habits.count {
@@ -114,6 +109,11 @@ struct HabitTrackerView: View {
             }
             Button("Cancel", role: .cancel, action: {})
         }
+        .alert("Premium Feature", isPresented: $showPaywall) {
+            Button("OK", role: .cancel, action: {})
+        } message: {
+            Text("Viewing weeks beyond last week requires Premium. Upgrade to unlock full history.")
+        }
         .onAppear {
             if viewModel == nil {
                 viewModel = HabitViewModel(modelContext: modelContext)
@@ -128,26 +128,7 @@ struct HabitTrackerView: View {
             // Fallback: should not happen after onAppear
             return WeekRecord(weekStartDate: Date())
         }
-        return vm.currentWeekRecord(for: habit)
-    }
-
-    func color(for state: HabitState) -> Color {
-        switch state {
-        case .notCompleted:
-            return Color.gray
-        case .completed:
-            return Color.green
-        case .failed:
-            return Color.red
-        }
-    }
-
-    func todaysColor(day: Int) -> Color {
-        if day == currentDayIndex {
-            Color(.yellow).opacity(1)
-        } else {
-            Color(.yellow).opacity(0)
-        }
+        return vm.weekRecord(for: habit, weekOffset: displayedWeekOffset)
     }
 
     func addNewHabit() {

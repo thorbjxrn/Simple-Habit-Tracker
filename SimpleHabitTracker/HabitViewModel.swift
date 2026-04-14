@@ -56,7 +56,12 @@ final class HabitViewModel {
     // MARK: - Week Record Access
 
     func currentWeekRecord(for habit: Habit) -> WeekRecord {
-        let startOfWeek = weekStartDate(for: Date())
+        return weekRecord(for: habit, weekOffset: 0)
+    }
+
+    func weekRecord(for habit: Habit, weekOffset: Int) -> WeekRecord {
+        let targetDate = dateForWeekOffset(weekOffset)
+        let startOfWeek = weekStartDate(for: targetDate)
 
         if let existing = habit.weekRecords.first(where: {
             Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
@@ -69,6 +74,27 @@ final class HabitViewModel {
         modelContext.insert(weekRecord)
         save()
         return weekRecord
+    }
+
+    // MARK: - Week Navigation
+
+    func canNavigateToWeek(offset: Int, isPremium: Bool) -> Bool {
+        if isPremium { return true }
+        // Free tier: only current week (0) and last week (-1)
+        return offset >= -1 && offset <= 0
+    }
+
+    func weekDateRange(for offset: Int) -> (start: Date, end: Date) {
+        let calendar = Calendar.current
+        let targetDate = dateForWeekOffset(offset)
+        let start = weekStartDate(for: targetDate)
+        let end = calendar.date(byAdding: .day, value: 6, to: start) ?? start
+        return (start, end)
+    }
+
+    private func dateForWeekOffset(_ offset: Int) -> Date {
+        let calendar = Calendar.current
+        return calendar.date(byAdding: .weekOfYear, value: offset, to: Date()) ?? Date()
     }
 
     // MARK: - Week Utilities
