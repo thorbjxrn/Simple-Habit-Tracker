@@ -14,7 +14,7 @@ struct MonthlyCalendarPanel: View {
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 32) {
+            LazyHStack(alignment: .top, spacing: 32) {
                 ForEach((-monthsBack)...0, id: \.self) { offset in
                     SingleMonthView(
                         monthOffset: offset,
@@ -164,7 +164,7 @@ private struct SingleMonthView: View {
         var days: [DayInfo] = []
 
         for _ in 0..<leadingOffset {
-            days.append(DayInfo(day: 0, color: .clear, isPlaceholder: true, isFuture: false, isToday: false, habitStates: [], date: nil))
+            days.append(.placeholder)
         }
 
         for day in range {
@@ -176,11 +176,16 @@ private struct SingleMonthView: View {
             let isToday = calendar.isDateInToday(date)
 
             if isFuture {
-                days.append(DayInfo(day: day, color: .clear, isPlaceholder: false, isFuture: true, isToday: false, habitStates: [], date: date))
+                days.append(DayInfo(day: day, isPlaceholder: false, isFuture: true, isToday: false, habitStates: [], date: date))
             } else {
                 let states = habitStates(for: date)
-                days.append(DayInfo(day: day, color: .clear, isPlaceholder: false, isFuture: false, isToday: isToday, habitStates: states, date: date))
+                days.append(DayInfo(day: day, isPlaceholder: false, isFuture: false, isToday: isToday, habitStates: states, date: date))
             }
+        }
+
+        // Pad to 42 cells (6 rows of 7) so all months have equal height
+        while days.count < 42 {
+            days.append(.placeholder)
         }
 
         return (title, days)
@@ -210,10 +215,11 @@ private struct SingleMonthView: View {
 
 private struct DayInfo {
     let day: Int
-    let color: Color
     let isPlaceholder: Bool
     let isFuture: Bool
     let isToday: Bool
     let habitStates: [HabitState]
     let date: Date?
+
+    static let placeholder = DayInfo(day: 0, isPlaceholder: true, isFuture: false, isToday: false, habitStates: [], date: nil)
 }
