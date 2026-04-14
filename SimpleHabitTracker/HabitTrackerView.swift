@@ -126,22 +126,41 @@ struct HabitTrackerView: View {
                                 onRename: { id, currentName in
                                     renameHabit(id: id, currentName: currentName)
                                 },
+                                onDelete: { habit in
+                                    habitToDelete = habit
+                                    showingDeleteConfirmation = true
+                                },
                                 onSetWeeklyGoal: { habit in
                                     presentWeeklyGoalSheet(for: habit)
                                 },
                                 isPremium: purchaseManager.isPremium
                             )
                         }
-                        .onDelete { indexSet in
-                            if let index = indexSet.first, index < habits.count {
-                                habitToDelete = habits[index]
-                                showingDeleteConfirmation = true
-                            }
-                        }
                         } header: {
                             DayOfWeekHeaderView()
                         }
                     }
+                    .gesture(
+                        DragGesture(minimumDistance: 50)
+                            .onEnded { value in
+                                let horizontal = value.translation.width
+                                guard abs(horizontal) > abs(value.translation.height) else { return }
+                                if horizontal < 0 {
+                                    // Swipe left → go to past week
+                                    let newOffset = displayedWeekOffset - 1
+                                    if viewModel?.canNavigateToWeek(offset: newOffset, isPremium: purchaseManager.isPremium) == true {
+                                        withAnimation { displayedWeekOffset = newOffset }
+                                    } else {
+                                        showPaywall = true
+                                    }
+                                } else {
+                                    // Swipe right → go to more recent week
+                                    if displayedWeekOffset < 0 {
+                                        withAnimation { displayedWeekOffset += 1 }
+                                    }
+                                }
+                            }
+                    )
                 }
 
                 // MARK: - Banner Ad

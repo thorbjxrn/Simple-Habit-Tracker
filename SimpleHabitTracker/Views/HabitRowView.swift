@@ -6,6 +6,7 @@ struct HabitRowView: View {
     let currentDayIndex: Int?
     let onToggle: (Int) -> Void
     let onRename: (UUID, String) -> Void
+    let onDelete: ((Habit) -> Void)?
     let onSetWeeklyGoal: ((Habit) -> Void)?
     let isPremium: Bool
     @AppStorage("todayIndicatorStyle") private var useDotIndicator = false
@@ -30,6 +31,7 @@ struct HabitRowView: View {
         currentDayIndex: Int?,
         onToggle: @escaping (Int) -> Void,
         onRename: @escaping (UUID, String) -> Void,
+        onDelete: ((Habit) -> Void)? = nil,
         onSetWeeklyGoal: ((Habit) -> Void)? = nil,
         isPremium: Bool = false
     ) {
@@ -38,6 +40,7 @@ struct HabitRowView: View {
         self.currentDayIndex = currentDayIndex
         self.onToggle = onToggle
         self.onRename = onRename
+        self.onDelete = onDelete
         self.onSetWeeklyGoal = onSetWeeklyGoal
         self.isPremium = isPremium
     }
@@ -60,6 +63,12 @@ struct HabitRowView: View {
                             }) {
                                 Label("Set Weekly Goal", systemImage: "target")
                             }
+                        }
+
+                        Button(role: .destructive, action: {
+                            onDelete?(habit)
+                        }) {
+                            Label("Delete", systemImage: "trash")
                         }
                     }
 
