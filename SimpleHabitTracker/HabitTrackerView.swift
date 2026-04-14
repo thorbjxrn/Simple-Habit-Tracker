@@ -68,7 +68,6 @@ struct HabitTrackerView: View {
                         DayOfWeekHeaderView()
                     }
                 }
-                .navigationTitle("Habit Tracker")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         NavigationLink {
