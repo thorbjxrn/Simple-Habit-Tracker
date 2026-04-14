@@ -72,7 +72,7 @@ private struct SingleMonthView: View {
             LazyVGrid(columns: columns, spacing: 2) {
                 ForEach(Array(data.days.enumerated()), id: \.offset) { _, info in
                     if info.isPlaceholder {
-                        Color.clear.frame(height: dayCellHeight)
+                        Color.clear.frame(height: 30)
                     } else {
                         dayCell(info)
                     }
@@ -81,23 +81,15 @@ private struct SingleMonthView: View {
         }
     }
 
-    private var dayCellHeight: CGFloat {
-        let dotSize: CGFloat = 5
-        let habitCount = max(habits.count, 1)
-        // day number (10) + spacing (2) + dots
-        return 10 + 2 + (dotSize * CGFloat(min(habitCount, 5))) + CGFloat(min(habitCount, 5) - 1)
-    }
-
     @ViewBuilder
     private func dayCell(_ info: DayInfo) -> some View {
-        VStack(spacing: 2) {
+        VStack(spacing: 1) {
             Text("\(info.day)")
                 .font(.system(size: 9, weight: info.isToday ? .bold : .regular))
                 .foregroundStyle(info.isFuture ? .quaternary : (info.isToday ? .primary : .secondary))
 
-            if !info.isFuture {
-                // One dot per habit
-                VStack(spacing: 1) {
+            if !info.isFuture && !info.habitStates.isEmpty {
+                HStack(spacing: 2) {
                     ForEach(Array(info.habitStates.prefix(5).enumerated()), id: \.offset) { _, state in
                         Circle()
                             .fill(colorForState(state))
@@ -106,7 +98,8 @@ private struct SingleMonthView: View {
                 }
             }
         }
-        .frame(height: dayCellHeight)
+        .frame(height: 30)
+        .frame(maxWidth: .infinity)
         .contentShape(Rectangle())
         .onTapGesture {
             guard !info.isFuture, let date = info.date else { return }
@@ -186,8 +179,7 @@ private struct SingleMonthView: View {
                 days.append(DayInfo(day: day, color: .clear, isPlaceholder: false, isFuture: true, isToday: false, habitStates: [], date: date))
             } else {
                 let states = habitStates(for: date)
-                let color = aggregateColor(from: states)
-                days.append(DayInfo(day: day, color: color, isPlaceholder: false, isFuture: false, isToday: isToday, habitStates: states, date: date))
+                days.append(DayInfo(day: day, color: .clear, isPlaceholder: false, isFuture: false, isToday: isToday, habitStates: states, date: date))
             }
         }
 
@@ -203,28 +195,16 @@ private struct SingleMonthView: View {
         var states: [HabitState] = []
         for habit in habits {
             if habit.createdDate > date { continue }
-            guard let record = habit.weekRecords.first(where: {
+            if let record = habit.weekRecords.first(where: {
                 calendar.isDate($0.weekStartDate, equalTo: weekStart, toGranularity: .day)
-            }) else {
+            }), dayIndex >= 0, dayIndex < record.completedDays.count {
+                states.append(record.completedDays[dayIndex])
+            } else {
+                // No record for this week — show as not completed
                 states.append(.notCompleted)
-                continue
             }
-            guard dayIndex >= 0 && dayIndex < record.completedDays.count else {
-                states.append(.notCompleted)
-                continue
-            }
-            states.append(record.completedDays[dayIndex])
         }
         return states
-    }
-
-    private func aggregateColor(from states: [HabitState]) -> Color {
-        let completed = states.filter { $0 == .completed }.count
-        let failed = states.filter { $0 == .failed }.count
-        if completed > failed && completed > 0 { return theme.completedColor }
-        if failed > completed { return theme.failedColor }
-        if completed > 0 { return theme.completedColor }
-        return theme.notCompletedColor
     }
 }
 
