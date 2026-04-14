@@ -17,12 +17,14 @@ final class AdManager {
     // MARK: - State
 
     private(set) var interstitialAd: InterstitialAd?
-    private(set) var isFirstSession: Bool
 
     @ObservationIgnored
     private static let appOpenCountKey = "adManager_appOpenCount"
-    @ObservationIgnored
-    private static let hasLaunchedBeforeKey = "adManager_hasLaunchedBefore"
+
+    /// Number of grace opens before any ads appear (banner or interstitial)
+    private static let gracePeriodOpens = 5
+    /// Show an interstitial every Nth open after the grace period
+    private static let interstitialFrequency = 5
 
     var appOpenCount: Int {
         didSet {
@@ -30,10 +32,21 @@ final class AdManager {
         }
     }
 
+    /// Whether we're still in the ad-free grace period
+    var isInGracePeriod: Bool {
+        appOpenCount <= Self.gracePeriodOpens
+    }
+
+    /// Whether to show the banner ad (hidden during grace period)
+    var shouldShowBanner: Bool {
+        !purchaseManager.isPremium && !isInGracePeriod
+    }
+
     var shouldShowInterstitial: Bool {
-        guard !isFirstSession else { return false }
         guard !purchaseManager.isPremium else { return false }
-        return appOpenCount > 0 && appOpenCount % 3 == 0
+        guard !isInGracePeriod else { return false }
+        let opensAfterGrace = appOpenCount - Self.gracePeriodOpens
+        return opensAfterGrace > 0 && opensAfterGrace % Self.interstitialFrequency == 0
     }
 
     // MARK: - Dependencies
@@ -46,25 +59,19 @@ final class AdManager {
     init(purchaseManager: PurchaseManager) {
         self.purchaseManager = purchaseManager
 
-        let hasLaunchedBefore = UserDefaults.standard.bool(forKey: Self.hasLaunchedBeforeKey)
-        self.isFirstSession = !hasLaunchedBefore
-
-        if !hasLaunchedBefore {
-            UserDefaults.standard.set(true, forKey: Self.hasLaunchedBeforeKey)
-        }
-
         self.appOpenCount = UserDefaults.standard.integer(forKey: Self.appOpenCountKey)
         self.appOpenCount += 1
 
-        loadInterstitial()
+        if !isInGracePeriod {
+            loadInterstitial()
+        }
     }
 
     // MARK: - ATT Permission
 
     func requestTrackingPermissionIfNeeded() {
-        // Request on second session (not first)
-        guard !isFirstSession else { return }
-        guard appOpenCount == 2 else { return }
+        // Request ATT just before ads start appearing
+        guard appOpenCount == Self.gracePeriodOpens else { return }
 
         Task { @MainActor in
             // Small delay to let the UI settle

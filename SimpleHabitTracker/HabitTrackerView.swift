@@ -123,7 +123,7 @@ struct HabitTrackerView: View {
                 }
 
                 // MARK: - Banner Ad
-                if !purchaseManager.isPremium {
+                if adManager?.shouldShowBanner == true {
                     VStack(spacing: 0) {
                         BannerAdView()
                             .frame(height: 50)
@@ -190,12 +190,6 @@ struct HabitTrackerView: View {
         }
         .sheet(isPresented: $showingWeeklyGoalSheet) {
             weeklyGoalSheet
-        }
-        .onChange(of: displayedWeekOffset) { oldValue, newValue in
-            // Show interstitial when navigating to past weeks
-            if newValue < oldValue, newValue < 0 {
-                adManager?.showInterstitialIfReady()
-            }
         }
     }
 
