@@ -69,16 +69,14 @@ struct TrendGraphPanel: View {
 
                                     // Locked columns on the left (older history)
                                     if !isPremium {
-                                        ForEach(0..<lockedColumns, id: \.self) { i in
+                                        ForEach(0..<lockedColumns, id: \.self) { _ in
                                             RoundedRectangle(cornerRadius: 3)
-                                                .fill(Color.gray.opacity(0.08))
+                                                .fill(Color.gray.opacity(0.1))
                                                 .frame(width: cellSize, height: cellSize)
                                                 .overlay {
-                                                    if i == lockedColumns / 2 {
-                                                        Image(systemName: "lock.fill")
-                                                            .font(.system(size: min(10, cellSize * 0.35)))
-                                                            .foregroundStyle(.secondary.opacity(0.5))
-                                                    }
+                                                    Image(systemName: "lock.fill")
+                                                        .font(.system(size: min(10, cellSize * 0.3)))
+                                                        .foregroundStyle(.secondary.opacity(0.4))
                                                 }
                                         }
                                     }
