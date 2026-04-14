@@ -40,6 +40,10 @@ struct MonthlyCalendarPanel: View {
                     // Calendar
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack(alignment: .top, spacing: 32) {
+                            if !isPremium {
+                                upgradeCard
+                                    .frame(width: monthWidth)
+                            }
                             ForEach((-monthsBack)...0, id: \.self) { offset in
                                 SingleMonthView(
                                     monthOffset: offset,
@@ -63,6 +67,25 @@ struct MonthlyCalendarPanel: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+    }
+}
+
+    private var upgradeCard: some View {
+        VStack(spacing: 12) {
+            Spacer()
+            Image(systemName: "calendar.badge.clock")
+                .font(.system(size: 32))
+                .foregroundStyle(.secondary)
+            Text("Unlock Full History")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+            Text("Upgrade to Premium to see\nall your past months")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

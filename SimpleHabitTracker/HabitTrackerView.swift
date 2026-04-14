@@ -185,6 +185,10 @@ struct HabitTrackerView: View {
                     adManager?.showInterstitialIfReady()
                 }
             }
+            // Show paywall when hitting the free tier limit
+            if !purchaseManager.isPremium && newValue == minWeekOffset {
+                showPaywall = true
+            }
         }
     }
 
