@@ -18,7 +18,8 @@ struct TrendGraphPanel: View {
     var body: some View {
         GeometryReader { geo in
             let spacing: CGFloat = 3
-            let columnCount = CGFloat(weeksToShow + (isPremium ? 0 : 1)) // +1 for lock column
+            let lockedColumns = isPremium ? 0 : 4
+            let columnCount = CGFloat(weeksToShow + lockedColumns)
             let nameWidth: CGFloat = min(140, geo.size.width * 0.2)
             let availableWidth = geo.size.width - nameWidth - 48 // padding
             let availableHeight = geo.size.height - 120 // title, legend, spacing
@@ -42,10 +43,12 @@ struct TrendGraphPanel: View {
                         VStack(alignment: .leading, spacing: spacing) {
                             // Week header row
                             HStack(spacing: spacing) {
-                                Color.clear.frame(width: nameWidth, height: cellSize * 0.6)
+                                Color.clear.frame(width: nameWidth, height: cellSize * 0.5)
 
                                 if !isPremium {
-                                    Color.clear.frame(width: cellSize, height: cellSize * 0.6)
+                                    ForEach(0..<lockedColumns, id: \.self) { _ in
+                                        Color.clear.frame(width: cellSize, height: cellSize * 0.5)
+                                    }
                                 }
 
                                 ForEach(heatMapWeeks, id: \.self) { weekStart in
@@ -64,16 +67,20 @@ struct TrendGraphPanel: View {
                                         .foregroundStyle(.secondary)
                                         .frame(width: nameWidth, alignment: .trailing)
 
-                                    // Lock column on the left (older history)
+                                    // Locked columns on the left (older history)
                                     if !isPremium {
-                                        RoundedRectangle(cornerRadius: 3)
-                                            .fill(.clear)
-                                            .frame(width: cellSize, height: cellSize)
-                                            .overlay {
-                                                Image(systemName: "lock.fill")
-                                                    .font(.system(size: 8))
-                                                    .foregroundStyle(.secondary)
-                                            }
+                                        ForEach(0..<lockedColumns, id: \.self) { i in
+                                            RoundedRectangle(cornerRadius: 3)
+                                                .fill(Color.gray.opacity(0.08))
+                                                .frame(width: cellSize, height: cellSize)
+                                                .overlay {
+                                                    if i == lockedColumns / 2 {
+                                                        Image(systemName: "lock.fill")
+                                                            .font(.system(size: min(10, cellSize * 0.35)))
+                                                            .foregroundStyle(.secondary.opacity(0.5))
+                                                    }
+                                                }
+                                        }
                                     }
 
                                     ForEach(heatMapWeeks, id: \.self) { weekStart in
