@@ -106,7 +106,10 @@ struct HabitTrackerView: View {
                     showPaywall: $showPaywall
                 )
 
-                if habits.isEmpty {
+                if viewModel == nil {
+                    ProgressView()
+                        .frame(maxHeight: .infinity)
+                } else if habits.isEmpty {
                     ContentUnavailableView {
                         Label("No Habits", systemImage: "checkmark.circle.badge.plus")
                     } description: {
