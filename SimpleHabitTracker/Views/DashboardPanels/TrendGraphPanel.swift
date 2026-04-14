@@ -89,9 +89,8 @@ struct TrendGraphPanel: View {
                                 }
                             }
                         }
+                        .frame(minWidth: geo.size.width - 48, alignment: .center)
                     }
-                    .defaultScrollAnchor(.trailing)
-
                     // Legend
                     HStack(spacing: 6) {
                         Text("Less")
