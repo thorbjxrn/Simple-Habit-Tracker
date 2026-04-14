@@ -16,46 +16,52 @@ struct MonthlyCalendarPanel: View {
         return habits[selectedHabitIndex]
     }
 
-    /// Free: current + last month. Premium: 24 months back.
     private var monthsBack: Int {
         isPremium ? 24 : 1
     }
 
     var body: some View {
-        VStack {
-            Spacer()
+        GeometryReader { geo in
+            let monthWidth = (geo.size.width - 80) / 2 // 24px padding each side + 32px gap
 
-            VStack(spacing: 12) {
-                // Habit picker
-                Picker("Habit", selection: $selectedHabitIndex) {
-                    ForEach(Array(habits.enumerated()), id: \.element.id) { index, habit in
-                        Text(habit.name).tag(index)
-                    }
-                }
-                .pickerStyle(.menu)
-                .labelsHidden()
+            VStack {
+                Spacer()
 
-                // Calendar
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(alignment: .top, spacing: 32) {
-                        ForEach((-monthsBack)...0, id: \.self) { offset in
-                            SingleMonthView(
-                                monthOffset: offset,
-                                viewModel: viewModel,
-                                habit: selectedHabit,
-                                theme: theme
-                            )
-                            .containerRelativeFrame(.horizontal, count: 2, spacing: 32)
+                VStack(spacing: 12) {
+                    // Habit picker
+                    Picker("Habit", selection: $selectedHabitIndex) {
+                        ForEach(Array(habits.enumerated()), id: \.element.id) { index, habit in
+                            Text(habit.name).tag(index)
                         }
                     }
-                    .scrollTargetLayout()
-                }
-                .scrollTargetBehavior(.viewAligned)
-                .defaultScrollAnchor(.trailing)
-                .padding(.horizontal, 24)
-            }
+                    .pickerStyle(.menu)
+                    .labelsHidden()
 
-            Spacer()
+                    // Calendar
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHStack(alignment: .top, spacing: 32) {
+                            ForEach((-monthsBack)...0, id: \.self) { offset in
+                                SingleMonthView(
+                                    monthOffset: offset,
+                                    viewModel: viewModel,
+                                    habit: selectedHabit,
+                                    theme: theme
+                                )
+                                .frame(width: monthWidth)
+                                .id(offset)
+                            }
+                        }
+                        .scrollTargetLayout()
+                    }
+                    .scrollTargetBehavior(.viewAligned)
+                    .defaultScrollAnchor(.trailing)
+                    .padding(.horizontal, 24)
+                }
+                .frame(maxWidth: .infinity)
+
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
