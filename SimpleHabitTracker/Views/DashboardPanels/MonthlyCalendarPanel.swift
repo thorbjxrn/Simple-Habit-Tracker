@@ -22,9 +22,7 @@ struct MonthlyCalendarPanel: View {
     }
 
     var body: some View {
-        VStack(spacing: 8) {
-            Spacer().frame(height: 8)
-
+        VStack(spacing: 12) {
             // Habit picker
             Menu {
                 ForEach(Array(habits.enumerated()), id: \.element.id) { index, habit in
@@ -39,15 +37,15 @@ struct MonthlyCalendarPanel: View {
                     }
                 }
             } label: {
-                HStack(spacing: 4) {
+                HStack(spacing: 6) {
                     Text(selectedHabit?.name ?? "Select Habit")
                         .font(.subheadline)
                         .fontWeight(.semibold)
-                        .animation(nil, value: selectedHabitIndex)
                     Image(systemName: "chevron.up.chevron.down")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
+                .fixedSize()
             }
             .buttonStyle(.plain)
 
@@ -69,8 +67,9 @@ struct MonthlyCalendarPanel: View {
             .scrollTargetBehavior(.viewAligned)
             .defaultScrollAnchor(.trailing)
             .padding(.horizontal, 24)
-            .frame(maxHeight: .infinity)
         }
+        .frame(maxHeight: .infinity)
+        .padding(.vertical, 12)
     }
 }
 
