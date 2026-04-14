@@ -69,9 +69,9 @@ final class AdManager {
     init(purchaseManager: PurchaseManager) {
         self.purchaseManager = purchaseManager
 
+        self.historyNavCount = UserDefaults.standard.integer(forKey: Self.historyNavCountKey)
         self.appOpenCount = UserDefaults.standard.integer(forKey: Self.appOpenCountKey)
         self.appOpenCount += 1
-        self.historyNavCount = UserDefaults.standard.integer(forKey: Self.historyNavCountKey)
 
         if !isInGracePeriod {
             loadInterstitial()
