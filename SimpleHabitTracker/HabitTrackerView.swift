@@ -63,21 +63,19 @@ struct HabitTrackerView: View {
 
     var body: some View {
         GeometryReader { geo in
-            Group {
-                if geo.size.width > geo.size.height, let vm = viewModel {
-                    DashboardView(
-                        viewModel: vm,
-                        habits: habits,
-                        isPremium: purchaseManager.isPremium
-                    )
-                } else {
-                    habitListView
-                }
+            if geo.size.width > geo.size.height, let vm = viewModel {
+                DashboardView(
+                    viewModel: vm,
+                    habits: habits,
+                    isPremium: purchaseManager.isPremium
+                )
+            } else {
+                habitListView
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .onAppear {
             if viewModel == nil {
+                MigrationManager.migrateIfNeeded(context: modelContext)
                 viewModel = HabitViewModel(modelContext: modelContext)
             }
 

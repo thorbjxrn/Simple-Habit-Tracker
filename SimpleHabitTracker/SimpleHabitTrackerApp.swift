@@ -15,16 +15,8 @@ struct SimpleHabitTrackerApp: App {
         _purchaseManager = State(initialValue: pm)
         _adManager = State(initialValue: AdManager(purchaseManager: pm))
 
-        let iCloudEnabled = UserDefaults.standard.bool(forKey: "iCloudSyncEnabled")
-        let isPremium = UserDefaults.standard.bool(forKey: "isPremiumCached")
-
         do {
-            let config = ModelConfiguration(
-                cloudKitDatabase: (isPremium && iCloudEnabled) ? .automatic : .none
-            )
-            modelContainer = try ModelContainer(for: Habit.self, configurations: config)
-            let context = ModelContext(modelContainer)
-            MigrationManager.migrateIfNeeded(context: context)
+            modelContainer = try ModelContainer(for: Habit.self)
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
         }
