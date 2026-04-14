@@ -13,24 +13,28 @@ struct MonthlyCalendarPanel: View {
     private let monthsBack = 24
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(alignment: .top, spacing: 32) {
-                ForEach((-monthsBack)...0, id: \.self) { offset in
-                    SingleMonthView(
-                        monthOffset: offset,
-                        viewModel: viewModel,
-                        habits: habits,
-                        theme: theme
-                    )
-                    .containerRelativeFrame(.horizontal, count: 2, spacing: 32)
+        VStack {
+            Spacer()
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(alignment: .top, spacing: 32) {
+                    ForEach((-monthsBack)...0, id: \.self) { offset in
+                        SingleMonthView(
+                            monthOffset: offset,
+                            viewModel: viewModel,
+                            habits: habits,
+                            theme: theme
+                        )
+                        .containerRelativeFrame(.horizontal, count: 2, spacing: 32)
+                    }
                 }
+                .scrollTargetLayout()
             }
-            .scrollTargetLayout()
+            .scrollTargetBehavior(.viewAligned)
+            .defaultScrollAnchor(.trailing)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.horizontal, 24)
+            Spacer()
         }
-        .scrollTargetBehavior(.viewAligned)
-        .defaultScrollAnchor(.trailing)
-        .padding(.horizontal, 24)
-        .padding(.vertical, 8)
     }
 }
 
