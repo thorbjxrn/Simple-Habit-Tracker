@@ -1,33 +1,35 @@
 import SwiftUI
+import SwiftData
 
 struct MonthlyCalendarPanel: View {
     let viewModel: HabitViewModel
     @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.defaultTheme.rawValue
+    @Query(sort: \Habit.sortOrder) private var habits: [Habit]
 
     private var theme: AppTheme {
         AppTheme.from(rawValue: selectedThemeRaw)
     }
 
-    /// How many months back to allow scrolling
     private let monthsBack = 24
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 16) {
+            LazyHStack(spacing: 32) {
                 ForEach((-monthsBack)...0, id: \.self) { offset in
                     SingleMonthView(
                         monthOffset: offset,
                         viewModel: viewModel,
+                        habits: habits,
                         theme: theme
                     )
-                    .containerRelativeFrame(.horizontal, count: 2, spacing: 16)
+                    .containerRelativeFrame(.horizontal, count: 2, spacing: 32)
                 }
             }
             .scrollTargetLayout()
         }
         .scrollTargetBehavior(.viewAligned)
         .defaultScrollAnchor(.trailing)
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 24)
         .padding(.vertical, 8)
     }
 }
@@ -37,6 +39,7 @@ struct MonthlyCalendarPanel: View {
 private struct SingleMonthView: View {
     let monthOffset: Int
     let viewModel: HabitViewModel
+    let habits: [Habit]
     let theme: AppTheme
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
@@ -69,7 +72,7 @@ private struct SingleMonthView: View {
             LazyVGrid(columns: columns, spacing: 2) {
                 ForEach(Array(data.days.enumerated()), id: \.offset) { _, info in
                     if info.isPlaceholder {
-                        Color.clear.frame(height: 18)
+                        Color.clear.frame(height: dayCellHeight)
                     } else {
                         dayCell(info)
                     }
@@ -78,19 +81,66 @@ private struct SingleMonthView: View {
         }
     }
 
+    private var dayCellHeight: CGFloat {
+        let dotSize: CGFloat = 5
+        let habitCount = max(habits.count, 1)
+        // day number (10) + spacing (2) + dots
+        return 10 + 2 + (dotSize * CGFloat(min(habitCount, 5))) + CGFloat(min(habitCount, 5) - 1)
+    }
+
     @ViewBuilder
     private func dayCell(_ info: DayInfo) -> some View {
-        VStack(spacing: 1) {
+        VStack(spacing: 2) {
             Text("\(info.day)")
-                .font(.system(size: 8, weight: info.isToday ? .bold : .regular))
+                .font(.system(size: 9, weight: info.isToday ? .bold : .regular))
                 .foregroundStyle(info.isFuture ? .quaternary : (info.isToday ? .primary : .secondary))
 
-            Circle()
-                .fill(info.color)
-                .frame(width: 6, height: 6)
-                .opacity(info.isFuture ? 0 : 1)
+            if !info.isFuture {
+                // One dot per habit
+                VStack(spacing: 1) {
+                    ForEach(Array(info.habitStates.prefix(5).enumerated()), id: \.offset) { _, state in
+                        Circle()
+                            .fill(colorForState(state))
+                            .frame(width: 5, height: 5)
+                    }
+                }
+            }
         }
-        .frame(height: 18)
+        .frame(height: dayCellHeight)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            guard !info.isFuture, let date = info.date else { return }
+            toggleAllHabits(for: date)
+        }
+    }
+
+    private func colorForState(_ state: HabitState) -> Color {
+        switch state {
+        case .completed: return theme.completedColor
+        case .failed: return theme.failedColor
+        case .notCompleted: return theme.notCompletedColor
+        }
+    }
+
+    private func toggleAllHabits(for date: Date) {
+        let calendar = Calendar.current
+        let dayOfWeek = calendar.component(.weekday, from: date)
+        let dayIndex = (dayOfWeek - calendar.firstWeekday + 7) % 7
+
+        for habit in habits {
+            if habit.createdDate > date { continue }
+            let weekRecord = viewModel.weekRecord(for: habit, weekOffset: weekOffset(for: date))
+            guard dayIndex >= 0 && dayIndex < weekRecord.completedDays.count else { continue }
+            viewModel.toggleDay(weekRecord: weekRecord, dayIndex: dayIndex)
+        }
+    }
+
+    private func weekOffset(for date: Date) -> Int {
+        let calendar = Calendar.current
+        let currentWeekStart = viewModel.weekStartDate(for: Date())
+        let targetWeekStart = viewModel.weekStartDate(for: date)
+        let components = calendar.dateComponents([.weekOfYear], from: currentWeekStart, to: targetWeekStart)
+        return components.weekOfYear ?? 0
     }
 
     // MARK: - Data
@@ -117,12 +167,11 @@ private struct SingleMonthView: View {
         let title = formatter.string(from: firstOfMonth)
         let firstWeekday = calendar.component(.weekday, from: firstOfMonth)
         let leadingOffset = (firstWeekday - calendar.firstWeekday + 7) % 7
-        let habits = viewModel.fetchHabits()
 
         var days: [DayInfo] = []
 
         for _ in 0..<leadingOffset {
-            days.append(DayInfo(day: 0, color: .clear, isPlaceholder: true, isFuture: false, isToday: false))
+            days.append(DayInfo(day: 0, color: .clear, isPlaceholder: true, isFuture: false, isToday: false, habitStates: [], date: nil))
         }
 
         for day in range {
@@ -134,48 +183,47 @@ private struct SingleMonthView: View {
             let isToday = calendar.isDateInToday(date)
 
             if isFuture {
-                days.append(DayInfo(day: day, color: .clear, isPlaceholder: false, isFuture: true, isToday: false))
+                days.append(DayInfo(day: day, color: .clear, isPlaceholder: false, isFuture: true, isToday: false, habitStates: [], date: date))
             } else {
-                let color = aggregateColor(for: date, habits: habits)
-                days.append(DayInfo(day: day, color: color, isPlaceholder: false, isFuture: false, isToday: isToday))
+                let states = habitStates(for: date)
+                let color = aggregateColor(from: states)
+                days.append(DayInfo(day: day, color: color, isPlaceholder: false, isFuture: false, isToday: isToday, habitStates: states, date: date))
             }
         }
 
         return (title, days)
     }
 
-    private func aggregateColor(for date: Date, habits: [Habit]) -> Color {
+    private func habitStates(for date: Date) -> [HabitState] {
         let calendar = Calendar.current
-        guard !habits.isEmpty else { return theme.notCompletedColor }
+        let dayOfWeek = calendar.component(.weekday, from: date)
+        let dayIndex = (dayOfWeek - calendar.firstWeekday + 7) % 7
+        let weekStart = viewModel.weekStartDate(for: date)
 
-        var completedCount = 0
-        var failedCount = 0
-        var totalTracked = 0
-
+        var states: [HabitState] = []
         for habit in habits {
             if habit.createdDate > date { continue }
-
-            let weekStart = viewModel.weekStartDate(for: date)
             guard let record = habit.weekRecords.first(where: {
                 calendar.isDate($0.weekStartDate, equalTo: weekStart, toGranularity: .day)
-            }) else { continue }
-
-            let dayOfWeek = calendar.component(.weekday, from: date)
-            let dayIndex = (dayOfWeek - calendar.firstWeekday + 7) % 7
-            guard dayIndex >= 0 && dayIndex < record.completedDays.count else { continue }
-
-            totalTracked += 1
-            switch record.completedDays[dayIndex] {
-            case .completed: completedCount += 1
-            case .failed: failedCount += 1
-            case .notCompleted: break
+            }) else {
+                states.append(.notCompleted)
+                continue
             }
+            guard dayIndex >= 0 && dayIndex < record.completedDays.count else {
+                states.append(.notCompleted)
+                continue
+            }
+            states.append(record.completedDays[dayIndex])
         }
+        return states
+    }
 
-        if totalTracked == 0 { return theme.notCompletedColor }
-        if completedCount > failedCount { return theme.completedColor }
-        if failedCount > completedCount { return theme.failedColor }
-        if completedCount > 0 { return theme.completedColor }
+    private func aggregateColor(from states: [HabitState]) -> Color {
+        let completed = states.filter { $0 == .completed }.count
+        let failed = states.filter { $0 == .failed }.count
+        if completed > failed && completed > 0 { return theme.completedColor }
+        if failed > completed { return theme.failedColor }
+        if completed > 0 { return theme.completedColor }
         return theme.notCompletedColor
     }
 }
@@ -186,4 +234,6 @@ private struct DayInfo {
     let isPlaceholder: Bool
     let isFuture: Bool
     let isToday: Bool
+    let habitStates: [HabitState]
+    let date: Date?
 }
