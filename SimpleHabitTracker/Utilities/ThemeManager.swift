@@ -34,7 +34,7 @@ enum AppTheme: String, CaseIterable, Identifiable {
         case .defaultTheme: return .green
         case .ocean: return Color(red: 0.0, green: 0.6, blue: 0.85)
         case .sunset: return Color(red: 1.0, green: 0.6, blue: 0.0)
-        case .lavender: return Color(red: 0.6, green: 0.4, blue: 0.9)
+        case .lavender: return Color(red: 0.55, green: 0.4, blue: 0.9)
         case .monochrome: return .black
         case .dynamic: return DynamicPalette.current.completed
         }
@@ -43,9 +43,9 @@ enum AppTheme: String, CaseIterable, Identifiable {
     var failedColor: Color {
         switch self {
         case .defaultTheme: return .red
-        case .ocean: return Color(red: 0.1, green: 0.2, blue: 0.5)
+        case .ocean: return Color(red: 0.6, green: 0.25, blue: 0.35)
         case .sunset: return Color(red: 0.8, green: 0.2, blue: 0.1)
-        case .lavender: return Color(red: 0.4, green: 0.2, blue: 0.5)
+        case .lavender: return Color(red: 0.75, green: 0.35, blue: 0.45)
         case .monochrome: return Color(white: 0.55)
         case .dynamic: return DynamicPalette.current.failed
         }
@@ -53,10 +53,10 @@ enum AppTheme: String, CaseIterable, Identifiable {
 
     var notCompletedColor: Color {
         switch self {
-        case .defaultTheme: return .gray.opacity(0.3)
-        case .ocean: return Color(red: 0.7, green: 0.85, blue: 0.95)
-        case .sunset: return Color(red: 1.0, green: 0.9, blue: 0.75)
-        case .lavender: return Color(red: 0.85, green: 0.8, blue: 0.95)
+        case .defaultTheme: return Color(white: 0.85)
+        case .ocean: return Color(red: 0.55, green: 0.7, blue: 0.78)
+        case .sunset: return Color(red: 0.85, green: 0.75, blue: 0.6)
+        case .lavender: return Color(red: 0.72, green: 0.68, blue: 0.8)
         case .monochrome: return Color(white: 0.85)
         case .dynamic: return DynamicPalette.current.notCompleted
         }
