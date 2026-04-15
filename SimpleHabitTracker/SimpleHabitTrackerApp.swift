@@ -22,7 +22,7 @@ struct SimpleHabitTrackerApp: App {
         }
 
         #if !DEBUG
-        #warning("Replace GADApplicationIdentifier in Info.plist with real AdMob App ID before release")
+        #error("Replace GADApplicationIdentifier in Info.plist with real AdMob App ID, then remove this error")
         #endif
         MobileAds.shared.start()
     }

@@ -1,5 +1,9 @@
 import SwiftUI
 
+#if !DEBUG
+#error("Replace privacy policy contact email (privacy@yourdomain.com) with real address, then remove this error")
+#endif
+
 struct PrivacyPolicyView: View {
     var body: some View {
         ScrollView {
