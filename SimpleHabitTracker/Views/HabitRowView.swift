@@ -119,7 +119,7 @@ struct HabitRowView: View {
                             .overlay {
                                 if isToday && !useDotIndicator {
                                     Circle()
-                                        .strokeBorder(theme.accentColor, lineWidth: 2.5)
+                                        .strokeBorder(theme.indicatorColor, lineWidth: 2.5)
                                 }
                             }
                             .onTapGesture {
@@ -129,7 +129,7 @@ struct HabitRowView: View {
 
                         if useDotIndicator {
                             Circle()
-                                .fill(theme.accentColor)
+                                .fill(theme.indicatorColor)
                                 .frame(width: 4, height: 4)
                                 .opacity(isToday ? 1 : 0)
                         }

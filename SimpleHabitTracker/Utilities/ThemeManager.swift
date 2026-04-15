@@ -73,6 +73,18 @@ enum AppTheme: String, CaseIterable, Identifiable {
         }
     }
 
+    /// Complementary color for the today indicator — chosen to contrast all three states
+    var indicatorColor: Color {
+        switch self {
+        case .defaultTheme: return .yellow                                  // pops against green/red/gray
+        case .ocean: return Color(red: 0.95, green: 0.75, blue: 0.2)       // gold against blues/coral
+        case .sunset: return Color(red: 0.2, green: 0.6, blue: 0.85)       // sky blue against oranges/reds
+        case .lavender: return Color(red: 0.85, green: 0.75, blue: 0.2)    // gold against purples/rose
+        case .monochrome: return Color(red: 0.9, green: 0.65, blue: 0.15)  // amber — visible on both light/dark
+        case .dynamic: return DynamicPalette.current.indicator
+        }
+    }
+
     /// Preview colors for the theme picker: [completed, failed, notCompleted]
     var previewColors: [Color] {
         [completedColor, failedColor, notCompletedColor]
@@ -96,6 +108,7 @@ private struct DynamicPalette {
     let failed: Color
     let notCompleted: Color
     let accent: Color
+    let indicator: Color
 
     // MARK: - Time Period Detection
 
@@ -115,7 +128,8 @@ private struct DynamicPalette {
         completed:    Color(red: 0.95, green: 0.65, blue: 0.15),  // warm amber
         failed:       Color(red: 0.85, green: 0.30, blue: 0.25),  // coral red
         notCompleted: Color(red: 1.00, green: 0.90, blue: 0.75),  // soft peach
-        accent:       Color(red: 0.90, green: 0.50, blue: 0.10)   // burnt orange
+        accent:       Color(red: 0.90, green: 0.50, blue: 0.10),  // burnt orange
+        indicator:    Color(red: 0.2, green: 0.55, blue: 0.85)    // sky blue — complements amber
     )
 
     // MARK: - Afternoon (12pm - 6pm)
@@ -124,7 +138,8 @@ private struct DynamicPalette {
         completed:    Color(red: 0.10, green: 0.70, blue: 0.65),  // teal green
         failed:       Color(red: 0.30, green: 0.30, blue: 0.55),  // slate blue
         notCompleted: Color(red: 0.80, green: 0.92, blue: 0.92),  // pale cyan
-        accent:       Color(red: 0.05, green: 0.55, blue: 0.60)   // deep teal
+        accent:       Color(red: 0.05, green: 0.55, blue: 0.60),  // deep teal
+        indicator:    Color(red: 0.95, green: 0.65, blue: 0.15)   // amber — complements teal
     )
 
     // MARK: - Evening (6pm - 10pm)
@@ -133,7 +148,8 @@ private struct DynamicPalette {
         completed:    Color(red: 0.60, green: 0.50, blue: 0.80),  // soft purple
         failed:       Color(red: 0.65, green: 0.30, blue: 0.40),  // dusty rose
         notCompleted: Color(red: 0.85, green: 0.80, blue: 0.90),  // light mauve
-        accent:       Color(red: 0.50, green: 0.35, blue: 0.70)   // medium purple
+        accent:       Color(red: 0.50, green: 0.35, blue: 0.70),  // medium purple
+        indicator:    Color(red: 0.85, green: 0.75, blue: 0.2)    // gold — complements purple
     )
 
     // MARK: - Night (10pm - 6am)
@@ -142,6 +158,7 @@ private struct DynamicPalette {
         completed:    Color(red: 0.25, green: 0.55, blue: 0.60),  // muted teal
         failed:       Color(red: 0.55, green: 0.20, blue: 0.25),  // dark burgundy
         notCompleted: Color(red: 0.25, green: 0.25, blue: 0.30),  // charcoal
-        accent:       Color(red: 0.30, green: 0.45, blue: 0.60)   // steel blue
+        accent:       Color(red: 0.30, green: 0.45, blue: 0.60),  // steel blue
+        indicator:    Color(red: 0.85, green: 0.65, blue: 0.3)    // warm gold — visible on dark
     )
 }
