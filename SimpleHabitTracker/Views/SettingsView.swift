@@ -167,15 +167,10 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
             }
 
-            if let url = URL(string: "https://example.com/privacy-policy") {
-                Link(destination: url) {
-                    HStack {
-                        Text("Privacy Policy")
-                        Spacer()
-                        Image(systemName: "arrow.up.right.square")
-                            .foregroundStyle(.secondary)
-                    }
-                }
+            NavigationLink {
+                PrivacyPolicyView()
+            } label: {
+                Text("Privacy Policy")
             }
         }
     }

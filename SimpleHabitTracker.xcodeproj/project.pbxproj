@@ -35,6 +35,7 @@
 		GG0007053300000700000003 /* HeatmapPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007043300000700000003 /* HeatmapPanel.swift */; };
 		GG0007073300000700000004 /* StatsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007063300000700000004 /* StatsPanel.swift */; };
 		HH0008013400000800000001 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH0008003400000800000001 /* OnboardingView.swift */; };
+		II0009013500000900000001 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = II0009003500000900000001 /* PrivacyPolicyView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,7 @@
 		GG0007043300000700000003 /* HeatmapPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatmapPanel.swift; sourceTree = "<group>"; };
 		GG0007063300000700000004 /* StatsPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsPanel.swift; sourceTree = "<group>"; };
 		HH0008003400000800000001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		II0009003500000900000001 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +217,7 @@
 				BB0002002E00000200000001 /* HabitRowView.swift */,
 				HH0008003400000800000001 /* OnboardingView.swift */,
 				CC0003022F00000300000002 /* PaywallView.swift */,
+				II0009003500000900000001 /* PrivacyPolicyView.swift */,
 				DD0004003000000400000001 /* SettingsView.swift */,
 				BB0002022E00000200000002 /* WeekNavigationView.swift */,
 			);
@@ -386,6 +389,7 @@
 				GG0007053300000700000003 /* HeatmapPanel.swift in Sources */,
 				GG0007073300000700000004 /* StatsPanel.swift in Sources */,
 				HH0008013400000800000001 /* OnboardingView.swift in Sources */,
+				II0009013500000900000001 /* PrivacyPolicyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
