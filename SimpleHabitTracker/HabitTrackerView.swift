@@ -263,7 +263,7 @@ struct HabitTrackerView: View {
         switch orientation {
         case .landscapeLeft, .landscapeRight:
             isLandscape = true
-        case .portrait, .portraitUpsideDown:
+        case .portrait:
             isLandscape = false
         default:
             break

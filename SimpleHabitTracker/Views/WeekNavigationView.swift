@@ -79,7 +79,7 @@ struct WeekNavigationView: View {
 struct DayOfWeekHeaderView: View {
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(dayLabels(), id: \.self) { label in
+            ForEach(Array(dayLabels().enumerated()), id: \.offset) { _, label in
                 Text(label)
                     .font(.caption2)
                     .fontWeight(.medium)
