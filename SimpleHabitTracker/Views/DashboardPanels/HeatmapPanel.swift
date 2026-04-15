@@ -19,11 +19,13 @@ struct HeatmapPanel: View {
         GeometryReader { geo in
             let spacing: CGFloat = 3
             let lockedColumns = isPremium ? 0 : 4
-            let columnCount = CGFloat(weeksToShow + lockedColumns)
             let nameWidth: CGFloat = min(140, geo.size.width * 0.2)
             let availableWidth = geo.size.width - nameWidth - 48 // padding
-            let availableHeight = geo.size.height - 120 // title, legend, spacing
-            let cellFromWidth = (availableWidth - spacing * columnCount) / columnCount
+            let maxColumns = max(1, Int(availableWidth / 48))
+            let visibleWeekCount = min(maxColumns, weeksToShow)
+            let totalColumns = CGFloat(visibleWeekCount + lockedColumns)
+            let availableHeight = geo.size.height - 120
+            let cellFromWidth = (availableWidth - spacing * totalColumns) / totalColumns
             let cellFromHeight = (availableHeight - spacing * CGFloat(max(habits.count, 1))) / CGFloat(max(habits.count, 1) + 1)
             let cellSize = max(16, min(44, min(cellFromWidth, cellFromHeight)))
 
@@ -39,59 +41,58 @@ struct HeatmapPanel: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 } else {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        VStack(alignment: .leading, spacing: spacing) {
-                            // Week header row
+                    VStack(alignment: .leading, spacing: spacing) {
+                        // Week header row
+                        HStack(spacing: spacing) {
+                            Color.clear.frame(width: nameWidth, height: cellSize * 0.5)
+
+                            if !isPremium {
+                                ForEach(0..<lockedColumns, id: \.self) { _ in
+                                    Color.clear.frame(width: cellSize, height: cellSize * 0.5)
+                                }
+                            }
+
+                            ForEach(recentWeeks(count: visibleWeekCount), id: \.self) { weekStart in
+                                Text(weekLabel(for: weekStart))
+                                    .font(.system(size: min(10, cellSize * 0.4)))
+                                    .foregroundStyle(.tertiary)
+                                    .frame(width: cellSize, height: cellSize * 0.5)
+                            }
+                        }
+
+                        // One row per habit
+                        ForEach(habits) { habit in
                             HStack(spacing: spacing) {
-                                Color.clear.frame(width: nameWidth, height: cellSize * 0.5)
+                                Text(habit.name)
+                                    .font(.system(size: min(12, cellSize * 0.5)))
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: nameWidth, alignment: .trailing)
 
                                 if !isPremium {
                                     ForEach(0..<lockedColumns, id: \.self) { _ in
-                                        Color.clear.frame(width: cellSize, height: cellSize * 0.5)
-                                    }
-                                }
-
-                                ForEach(heatMapWeeks, id: \.self) { weekStart in
-                                    Text(weekLabel(for: weekStart))
-                                        .font(.system(size: min(10, cellSize * 0.4)))
-                                        .foregroundStyle(.tertiary)
-                                        .frame(width: cellSize, height: cellSize * 0.5)
-                                }
-                            }
-
-                            // One row per habit
-                            ForEach(habits) { habit in
-                                HStack(spacing: spacing) {
-                                    Text(habit.name)
-                                        .font(.system(size: min(12, cellSize * 0.5)))
-                                        .foregroundStyle(.secondary)
-                                        .frame(width: nameWidth, alignment: .trailing)
-
-                                    if !isPremium {
-                                        ForEach(0..<lockedColumns, id: \.self) { _ in
-                                            RoundedRectangle(cornerRadius: 3)
-                                                .fill(Color.gray.opacity(0.1))
-                                                .frame(width: cellSize, height: cellSize)
-                                                .overlay {
-                                                    Image(systemName: "lock.fill")
-                                                        .font(.system(size: min(10, cellSize * 0.3)))
-                                                        .foregroundStyle(.secondary.opacity(0.4))
-                                                }
-                                        }
-                                    }
-
-                                    ForEach(heatMapWeeks, id: \.self) { weekStart in
-                                        let count = completionCount(habit: habit, weekStart: weekStart)
                                         RoundedRectangle(cornerRadius: 3)
-                                            .fill(heatColor(count: count))
+                                            .fill(Color.gray.opacity(0.1))
                                             .frame(width: cellSize, height: cellSize)
+                                            .overlay {
+                                                Image(systemName: "lock.fill")
+                                                    .font(.system(size: min(10, cellSize * 0.3)))
+                                                    .foregroundStyle(.secondary.opacity(0.4))
+                                            }
                                     }
+                                }
+
+                                ForEach(recentWeeks(count: visibleWeekCount), id: \.self) { weekStart in
+                                    let count = completionCount(habit: habit, weekStart: weekStart)
+                                    RoundedRectangle(cornerRadius: 3)
+                                        .fill(heatColor(count: count))
+                                        .frame(width: cellSize, height: cellSize)
                                 }
                             }
                         }
-                        .padding(.trailing, nameWidth)
-                        .frame(minWidth: geo.size.width, alignment: .center)
                     }
+                    .padding(.trailing, nameWidth)
+                    .frame(maxWidth: .infinity)
+
                     // Legend
                     HStack(spacing: 6) {
                         Text("Less")
@@ -123,12 +124,12 @@ struct HeatmapPanel: View {
 
     // MARK: - Data
 
-    private var heatMapWeeks: [Date] {
+    private func recentWeeks(count: Int) -> [Date] {
         let calendar = Calendar.current
         let today = Date()
         var weeks: [Date] = []
 
-        for i in stride(from: -(weeksToShow - 1), through: 0, by: 1) {
+        for i in stride(from: -(count - 1), through: 0, by: 1) {
             if let weekDate = calendar.date(byAdding: .weekOfYear, value: i, to: today) {
                 weeks.append(viewModel.weekStartDate(for: weekDate))
             }
