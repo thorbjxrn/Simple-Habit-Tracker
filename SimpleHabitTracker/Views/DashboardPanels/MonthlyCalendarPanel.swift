@@ -6,6 +6,7 @@ struct MonthlyCalendarPanel: View {
     let isPremium: Bool
     @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.defaultTheme.rawValue
     @State private var selectedHabitIndex: Int = 0
+    @State private var scrollPosition: Int?
 
     private var theme: AppTheme {
         AppTheme.from(rawValue: selectedThemeRaw)
@@ -20,6 +21,11 @@ struct MonthlyCalendarPanel: View {
         isPremium ? 24 : 0
     }
 
+    private var isScrolledToHistory: Bool {
+        guard let pos = scrollPosition else { return false }
+        return pos < 0
+    }
+
     var body: some View {
         GeometryReader { geo in
             let padding: CGFloat = 16
@@ -29,7 +35,6 @@ struct MonthlyCalendarPanel: View {
             VStack(spacing: 16) {
                 Spacer()
 
-                // Habit picker
                 Picker("Habit", selection: $selectedHabitIndex) {
                     ForEach(Array(habits.enumerated()), id: \.element.id) { index, habit in
                         Text(habit.name).tag(index)
@@ -38,29 +43,64 @@ struct MonthlyCalendarPanel: View {
                 .pickerStyle(.menu)
                 .labelsHidden()
 
-                // Calendar
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(alignment: .top, spacing: gap) {
-                        if !isPremium {
-                            upgradeCard
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHStack(alignment: .top, spacing: gap) {
+                            if !isPremium {
+                                upgradeCard
+                                    .frame(width: monthWidth)
+                            }
+                            ForEach((-monthsBack)...0, id: \.self) { offset in
+                                SingleMonthView(
+                                    monthOffset: offset,
+                                    viewModel: viewModel,
+                                    habit: selectedHabit,
+                                    theme: theme
+                                )
                                 .frame(width: monthWidth)
+                                .id(offset)
+                            }
                         }
-                        ForEach((-monthsBack)...0, id: \.self) { offset in
-                            SingleMonthView(
-                                monthOffset: offset,
-                                viewModel: viewModel,
-                                habit: selectedHabit,
-                                theme: theme
-                            )
-                            .frame(width: monthWidth)
-                            .id(offset)
+                        .scrollTargetLayout()
+                    }
+                    .scrollTargetBehavior(.viewAligned)
+                    .scrollPosition(id: $scrollPosition, anchor: .trailing)
+                    .defaultScrollAnchor(.trailing)
+                    .padding(.horizontal, padding)
+                    .gesture(
+                        DragGesture(minimumDistance: 30)
+                            .onEnded { value in
+                                // Vertical swipe to change habit
+                                let horizontal = abs(value.translation.width)
+                                let vertical = abs(value.translation.height)
+                                guard vertical > horizontal else { return }
+
+                                if value.translation.height < -30 {
+                                    withAnimation { selectedHabitIndex = min(habits.count - 1, selectedHabitIndex + 1) }
+                                } else if value.translation.height > 30 {
+                                    withAnimation { selectedHabitIndex = max(0, selectedHabitIndex - 1) }
+                                }
+                            }
+                    )
+                    .overlay(alignment: .bottomTrailing) {
+                        if isScrolledToHistory {
+                            Button {
+                                withAnimation { proxy.scrollTo(0, anchor: .trailing) }
+                            } label: {
+                                Text("Today")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 4)
+                                    .background(Capsule().fill(theme.accentColor))
+                                    .foregroundStyle(.white)
+                            }
+                            .padding(.trailing, padding + 4)
+                            .padding(.bottom, 4)
+                            .transition(.opacity)
                         }
                     }
-                    .scrollTargetLayout()
                 }
-                .scrollTargetBehavior(.viewAligned)
-                .defaultScrollAnchor(.trailing)
-                .padding(.horizontal, padding)
 
                 Spacer()
             }
@@ -84,8 +124,6 @@ struct MonthlyCalendarPanel: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
-
-// MARK: - Single Month
 
 private struct SingleMonthView: View {
     let monthOffset: Int
@@ -174,8 +212,6 @@ private struct SingleMonthView: View {
         let components = calendar.dateComponents([.weekOfYear], from: currentWeekStart, to: targetWeekStart)
         return components.weekOfYear ?? 0
     }
-
-    // MARK: - Data
 
     private var monthData: (title: String, days: [DayInfo]) {
         let calendar = Calendar.current
