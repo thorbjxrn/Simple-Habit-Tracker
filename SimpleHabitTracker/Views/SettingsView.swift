@@ -54,14 +54,16 @@ struct SettingsView: View {
                 }
             }
 
-            Button {
-                Task {
-                    await purchaseManager.restorePurchases()
+            if !purchaseManager.isPremium {
+                Button {
+                    Task {
+                        await purchaseManager.restorePurchases()
+                    }
+                } label: {
+                    Label("Restore Purchases", systemImage: "arrow.clockwise")
                 }
-            } label: {
-                Label("Restore Purchases", systemImage: "arrow.clockwise")
+                .disabled(purchaseManager.isLoading)
             }
-            .disabled(purchaseManager.isLoading)
         }
     }
 
@@ -69,8 +71,11 @@ struct SettingsView: View {
 
     private var appearanceSection: some View {
         Section("Appearance") {
-            Toggle(isOn: $useDotIndicator) {
-                Label("Dot Today Indicator", systemImage: "circle.fill")
+            Picker(selection: $useDotIndicator) {
+                Text("Ring").tag(false)
+                Text("Dot").tag(true)
+            } label: {
+                Label("Today Marker", systemImage: "smallcircle.filled.circle")
             }
 
             if purchaseManager.isPremium {
@@ -104,11 +109,20 @@ struct SettingsView: View {
     private func themeOption(_ theme: AppTheme) -> some View {
         let isSelected = selectedThemeRaw == theme.rawValue
         return VStack(spacing: 4) {
-            HStack(spacing: 3) {
-                ForEach(theme.previewColors.indices, id: \.self) { index in
-                    Circle()
-                        .fill(theme.previewColors[index])
-                        .frame(width: 18, height: 18)
+            ZStack {
+                HStack(spacing: 3) {
+                    ForEach(theme.previewColors.indices, id: \.self) { index in
+                        Circle()
+                            .fill(theme.previewColors[index])
+                            .frame(width: 18, height: 18)
+                    }
+                }
+
+                if let icon = theme.iconName {
+                    Image(systemName: icon)
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(.white)
+                        .shadow(color: .black.opacity(0.5), radius: 1, x: 0, y: 0.5)
                 }
             }
 
@@ -150,7 +164,7 @@ struct SettingsView: View {
                     HStack {
                         Label("iCloud Sync", systemImage: "icloud.slash")
                         Spacer()
-                        Text("Sign in to iCloud")
+                        Text("Not available")
                             .foregroundStyle(.secondary)
                             .font(.caption)
                     }
@@ -171,8 +185,12 @@ struct SettingsView: View {
         } header: {
             Text("Data")
         } footer: {
-            if purchaseManager.isPremium && iCloudSyncEnabled && isICloudAvailable {
-                Text("Syncs your habits across all devices signed into the same iCloud account.")
+            if purchaseManager.isPremium {
+                if iCloudSyncEnabled && isICloudAvailable {
+                    Text("Syncs your habits across all devices signed into the same iCloud account.")
+                } else if !isICloudAvailable {
+                    Text("Sign in to iCloud in device Settings to enable sync.")
+                }
             }
         }
     }
