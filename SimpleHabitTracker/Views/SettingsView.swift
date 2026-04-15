@@ -129,17 +129,32 @@ struct SettingsView: View {
 
     // MARK: - Data Section
 
+    private var isICloudAvailable: Bool {
+        FileManager.default.ubiquityIdentityToken != nil
+    }
+
     private var dataSection: some View {
-        Section("Data") {
+        Section {
             if purchaseManager.isPremium {
-                Toggle(isOn: Binding(
-                    get: { iCloudSyncEnabled },
-                    set: { newValue in
-                        iCloudSyncEnabled = newValue
-                        showRestartAlert = true
+                if isICloudAvailable {
+                    Toggle(isOn: Binding(
+                        get: { iCloudSyncEnabled },
+                        set: { newValue in
+                            iCloudSyncEnabled = newValue
+                            showRestartAlert = true
+                        }
+                    )) {
+                        Label("iCloud Sync", systemImage: "icloud")
                     }
-                )) {
-                    Label("iCloud Sync", systemImage: "icloud")
+                } else {
+                    HStack {
+                        Label("iCloud Sync", systemImage: "icloud.slash")
+                        Spacer()
+                        Text("Sign in to iCloud")
+                            .foregroundStyle(.secondary)
+                            .font(.caption)
+                    }
+                    .foregroundStyle(.secondary)
                 }
             } else {
                 HStack {
@@ -152,6 +167,12 @@ struct SettingsView: View {
                 .onTapGesture {
                     showPaywall = true
                 }
+            }
+        } header: {
+            Text("Data")
+        } footer: {
+            if purchaseManager.isPremium && iCloudSyncEnabled && isICloudAvailable {
+                Text("Syncs your habits across all devices signed into the same iCloud account.")
             }
         }
     }
