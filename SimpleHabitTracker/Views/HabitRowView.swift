@@ -8,6 +8,10 @@ struct HabitRowView: View {
     let onRename: (UUID, String) -> Void
     let onDelete: ((Habit) -> Void)?
     let onSetWeeklyGoal: ((Habit) -> Void)?
+    let onMoveUp: ((Habit) -> Void)?
+    let onMoveDown: ((Habit) -> Void)?
+    let isFirst: Bool
+    let isLast: Bool
     let isPremium: Bool
     @AppStorage("todayIndicatorStyle") private var useDotIndicator = false
     @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.defaultTheme.rawValue
@@ -33,6 +37,10 @@ struct HabitRowView: View {
         onRename: @escaping (UUID, String) -> Void,
         onDelete: ((Habit) -> Void)? = nil,
         onSetWeeklyGoal: ((Habit) -> Void)? = nil,
+        onMoveUp: ((Habit) -> Void)? = nil,
+        onMoveDown: ((Habit) -> Void)? = nil,
+        isFirst: Bool = false,
+        isLast: Bool = false,
         isPremium: Bool = false
     ) {
         self.habit = habit
@@ -42,6 +50,10 @@ struct HabitRowView: View {
         self.onRename = onRename
         self.onDelete = onDelete
         self.onSetWeeklyGoal = onSetWeeklyGoal
+        self.onMoveUp = onMoveUp
+        self.onMoveDown = onMoveDown
+        self.isFirst = isFirst
+        self.isLast = isLast
         self.isPremium = isPremium
     }
 
@@ -62,6 +74,22 @@ struct HabitRowView: View {
                                 onSetWeeklyGoal?(habit)
                             }) {
                                 Label("Set Weekly Goal", systemImage: "target")
+                            }
+                        }
+
+                        if !isFirst {
+                            Button(action: {
+                                onMoveUp?(habit)
+                            }) {
+                                Label("Move Up", systemImage: "arrow.up")
+                            }
+                        }
+
+                        if !isLast {
+                            Button(action: {
+                                onMoveDown?(habit)
+                            }) {
+                                Label("Move Down", systemImage: "arrow.down")
                             }
                         }
 

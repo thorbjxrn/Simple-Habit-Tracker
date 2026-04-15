@@ -122,6 +122,28 @@ final class HabitViewModel {
         return calendar.date(from: components) ?? date
     }
 
+    // MARK: - Reorder
+
+    func moveHabitUp(_ habit: Habit) {
+        let habits = fetchHabits()
+        guard let index = habits.firstIndex(where: { $0.id == habit.id }), index > 0 else { return }
+        let other = habits[index - 1]
+        let temp = habit.sortOrder
+        habit.sortOrder = other.sortOrder
+        other.sortOrder = temp
+        save()
+    }
+
+    func moveHabitDown(_ habit: Habit) {
+        let habits = fetchHabits()
+        guard let index = habits.firstIndex(where: { $0.id == habit.id }), index < habits.count - 1 else { return }
+        let other = habits[index + 1]
+        let temp = habit.sortOrder
+        habit.sortOrder = other.sortOrder
+        other.sortOrder = temp
+        save()
+    }
+
     // MARK: - Business Rules
 
     func canAddHabit(isPremium: Bool) -> Bool {

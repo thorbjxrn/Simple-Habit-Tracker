@@ -232,6 +232,14 @@ struct HabitTrackerView: View {
                                 onSetWeeklyGoal: { habit in
                                     presentWeeklyGoalSheet(for: habit)
                                 },
+                                onMoveUp: { habit in
+                                    viewModel?.moveHabitUp(habit)
+                                },
+                                onMoveDown: { habit in
+                                    viewModel?.moveHabitDown(habit)
+                                },
+                                isFirst: habit.id == habits.first?.id,
+                                isLast: habit.id == habits.last?.id,
                                 isPremium: purchaseManager.isPremium
                             )
                         }
