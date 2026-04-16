@@ -20,7 +20,7 @@ struct HeatmapPanel: View {
             let spacing: CGFloat = 3
             let lockedColumns = isPremium ? 0 : 4
             let nameWidth: CGFloat = min(140, geo.size.width * 0.2)
-            let availableWidth = geo.size.width - nameWidth - 48 // padding
+            let availableWidth = geo.size.width - nameWidth * 2 - 48 // labels on both sides + padding
             let maxColumns = max(1, Int(availableWidth / 48))
             let visibleWeekCount = min(maxColumns, weeksToShow)
             let totalColumns = CGFloat(visibleWeekCount + lockedColumns)
@@ -58,6 +58,8 @@ struct HeatmapPanel: View {
                                     .foregroundStyle(.tertiary)
                                     .frame(width: cellSize, height: cellSize * 0.5)
                             }
+
+                            Color.clear.frame(width: nameWidth, height: cellSize * 0.5)
                         }
 
                         // One row per habit
@@ -87,10 +89,11 @@ struct HeatmapPanel: View {
                                         .fill(heatColor(count: count))
                                         .frame(width: cellSize, height: cellSize)
                                 }
+
+                                Color.clear.frame(width: nameWidth, height: cellSize)
                             }
                         }
                     }
-                    .padding(.trailing, nameWidth)
                     .frame(maxWidth: .infinity)
 
                     // Legend
