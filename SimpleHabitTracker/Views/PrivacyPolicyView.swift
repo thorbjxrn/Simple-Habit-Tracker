@@ -1,9 +1,5 @@
 import SwiftUI
 
-#if !DEBUG
-#error("Replace privacy policy contact email (privacy@yourdomain.com) with real address, then remove this error")
-#endif
-
 struct PrivacyPolicyView: View {
     var body: some View {
         ScrollView {
@@ -63,7 +59,7 @@ struct PrivacyPolicyView: View {
                 }
 
                 section("Contact") {
-                    "If you have questions about this privacy policy, please contact us at privacy@yourdomain.com."
+                    "If you have questions about this privacy policy, please contact us at app.chair433@passfwd.com."
                 }
             }
             .padding()

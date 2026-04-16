@@ -11,8 +11,7 @@ final class AdManager {
     #if DEBUG
     private static let interstitialAdUnitID = "ca-app-pub-3940256099942544/4411468910"
     #else
-    #error("Replace with real AdMob interstitial ad unit ID and remove this error")
-    private static let interstitialAdUnitID = "ca-app-pub-XXXXX/YYYYY"
+    private static let interstitialAdUnitID = "ca-app-pub-3919813110479769/6042194583"
     #endif
 
     // MARK: - State

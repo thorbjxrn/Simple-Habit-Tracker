@@ -32,9 +32,6 @@ struct SimpleHabitTrackerApp: App {
             fatalError("Failed to create ModelContainer: \(error)")
         }
 
-        #if !DEBUG
-        #error("Replace GADApplicationIdentifier in Info.plist with real AdMob App ID, then remove this error")
-        #endif
         MobileAds.shared.start()
     }
 
