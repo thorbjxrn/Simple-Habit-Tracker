@@ -41,7 +41,7 @@ struct HeatmapPanel: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 } else {
-                    VStack(alignment: .leading, spacing: spacing) {
+                    VStack(spacing: spacing) {
                         // Week header row
                         HStack(spacing: spacing) {
                             Color.clear.frame(width: nameWidth, height: cellSize * 0.5)
