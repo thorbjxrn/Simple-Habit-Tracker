@@ -82,7 +82,6 @@ struct HabitTrackerView: View {
 
             if !hasCheckedInterstitialOnAppear {
                 hasCheckedInterstitialOnAppear = true
-                adManager.requestTrackingPermissionIfNeeded()
             }
 
             updateOrientation()

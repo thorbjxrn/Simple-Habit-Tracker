@@ -1,6 +1,5 @@
 import Foundation
 import GoogleMobileAds
-import AppTrackingTransparency
 import UIKit
 
 @Observable
@@ -75,23 +74,6 @@ final class AdManager {
 
         if !isInGracePeriod {
             loadInterstitial()
-        }
-    }
-
-    // MARK: - ATT Permission
-
-    func requestTrackingPermissionIfNeeded() {
-        // Request ATT just before ads start appearing
-        guard appOpenCount == Self.gracePeriodOpens else { return }
-
-        Task { @MainActor in
-            // Small delay to let the UI settle
-            try? await Task.sleep(for: .seconds(1))
-
-            let status = ATTrackingManager.trackingAuthorizationStatus
-            if status == .notDetermined {
-                await ATTrackingManager.requestTrackingAuthorization()
-            }
         }
     }
 

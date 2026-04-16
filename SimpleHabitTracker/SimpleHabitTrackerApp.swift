@@ -32,6 +32,7 @@ struct SimpleHabitTrackerApp: App {
             fatalError("Failed to create ModelContainer: \(error)")
         }
 
+        MobileAds.shared.requestConfiguration.tagForUnderAgeOfConsent = false
         MobileAds.shared.start()
     }
 
