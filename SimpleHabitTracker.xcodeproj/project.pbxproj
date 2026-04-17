@@ -69,6 +69,7 @@
 		08C6A6B62C5AC8660001A26D /* SimpleHabitTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerUITests.swift; sourceTree = "<group>"; };
 		08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		08E202532C5E9D6F0054A4AD /* HabitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitModel.swift; sourceTree = "<group>"; };
+		28E6B0362F923863001AAA47 /* Product.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Product.storekit; sourceTree = "<group>"; };
 		AA0001002D00000100000001 /* HabitState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitState.swift; sourceTree = "<group>"; };
 		AA0001022D00000100000002 /* WeekRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekRecord.swift; sourceTree = "<group>"; };
 		AA0001042D00000100000003 /* MigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
@@ -120,6 +121,7 @@
 		08C6A68F2C5AC8640001A26D = {
 			isa = PBXGroup;
 			children = (
+				28E6B0362F923863001AAA47 /* Product.storekit */,
 				08C6A69A2C5AC8640001A26D /* SimpleHabitTracker */,
 				08C6A6AB2C5AC8660001A26D /* SimpleHabitTrackerTests */,
 				08C6A6B52C5AC8660001A26D /* SimpleHabitTrackerUITests */,
@@ -559,7 +561,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SimpleHabitTracker/SimpleHabitTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"simpleHabitTracker/Preview Content\"";
 				DEVELOPMENT_TEAM = 228DC29L7W;
 				ENABLE_PREVIEWS = YES;
@@ -590,7 +592,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SimpleHabitTracker/SimpleHabitTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"simpleHabitTracker/Preview Content\"";
 				DEVELOPMENT_TEAM = 228DC29L7W;
 				ENABLE_PREVIEWS = YES;

@@ -130,6 +130,16 @@ struct PaywallView: View {
                     .cornerRadius(14)
                 }
                 .disabled(purchaseManager.isLoading)
+            } else if purchaseManager.productLoadFailed {
+                VStack(spacing: 8) {
+                    Text("Unable to load product")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    Button("Try Again") {
+                        Task { await purchaseManager.loadProducts() }
+                    }
+                    .font(.subheadline)
+                }
             } else {
                 ProgressView("Loading...")
             }
