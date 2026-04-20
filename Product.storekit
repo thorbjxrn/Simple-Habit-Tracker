@@ -9,7 +9,7 @@
       }
     ]
   },
-  "identifier" : "469CE0C4",
+  "identifier" : "41D7FE0D",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -17,11 +17,11 @@
     {
       "displayPrice" : "3.99",
       "familyShareable" : false,
-      "internalID" : "3936A1D6",
+      "internalID" : "6762312934",
       "localizations" : [
         {
-          "description" : "unlock the full app",
-          "displayName" : "premium",
+          "description" : "Unlock the full app",
+          "displayName" : "Premium",
           "locale" : "en_US"
         }
       ],
@@ -31,11 +31,14 @@
     }
   ],
   "settings" : {
+    "_applicationInternalID" : "6762311878",
     "_askToBuyEnabled" : false,
     "_billingGracePeriodEnabled" : false,
     "_billingIssuesEnabled" : false,
+    "_developerTeamID" : "228DC29L7W",
     "_disableDialogs" : false,
     "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 798134941.62341595,
     "_locale" : "en_US",
     "_renewalBillingIssuesEnabled" : false,
     "_storefront" : "USA",

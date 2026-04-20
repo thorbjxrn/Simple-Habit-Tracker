@@ -6,7 +6,7 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var showPaywall = false
     @State private var showRestartAlert = false
-    @AppStorage("todayIndicatorStyle") private var useDotIndicator = false
+    @AppStorage("todayIndicatorStyle") private var useDotIndicator = true
     @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled = false
     @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.defaultTheme.rawValue
 

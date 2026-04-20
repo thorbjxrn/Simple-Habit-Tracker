@@ -1,5 +1,20 @@
 import SwiftUI
 import SwiftData
+import TipKit
+
+struct LandscapeTip: Tip {
+    var title: Text {
+        Text("Rotate for More")
+    }
+
+    var message: Text? {
+        Text("Turn your device sideways to see calendars, heatmaps, and stats.")
+    }
+
+    var image: Image? {
+        Image(systemName: "rectangle.landscape.rotate")
+    }
+}
 
 struct HabitTrackerView: View {
     @Environment(\.modelContext) private var modelContext
@@ -25,6 +40,7 @@ struct HabitTrackerView: View {
     @State private var weeklyGoalHabit: Habit?
     @State private var selectedWeeklyGoal: Int = 0
     @State private var habitPlaceholder: String = ""
+    private let landscapeTip = LandscapeTip()
 
     private static let placeholders = [
         "Drink water",
@@ -104,6 +120,9 @@ struct HabitTrackerView: View {
                     },
                     showPaywall: $showPaywall
                 )
+
+                TipView(landscapeTip)
+                    .padding(.horizontal)
 
                 if viewModel == nil {
                     ProgressView()
@@ -270,6 +289,7 @@ struct HabitTrackerView: View {
         switch orientation {
         case .landscapeLeft, .landscapeRight:
             isLandscape = true
+            landscapeTip.invalidate(reason: .actionPerformed)
         case .portrait:
             isLandscape = false
         default:

@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import GoogleMobileAds
+import TipKit
 
 @main
 struct SimpleHabitTrackerApp: App {
@@ -34,6 +35,8 @@ struct SimpleHabitTrackerApp: App {
 
         MobileAds.shared.requestConfiguration.tagForUnderAgeOfConsent = false
         MobileAds.shared.start()
+
+        try? Tips.configure()
     }
 
     var body: some Scene {

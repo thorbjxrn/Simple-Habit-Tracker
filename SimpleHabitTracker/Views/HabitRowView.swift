@@ -13,7 +13,7 @@ struct HabitRowView: View {
     let isFirst: Bool
     let isLast: Bool
     let isPremium: Bool
-    @AppStorage("todayIndicatorStyle") private var useDotIndicator = false
+    @AppStorage("todayIndicatorStyle") private var useDotIndicator = true
     @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.defaultTheme.rawValue
 
     private var theme: AppTheme {
