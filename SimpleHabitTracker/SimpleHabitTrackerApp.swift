@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import GoogleMobileAds
 import TipKit
+import WidgetKit
 
 @main
 struct SimpleHabitTrackerApp: App {
@@ -16,19 +17,16 @@ struct SimpleHabitTrackerApp: App {
         _purchaseManager = State(initialValue: pm)
         _adManager = State(initialValue: AdManager(purchaseManager: pm))
 
-        let syncEnabled = UserDefaults.standard.bool(forKey: "iCloudSyncEnabled")
-        let isPremiumCached = UserDefaults.standard.bool(forKey: "isPremiumCached")
+        SharedModelContainer.migrateStoreToAppGroupIfNeeded()
+
+        // Sync settings to shared UserDefaults for widget access
+        let shared = SharedModelContainer.sharedUserDefaults
+        shared.set(UserDefaults.standard.bool(forKey: "isPremiumCached"), forKey: "isPremiumCached")
+        shared.set(UserDefaults.standard.bool(forKey: "iCloudSyncEnabled"), forKey: "iCloudSyncEnabled")
+        shared.set(UserDefaults.standard.string(forKey: "selectedTheme") ?? AppTheme.defaultTheme.rawValue, forKey: "selectedTheme")
 
         do {
-            let config: ModelConfiguration
-            if syncEnabled && isPremiumCached {
-                config = ModelConfiguration(
-                    cloudKitDatabase: .private("iCloud.thorbjxrn.SimpleHabitTracker")
-                )
-            } else {
-                config = ModelConfiguration(cloudKitDatabase: .none)
-            }
-            modelContainer = try ModelContainer(for: Habit.self, configurations: config)
+            modelContainer = try SharedModelContainer.create()
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
         }
@@ -54,6 +52,9 @@ struct SimpleHabitTrackerApp: App {
                         hasCompletedOnboarding = true
                         showOnboarding = false
                     }
+                }
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                    WidgetCenter.shared.reloadAllTimelines()
                 }
         }
         .modelContainer(modelContainer)

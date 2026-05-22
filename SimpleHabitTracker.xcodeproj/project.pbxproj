@@ -37,6 +37,7 @@
 		GG0007073300000700000004 /* StatsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007063300000700000004 /* StatsPanel.swift */; };
 		HH0008013400000800000001 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH0008003400000800000001 /* OnboardingView.swift */; };
 		II0009013500000900000001 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = II0009003500000900000001 /* PrivacyPolicyView.swift */; };
+		JJ000B013700000B00000001 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = JJ000B003700000B00000001 /* SharedModelContainer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		GG0007063300000700000004 /* StatsPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsPanel.swift; sourceTree = "<group>"; };
 		HH0008003400000800000001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		II0009003500000900000001 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
+		JJ000B003700000B00000001 /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
 		AA000A003600000A00000001 /* SimpleHabitTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SimpleHabitTracker.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -149,6 +151,7 @@
 				AA0001062D00000100000004 /* Models */,
 				AA0001072D00000100000005 /* Utilities */,
 				BB0002042E00000200000003 /* Views */,
+				JJ000B023700000B00000002 /* Shared */,
 				08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */,
 				08C6A69D2C5AC8640001A26D /* HabitTrackerView.swift */,
 				087672842D28603500683FA2 /* HabitViewModel.swift */,
@@ -240,6 +243,14 @@
 				GG0007063300000700000004 /* StatsPanel.swift */,
 			);
 			path = DashboardPanels;
+			sourceTree = "<group>";
+		};
+		JJ000B023700000B00000002 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				JJ000B003700000B00000001 /* SharedModelContainer.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -403,6 +414,7 @@
 				GG0007073300000700000004 /* StatsPanel.swift in Sources */,
 				HH0008013400000800000001 /* OnboardingView.swift in Sources */,
 				II0009013500000900000001 /* PrivacyPolicyView.swift in Sources */,
+				JJ000B013700000B00000001 /* SharedModelContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

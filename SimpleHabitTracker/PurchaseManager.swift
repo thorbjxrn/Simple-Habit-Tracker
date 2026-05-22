@@ -153,6 +153,7 @@ final class PurchaseManager {
     private func updatePremiumStatus(_ newValue: Bool) {
         isPremium = newValue
         UserDefaults.standard.set(newValue, forKey: Self.isPremiumKey)
+        SharedModelContainer.sharedUserDefaults.set(newValue, forKey: Self.isPremiumKey)
     }
 
     // MARK: - Debug

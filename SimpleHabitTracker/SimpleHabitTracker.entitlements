@@ -10,5 +10,9 @@
 	<array>
 		<string>iCloud.thorbjxrn.SimpleHabitTracker</string>
 	</array>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.thorbjxrn.SimpleHabitTracker</string>
+	</array>
 </dict>
 </plist>

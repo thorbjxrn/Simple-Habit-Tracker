@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import WidgetKit
 
 struct LandscapeTip: Tip {
     var title: Text {
@@ -239,6 +240,7 @@ struct HabitTrackerView: View {
                                 currentDayIndex: offset == 0 ? currentDayIndex : nil,
                                 onToggle: { dayIndex in
                                     viewModel?.toggleDay(weekRecord: weekRecord, dayIndex: dayIndex)
+                                    WidgetCenter.shared.reloadAllTimelines()
                                 },
                                 onRename: { id, currentName in
                                     renameHabit(id: id, currentName: currentName)
