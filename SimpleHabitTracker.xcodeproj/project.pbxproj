@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		041286497DA45620DF9CCC69 /* SingleHabitWeekWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7286FAD4ABC37C5915A136F3 /* SingleHabitWeekWidget.swift */; };
 		0811AC1D2C5AE48A003E752D /* readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 0811AC1C2C5AE48A003E752D /* readme.md */; };
 		087672852D28603500683FA2 /* HabitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087672842D28603500683FA2 /* HabitViewModel.swift */; };
 		08C6A69C2C5AC8640001A26D /* SimpleHabitTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A69B2C5AC8640001A26D /* SimpleHabitTrackerApp.swift */; };
@@ -17,19 +18,34 @@
 		08C6A6B72C5AC8660001A26D /* SimpleHabitTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B62C5AC8660001A26D /* SimpleHabitTrackerUITests.swift */; };
 		08C6A6B92C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */; };
 		08E202542C5E9D6F0054A4AD /* HabitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E202532C5E9D6F0054A4AD /* HabitModel.swift */; };
+		0F76763EE4E5ECCB34825B09 /* HabitEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9924DFA902AE50626A33CCF6 /* HabitEntity.swift */; };
 		2864A8CC2F8ED3F100725303 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 2864A8CB2F8ED3F100725303 /* GoogleMobileAds */; };
 		28EC62852F93D01F00C7B580 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28EC62842F93D01F00C7B580 /* StoreKit.framework */; };
+		408F506451CE9CCF05FC5387 /* MultiHabitTodayWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35DCA99BE818F8BDC404C72 /* MultiHabitTodayWidget.swift */; };
+		57D28BBFA2CCC5E1BFB12CD7 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0006003200000600000001 /* ThemeManager.swift */; };
+		5D3F626A5EF4F1640FB50E8C /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = JJ000B003700000B00000001 /* SharedModelContainer.swift */; };
+		63AF65775A73DED5DB947C64 /* ToggleHabitIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880D3C1241199F5C41F4897B /* ToggleHabitIntent.swift */; };
+		7B9A3CB672F10AC9D8330980 /* SimpleHabitTrackerWidgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A90A9CEC328A9D507B590F29 /* SimpleHabitTrackerWidgets.appex */; };
+		8C3E8A8C8A96D89434561C3D /* WidgetDateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB23CA8CB4B297E9B3D059F8 /* WidgetDateHelpers.swift */; };
+		949640AC3878C9AC1F1FF822 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 473DA22BC4D0B1435EB47EE6 /* Foundation.framework */; };
+		9745281CE1B40CE6DDD2CBF9 /* WidgetTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D994B06CCCB0471FC0DFFF /* WidgetTheme.swift */; };
+		A4EF0947FD2980FE3FA9B9B1 /* WidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B94A56828B6ED7A10C4252 /* WidgetBundle.swift */; };
 		AA0001012D00000100000001 /* HabitState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001002D00000100000001 /* HabitState.swift */; };
 		AA0001032D00000100000002 /* WeekRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001022D00000100000002 /* WeekRecord.swift */; };
 		AA0001052D00000100000003 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001042D00000100000003 /* MigrationManager.swift */; };
 		BB0002012E00000200000001 /* HabitRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0002002E00000200000001 /* HabitRowView.swift */; };
 		BB0002032E00000200000002 /* WeekNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0002022E00000200000002 /* WeekNavigationView.swift */; };
+		BC875B524EA381B60C3FC42C /* HeatmapWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD2720295B04EA5CEE3496C /* HeatmapWidget.swift */; };
 		CC0003012F00000300000001 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0003002F00000300000001 /* PurchaseManager.swift */; };
 		CC0003032F00000300000002 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0003022F00000300000002 /* PaywallView.swift */; };
+		D21090B1A1C6C81D5A915F5F /* HabitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E202532C5E9D6F0054A4AD /* HabitModel.swift */; };
+		D38BAD50E93A4F557886AC8F /* HabitState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001002D00000100000001 /* HabitState.swift */; };
 		DD0004013000000400000001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0004003000000400000001 /* SettingsView.swift */; };
 		EE0005013100000500000001 /* AdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0005003100000500000001 /* AdManager.swift */; };
 		EE0005033100000500000002 /* BannerAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0005023100000500000002 /* BannerAdView.swift */; };
 		EE0005053100000500000003 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EE0005043100000500000003 /* PrivacyInfo.xcprivacy */; };
+		F79994E6078F929DE872C71D /* SingleHabitTodayWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72A02BEFB8773A6996D563A /* SingleHabitTodayWidget.swift */; };
+		F815BAA805EBA904E4E40595 /* WeekRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001022D00000100000002 /* WeekRecord.swift */; };
 		FF0006013200000600000001 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0006003200000600000001 /* ThemeManager.swift */; };
 		GG0007013300000700000001 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007003300000700000001 /* DashboardView.swift */; };
 		GG0007033300000700000002 /* MonthlyCalendarPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG0007023300000700000002 /* MonthlyCalendarPanel.swift */; };
@@ -57,6 +73,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		5D20C477CD412E9C4E67CEEE /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7B9A3CB672F10AC9D8330980 /* SimpleHabitTrackerWidgets.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0811AC1C2C5AE48A003E752D /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = SOURCE_ROOT; };
 		087672842D28603500683FA2 /* HabitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitViewModel.swift; sourceTree = "<group>"; };
@@ -71,20 +101,33 @@
 		08C6A6B62C5AC8660001A26D /* SimpleHabitTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerUITests.swift; sourceTree = "<group>"; };
 		08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		08E202532C5E9D6F0054A4AD /* HabitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitModel.swift; sourceTree = "<group>"; };
+		0CD2720295B04EA5CEE3496C /* HeatmapWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HeatmapWidget.swift; path = HeatmapWidget.swift; sourceTree = "<group>"; };
 		286C96352F92929B00310E89 /* Product.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Product.storekit; sourceTree = "<group>"; };
 		28EC62842F93D01F00C7B580 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		473DA22BC4D0B1435EB47EE6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		50B94A56828B6ED7A10C4252 /* WidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetBundle.swift; sourceTree = "<group>"; };
+		7286FAD4ABC37C5915A136F3 /* SingleHabitWeekWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SingleHabitWeekWidget.swift; path = SingleHabitWeekWidget.swift; sourceTree = "<group>"; };
+		880D3C1241199F5C41F4897B /* ToggleHabitIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToggleHabitIntent.swift; path = ToggleHabitIntent.swift; sourceTree = "<group>"; };
+		9924DFA902AE50626A33CCF6 /* HabitEntity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HabitEntity.swift; path = HabitEntity.swift; sourceTree = "<group>"; };
+		A90A9CEC328A9D507B590F29 /* SimpleHabitTrackerWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SimpleHabitTrackerWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0001002D00000100000001 /* HabitState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitState.swift; sourceTree = "<group>"; };
 		AA0001022D00000100000002 /* WeekRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekRecord.swift; sourceTree = "<group>"; };
 		AA0001042D00000100000003 /* MigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
+		AA000A003600000A00000001 /* SimpleHabitTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SimpleHabitTracker.entitlements; sourceTree = "<group>"; };
 		BB0002002E00000200000001 /* HabitRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitRowView.swift; sourceTree = "<group>"; };
 		BB0002022E00000200000002 /* WeekNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekNavigationView.swift; sourceTree = "<group>"; };
+		C72A02BEFB8773A6996D563A /* SingleHabitTodayWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SingleHabitTodayWidget.swift; path = SingleHabitTodayWidget.swift; sourceTree = "<group>"; };
 		CC0003002F00000300000001 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		CC0003022F00000300000002 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		D35DCA99BE818F8BDC404C72 /* MultiHabitTodayWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultiHabitTodayWidget.swift; path = MultiHabitTodayWidget.swift; sourceTree = "<group>"; };
+		D51BCFB0DC7BBDFEF1011474 /* SimpleHabitTrackerWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = SimpleHabitTrackerWidgets.entitlements; sourceTree = "<group>"; };
+		DB23CA8CB4B297E9B3D059F8 /* WidgetDateHelpers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WidgetDateHelpers.swift; path = WidgetDateHelpers.swift; sourceTree = "<group>"; };
 		DD0004003000000400000001 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		EE0005003100000500000001 /* AdManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdManager.swift; sourceTree = "<group>"; };
 		EE0005023100000500000002 /* BannerAdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAdView.swift; sourceTree = "<group>"; };
 		EE0005043100000500000003 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		EE0005063100000500000004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F4D994B06CCCB0471FC0DFFF /* WidgetTheme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WidgetTheme.swift; path = WidgetTheme.swift; sourceTree = "<group>"; };
 		FF0006003200000600000001 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		GG0007003300000700000001 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		GG0007023300000700000002 /* MonthlyCalendarPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyCalendarPanel.swift; sourceTree = "<group>"; };
@@ -93,7 +136,6 @@
 		HH0008003400000800000001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		II0009003500000900000001 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
 		JJ000B003700000B00000001 /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
-		AA000A003600000A00000001 /* SimpleHabitTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SimpleHabitTracker.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +162,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5EA9D6ED8067406327D6989D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				949640AC3878C9AC1F1FF822 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -132,6 +182,7 @@
 				08C6A6B52C5AC8660001A26D /* SimpleHabitTrackerUITests */,
 				2864A8CA2F8ED3F100725303 /* Frameworks */,
 				08C6A6992C5AC8640001A26D /* Products */,
+				92F51DCFE202CB0AA7605754 /* SimpleHabitTrackerWidgets */,
 			);
 			sourceTree = "<group>";
 		};
@@ -141,6 +192,7 @@
 				08C6A6982C5AC8640001A26D /* SimpleHabitTracker.app */,
 				08C6A6A82C5AC8660001A26D /* SimpleHabitTrackerTests.xctest */,
 				08C6A6B22C5AC8660001A26D /* SimpleHabitTrackerUITests.xctest */,
+				A90A9CEC328A9D507B590F29 /* SimpleHabitTrackerWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -196,8 +248,42 @@
 			isa = PBXGroup;
 			children = (
 				28EC62842F93D01F00C7B580 /* StoreKit.framework */,
+				F2B2C3A3BA58292E7655C355 /* iOS */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		748D74A8C007DE6387A48889 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				F4D994B06CCCB0471FC0DFFF /* WidgetTheme.swift */,
+				DB23CA8CB4B297E9B3D059F8 /* WidgetDateHelpers.swift */,
+			);
+			name = Helpers;
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		92F51DCFE202CB0AA7605754 /* SimpleHabitTrackerWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				93400320CC4F39A2E16CE0DE /* Intents */,
+				DA0D2F7B4138E23DFC06C133 /* Widgets */,
+				748D74A8C007DE6387A48889 /* Helpers */,
+				50B94A56828B6ED7A10C4252 /* WidgetBundle.swift */,
+				D51BCFB0DC7BBDFEF1011474 /* SimpleHabitTrackerWidgets.entitlements */,
+			);
+			name = SimpleHabitTrackerWidgets;
+			path = SimpleHabitTrackerWidgets;
+			sourceTree = "<group>";
+		};
+		93400320CC4F39A2E16CE0DE /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				9924DFA902AE50626A33CCF6 /* HabitEntity.swift */,
+				880D3C1241199F5C41F4897B /* ToggleHabitIntent.swift */,
+			);
+			name = Intents;
+			path = Intents;
 			sourceTree = "<group>";
 		};
 		AA0001062D00000100000004 /* Models */ = {
@@ -235,6 +321,26 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		DA0D2F7B4138E23DFC06C133 /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				C72A02BEFB8773A6996D563A /* SingleHabitTodayWidget.swift */,
+				7286FAD4ABC37C5915A136F3 /* SingleHabitWeekWidget.swift */,
+				D35DCA99BE818F8BDC404C72 /* MultiHabitTodayWidget.swift */,
+				0CD2720295B04EA5CEE3496C /* HeatmapWidget.swift */,
+			);
+			name = Widgets;
+			path = Widgets;
+			sourceTree = "<group>";
+		};
+		F2B2C3A3BA58292E7655C355 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				473DA22BC4D0B1435EB47EE6 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		GG0007083300000700000005 /* DashboardPanels */ = {
 			isa = PBXGroup;
 			children = (
@@ -263,6 +369,7 @@
 				08C6A6942C5AC8640001A26D /* Sources */,
 				08C6A6952C5AC8640001A26D /* Frameworks */,
 				08C6A6962C5AC8640001A26D /* Resources */,
+				5D20C477CD412E9C4E67CEEE /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
@@ -308,6 +415,23 @@
 			productName = simpleHabitTrackerUITests;
 			productReference = 08C6A6B22C5AC8660001A26D /* SimpleHabitTrackerUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		FC7EBE9A9DCA14191497AAD8 /* SimpleHabitTrackerWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 980A840E1C96B870B14C2D0A /* Build configuration list for PBXNativeTarget "SimpleHabitTrackerWidgets" */;
+			buildPhases = (
+				6ABEFDF46AFAB8AD234694CD /* Sources */,
+				5EA9D6ED8067406327D6989D /* Frameworks */,
+				39AED2D4BAA457D2885175DB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SimpleHabitTrackerWidgets;
+			productName = SimpleHabitTrackerWidgets;
+			productReference = A90A9CEC328A9D507B590F29 /* SimpleHabitTrackerWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -356,6 +480,7 @@
 				08C6A6972C5AC8640001A26D /* SimpleHabitTracker */,
 				08C6A6A72C5AC8660001A26D /* SimpleHabitTrackerTests */,
 				08C6A6B12C5AC8660001A26D /* SimpleHabitTrackerUITests */,
+				FC7EBE9A9DCA14191497AAD8 /* SimpleHabitTrackerWidgets */,
 			);
 		};
 /* End PBXProject section */
@@ -380,6 +505,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		08C6A6B02C5AC8660001A26D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		39AED2D4BAA457D2885175DB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -432,6 +564,27 @@
 			files = (
 				08C6A6B92C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift in Sources */,
 				08C6A6B72C5AC8660001A26D /* SimpleHabitTrackerUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6ABEFDF46AFAB8AD234694CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4EF0947FD2980FE3FA9B9B1 /* WidgetBundle.swift in Sources */,
+				0F76763EE4E5ECCB34825B09 /* HabitEntity.swift in Sources */,
+				63AF65775A73DED5DB947C64 /* ToggleHabitIntent.swift in Sources */,
+				F79994E6078F929DE872C71D /* SingleHabitTodayWidget.swift in Sources */,
+				041286497DA45620DF9CCC69 /* SingleHabitWeekWidget.swift in Sources */,
+				408F506451CE9CCF05FC5387 /* MultiHabitTodayWidget.swift in Sources */,
+				BC875B524EA381B60C3FC42C /* HeatmapWidget.swift in Sources */,
+				9745281CE1B40CE6DDD2CBF9 /* WidgetTheme.swift in Sources */,
+				8C3E8A8C8A96D89434561C3D /* WidgetDateHelpers.swift in Sources */,
+				D21090B1A1C6C81D5A915F5F /* HabitModel.swift in Sources */,
+				F815BAA805EBA904E4E40595 /* WeekRecord.swift in Sources */,
+				D38BAD50E93A4F557886AC8F /* HabitState.swift in Sources */,
+				57D28BBFA2CCC5E1BFB12CD7 /* ThemeManager.swift in Sources */,
+				5D3F626A5EF4F1640FB50E8C /* SharedModelContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -706,6 +859,57 @@
 			};
 			name = Release;
 		};
+		26617B831BA91839A7D867BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = SimpleHabitTrackerWidgets/SimpleHabitTrackerWidgets.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 228DC29L7W;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTracker.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4F451FD9CB2B156B4F7402A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = SimpleHabitTrackerWidgets/SimpleHabitTrackerWidgets.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 228DC29L7W;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTracker.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -741,6 +945,15 @@
 			buildConfigurations = (
 				08C6A6C32C5AC8660001A26D /* Debug */,
 				08C6A6C42C5AC8660001A26D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		980A840E1C96B870B14C2D0A /* Build configuration list for PBXNativeTarget "SimpleHabitTrackerWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				26617B831BA91839A7D867BC /* Release */,
+				4F451FD9CB2B156B4F7402A8 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
