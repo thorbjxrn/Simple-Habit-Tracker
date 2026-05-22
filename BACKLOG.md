@@ -13,7 +13,7 @@
 ## Medium (v1.2+)
 
 - [ ] Notifications / reminders
-- [ ] Widgets
+- [x] ~~Widgets~~ — 4 WidgetKit widgets (single today free, week/multi/heatmap premium)
 - [ ] Emoji habit circles — replace dots with emoji pairs (fire/water, rose/wilted, etc.)
 - [ ] Smarter ad strategy — rewarded ads for extended free history, A/B test
 
