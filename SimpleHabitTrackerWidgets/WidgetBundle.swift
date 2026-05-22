@@ -5,5 +5,8 @@ import WidgetKit
 struct SimpleHabitTrackerWidgetBundle: WidgetBundle {
     var body: some Widget {
         SingleHabitTodayWidget()
+        SingleHabitWeekWidget()
+        MultiHabitTodayWidget()
+        HeatmapWidget()
     }
 }
