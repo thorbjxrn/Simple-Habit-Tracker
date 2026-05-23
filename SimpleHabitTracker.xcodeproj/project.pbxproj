@@ -107,6 +107,7 @@
 		473DA22BC4D0B1435EB47EE6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		50B94A56828B6ED7A10C4252 /* WidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetBundle.swift; sourceTree = "<group>"; };
 		7286FAD4ABC37C5915A136F3 /* SingleHabitWeekWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SingleHabitWeekWidget.swift; path = SingleHabitWeekWidget.swift; sourceTree = "<group>"; };
+		72957D37AF0FCA19053F960D /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		880D3C1241199F5C41F4897B /* ToggleHabitIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToggleHabitIntent.swift; path = ToggleHabitIntent.swift; sourceTree = "<group>"; };
 		9924DFA902AE50626A33CCF6 /* HabitEntity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HabitEntity.swift; path = HabitEntity.swift; sourceTree = "<group>"; };
 		A90A9CEC328A9D507B590F29 /* SimpleHabitTrackerWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SimpleHabitTrackerWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -271,6 +272,7 @@
 				748D74A8C007DE6387A48889 /* Helpers */,
 				50B94A56828B6ED7A10C4252 /* WidgetBundle.swift */,
 				D51BCFB0DC7BBDFEF1011474 /* SimpleHabitTrackerWidgets.entitlements */,
+				72957D37AF0FCA19053F960D /* Info.plist */,
 			);
 			name = SimpleHabitTrackerWidgets;
 			path = SimpleHabitTrackerWidgets;
@@ -867,8 +869,8 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleHabitTrackerWidgets/SimpleHabitTrackerWidgets.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 228DC29L7W;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SimpleHabitTrackerWidgets/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -893,8 +895,8 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleHabitTrackerWidgets/SimpleHabitTrackerWidgets.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 228DC29L7W;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SimpleHabitTrackerWidgets/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
