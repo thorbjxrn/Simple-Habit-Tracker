@@ -99,7 +99,7 @@ struct HeatmapWidgetView: View {
     private var heatmapGrid: some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 2) {
-                Color.clear.frame(width: 50, height: 10)
+                Color.clear.frame(width: 55, height: 10)
                 ForEach(Array(entry.weekLabels.enumerated()), id: \.offset) { _, label in
                     Text(label)
                         .font(.system(size: 7))
@@ -113,14 +113,13 @@ struct HeatmapWidgetView: View {
                     Text(entry.habitNames[rowIndex])
                         .font(.system(size: 8))
                         .foregroundStyle(.secondary)
-                        .frame(width: 50, alignment: .trailing)
+                        .frame(width: 55, alignment: .trailing)
                         .lineLimit(1)
 
                     ForEach(Array(row.enumerated()), id: \.offset) { _, count in
                         RoundedRectangle(cornerRadius: 2)
                             .fill(heatColor(count: count))
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .aspectRatio(1, contentMode: .fit)
                     }
                 }
             }
