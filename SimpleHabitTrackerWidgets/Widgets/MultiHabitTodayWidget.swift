@@ -7,6 +7,8 @@ struct HabitTodayData: Identifiable {
     let id: UUID
     let name: String
     let todayState: HabitState
+    let weeklyCompletions: Int
+    let weeklyTarget: Int?
 }
 
 struct MultiHabitTodayEntry: TimelineEntry {
@@ -25,9 +27,9 @@ struct MultiHabitTodayProvider: AppIntentTimelineProvider {
         Entry(
             date: Date(),
             habits: [
-                HabitTodayData(id: UUID(), name: "Exercise", todayState: .completed),
-                HabitTodayData(id: UUID(), name: "Read", todayState: .notCompleted),
-                HabitTodayData(id: UUID(), name: "Meditate", todayState: .notCompleted),
+                HabitTodayData(id: UUID(), name: "Exercise", todayState: .completed, weeklyCompletions: 5, weeklyTarget: 5),
+                HabitTodayData(id: UUID(), name: "Read", todayState: .notCompleted, weeklyCompletions: 2, weeklyTarget: 7),
+                HabitTodayData(id: UUID(), name: "Meditate", todayState: .notCompleted, weeklyCompletions: 3, weeklyTarget: nil),
             ],
             dayIndex: 0,
             theme: .current(),
@@ -64,10 +66,14 @@ struct MultiHabitTodayProvider: AppIntentTimelineProvider {
         let selectedIDs = Set(configuration.habits?.map(\.id) ?? [])
         let filtered = selectedIDs.isEmpty ? allHabits : allHabits.filter { selectedIDs.contains($0.id) }
 
+        let startOfWeek = SharedModelContainer.weekStartDate(for: Date())
         let habitData = filtered.map { habit -> HabitTodayData in
-            let record = SharedModelContainer.currentWeekRecord(for: habit, context: context)
-            let state = record.completedDays[dayIndex]
-            return HabitTodayData(id: habit.id, name: habit.name, todayState: state)
+            let record = habit.weekRecords.first(where: {
+                Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
+            })
+            let state = record?.completedDays[dayIndex] ?? .notCompleted
+            let completions = record?.completedDays.filter { $0 == .completed }.count ?? 0
+            return HabitTodayData(id: habit.id, name: habit.name, todayState: state, weeklyCompletions: completions, weeklyTarget: habit.targetDaysPerWeek)
         }
 
         return Entry(date: Date(), habits: habitData, dayIndex: dayIndex, theme: .current(), isPremium: true)
@@ -83,12 +89,7 @@ struct MultiHabitTodayIntent: WidgetConfigurationIntent {
 }
 
 struct MultiHabitTodayView: View {
-    @Environment(\.widgetFamily) var family
     let entry: MultiHabitTodayEntry
-
-    private var maxHabits: Int {
-        family == .systemLarge ? 8 : 4
-    }
 
     var body: some View {
         if !entry.isPremium {
@@ -101,24 +102,77 @@ struct MultiHabitTodayView: View {
     }
 
     private var habitList: some View {
-        VStack(alignment: .leading, spacing: family == .systemLarge ? 8 : 6) {
-            ForEach(entry.habits.prefix(maxHabits)) { habit in
-                HStack(spacing: 10) {
-                    Button(intent: ToggleHabitIntent(habitID: habit.id, dayIndex: entry.dayIndex)) {
-                        Circle()
-                            .fill(entry.theme.color(for: habit.todayState))
-                            .frame(width: 24, height: 24)
-                    }
-                    .buttonStyle(.plain)
+        let habits = Array(entry.habits.prefix(8))
+        let useGrid = habits.count > 2
 
-                    Text(habit.name)
-                        .font(.subheadline)
-                        .lineLimit(1)
-                }
+        return Group {
+            if useGrid {
+                gridLayout(habits: habits)
+            } else {
+                listLayout(habits: habits)
             }
         }
         .widgetURL(URL(string: "simplehabittracker://"))
         .containerBackground(.fill.tertiary, for: .widget)
+    }
+
+    private func listLayout(habits: [HabitTodayData]) -> some View {
+        VStack(spacing: 8) {
+            ForEach(habits) { habit in
+                HStack(spacing: 12) {
+                    Button(intent: ToggleHabitIntent(habitID: habit.id, dayIndex: entry.dayIndex)) {
+                        Circle()
+                            .fill(entry.theme.color(for: habit.todayState))
+                            .frame(width: 36, height: 36)
+                    }
+                    .buttonStyle(.plain)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(habit.name)
+                            .font(.subheadline.weight(.medium))
+                            .lineLimit(1)
+
+                        Text("\(habit.weeklyCompletions)/\(habit.weeklyTarget ?? 7) this week")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+                }
+                .frame(maxHeight: .infinity)
+            }
+        }
+    }
+
+    private func gridLayout(habits: [HabitTodayData]) -> some View {
+        VStack(spacing: 4) {
+            ForEach(0..<((habits.count + 1) / 2), id: \.self) { rowIndex in
+                HStack(spacing: 12) {
+                    ForEach(habits[rowIndex * 2..<min(rowIndex * 2 + 2, habits.count)]) { habit in
+                        HStack(spacing: 8) {
+                            Button(intent: ToggleHabitIntent(habitID: habit.id, dayIndex: entry.dayIndex)) {
+                                Circle()
+                                    .fill(entry.theme.color(for: habit.todayState))
+                                    .frame(width: 24, height: 24)
+                            }
+                            .buttonStyle(.plain)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(habit.name)
+                                    .font(.caption)
+                                    .lineLimit(1)
+
+                                Text("\(habit.weeklyCompletions)/\(habit.weeklyTarget ?? 7) this week")
+                                    .font(.system(size: 9))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+                .frame(maxHeight: .infinity)
+            }
+        }
     }
 
     private var emptyPlaceholder: some View {
@@ -161,6 +215,6 @@ struct MultiHabitTodayWidget: Widget {
         }
         .configurationDisplayName("Habits Today")
         .description("Track multiple habits at a glance")
-        .supportedFamilies([.systemMedium, .systemLarge])
+        .supportedFamilies([.systemMedium])
     }
 }

@@ -106,6 +106,12 @@ final class PurchaseManager {
     // MARK: - Verify Entitlement
 
     private func verifyEntitlement() async {
+        #if DEBUG
+        if UserDefaults.standard.bool(forKey: "debugPremiumOverride") {
+            isPremium = UserDefaults.standard.bool(forKey: Self.isPremiumKey)
+            return
+        }
+        #endif
         do {
             let result = await Transaction.currentEntitlement(for: Self.productID)
             if let result {
@@ -116,7 +122,6 @@ final class PurchaseManager {
                 updatePremiumStatus(false)
             }
         } catch {
-            // If verification fails, rely on cached value
             print("Entitlement verification error: \(error)")
         }
     }
@@ -160,6 +165,7 @@ final class PurchaseManager {
 
     #if DEBUG
     func debugTogglePremium() {
+        UserDefaults.standard.set(true, forKey: "debugPremiumOverride")
         updatePremiumStatus(!isPremium)
     }
     #endif

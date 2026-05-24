@@ -239,7 +239,8 @@ struct HabitTrackerView: View {
                                 weekRecord: weekRecord,
                                 currentDayIndex: offset == 0 ? currentDayIndex : nil,
                                 onToggle: { dayIndex in
-                                    viewModel?.toggleDay(weekRecord: weekRecord, dayIndex: dayIndex)
+                                    let record = viewModel?.ensureWeekRecord(for: habit, weekOffset: offset) ?? weekRecord
+                                    viewModel?.toggleDay(weekRecord: record, dayIndex: dayIndex)
                                     WidgetCenter.shared.reloadAllTimelines()
                                 },
                                 onRename: { id, currentName in

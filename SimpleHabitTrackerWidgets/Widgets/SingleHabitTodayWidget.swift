@@ -10,6 +10,8 @@ struct SingleHabitTodayEntry: TimelineEntry {
     let todayState: HabitState
     let dayIndex: Int
     let theme: WidgetTheme
+    let weeklyCompletions: Int
+    let weeklyTarget: Int?
 }
 
 struct SingleHabitTodayProvider: AppIntentTimelineProvider {
@@ -23,7 +25,9 @@ struct SingleHabitTodayProvider: AppIntentTimelineProvider {
             habitID: nil,
             todayState: .notCompleted,
             dayIndex: 0,
-            theme: .current()
+            theme: .current(),
+            weeklyCompletions: 3,
+            weeklyTarget: 5
         )
     }
 
@@ -46,7 +50,9 @@ struct SingleHabitTodayProvider: AppIntentTimelineProvider {
                 habitID: nil,
                 todayState: .notCompleted,
                 dayIndex: WidgetDateHelpers.todayDayIndex,
-                theme: .current()
+                theme: .current(),
+                weeklyCompletions: 0,
+                weeklyTarget: nil
             )
         }
 
@@ -62,12 +68,18 @@ struct SingleHabitTodayProvider: AppIntentTimelineProvider {
                 habitID: selectedHabit.id,
                 todayState: .notCompleted,
                 dayIndex: dayIndex,
-                theme: .current()
+                theme: .current(),
+                weeklyCompletions: 0,
+                weeklyTarget: nil
             )
         }
 
-        let record = SharedModelContainer.currentWeekRecord(for: habit, context: context)
-        let todayState = record.completedDays[dayIndex]
+        let startOfWeek = SharedModelContainer.weekStartDate(for: Date())
+        let record = habit.weekRecords.first(where: {
+            Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
+        })
+        let todayState = record?.completedDays[dayIndex] ?? .notCompleted
+        let weeklyCompletions = record?.completedDays.filter { $0 == .completed }.count ?? 0
 
         return Entry(
             date: Date(),
@@ -75,7 +87,9 @@ struct SingleHabitTodayProvider: AppIntentTimelineProvider {
             habitID: habit.id,
             todayState: todayState,
             dayIndex: dayIndex,
-            theme: .current()
+            theme: .current(),
+            weeklyCompletions: weeklyCompletions,
+            weeklyTarget: habit.targetDaysPerWeek
         )
     }
 }
@@ -91,25 +105,47 @@ struct SingleHabitTodayIntent: WidgetConfigurationIntent {
 struct SingleHabitTodayView: View {
     let entry: SingleHabitTodayEntry
 
+    private var progressText: String {
+        if let target = entry.weeklyTarget {
+            return "\(entry.weeklyCompletions)/\(target)"
+        }
+        return "\(entry.weeklyCompletions)/7"
+    }
+
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 8) {
             Text(entry.habitName)
                 .font(.headline)
                 .lineLimit(2)
-                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.7)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            Spacer()
 
             if let habitID = entry.habitID {
                 Button(intent: ToggleHabitIntent(habitID: habitID, dayIndex: entry.dayIndex)) {
                     Circle()
                         .fill(entry.theme.color(for: entry.todayState))
-                        .frame(width: 44, height: 44)
+                        .frame(width: 52, height: 52)
                 }
                 .buttonStyle(.plain)
             } else {
                 Circle()
                     .fill(entry.theme.color(for: .notCompleted))
-                    .frame(width: 44, height: 44)
+                    .frame(width: 52, height: 52)
             }
+
+            Spacer()
+
+            HStack(spacing: 4) {
+                Text(progressText)
+                    .font(.title3.weight(.semibold))
+                    .monospacedDigit()
+                Text("this week")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .widgetURL(URL(string: "simplehabittracker://"))
         .containerBackground(.fill.tertiary, for: .widget)

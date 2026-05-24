@@ -20,8 +20,8 @@ final class HabitViewModel {
         modelContext.insert(habit)
 
         let weekRecord = WeekRecord(weekStartDate: weekStartDate(for: Date()))
-        weekRecord.habit = habit
         modelContext.insert(weekRecord)
+        weekRecord.habit = habit
 
         save()
     }
@@ -86,11 +86,24 @@ final class HabitViewModel {
             return existing
         }
 
-        let weekRecord = WeekRecord(weekStartDate: startOfWeek)
-        weekRecord.habit = habit
-        modelContext.insert(weekRecord)
+        return WeekRecord(weekStartDate: startOfWeek)
+    }
+
+    func ensureWeekRecord(for habit: Habit, weekOffset: Int) -> WeekRecord {
+        let targetDate = dateForWeekOffset(weekOffset)
+        let startOfWeek = weekStartDate(for: targetDate)
+
+        if let existing = habit.weekRecords.first(where: {
+            Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
+        }) {
+            return existing
+        }
+
+        let record = WeekRecord(weekStartDate: startOfWeek)
+        modelContext.insert(record)
+        record.habit = habit
         save()
-        return weekRecord
+        return record
     }
 
     // MARK: - Week Navigation

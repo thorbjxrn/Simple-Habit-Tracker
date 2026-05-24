@@ -89,13 +89,16 @@ struct SingleHabitWeekProvider: AppIntentTimelineProvider {
             )
         }
 
-        let record = SharedModelContainer.currentWeekRecord(for: habit, context: context)
+        let startOfWeek = SharedModelContainer.weekStartDate(for: Date())
+        let record = habit.weekRecords.first(where: {
+            Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
+        })
 
         return Entry(
             date: Date(),
             habitName: habit.name,
             habitID: habit.id,
-            days: record.completedDays,
+            days: record?.completedDays ?? Array(repeating: .notCompleted, count: 7),
             dayLabels: WidgetDateHelpers.dayLabels,
             todayIndex: todayIndex,
             theme: .current(),

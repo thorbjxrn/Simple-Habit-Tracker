@@ -17,9 +17,9 @@ struct HeatmapProvider: TimelineProvider {
     func placeholder(in context: Context) -> Entry {
         Entry(
             date: Date(),
-            grid: [[2, 5, 3, 1], [4, 6, 2, 0], [1, 3, 7, 5]],
+            grid: [[2, 5, 3, 1, 4, 6, 2, 0], [4, 6, 2, 0, 1, 3, 7, 5], [1, 3, 7, 5, 2, 4, 0, 3]],
             habitNames: ["Exercise", "Read", "Meditate"],
-            weekLabels: ["28/4", "5/5", "12/5", "19/5"],
+            weekLabels: ["31/3", "7/4", "14/4", "21/4", "28/4", "5/5", "12/5", "19/5"],
             theme: .current(),
             isPremium: true
         )
@@ -48,7 +48,7 @@ struct HeatmapProvider: TimelineProvider {
         let habits = (try? context.fetch(descriptor)) ?? []
 
         let calendar = Calendar.current
-        let weekCount = 12
+        let weekCount = 8
         var weekStarts: [Date] = []
         for i in stride(from: -(weekCount - 1), through: 0, by: 1) {
             if let d = calendar.date(byAdding: .weekOfYear, value: i, to: Date()) {
@@ -97,13 +97,9 @@ struct HeatmapWidgetView: View {
     }
 
     private var heatmapGrid: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            Text("Heatmap")
-                .font(.headline)
-                .padding(.bottom, 2)
-
-            HStack(spacing: 3) {
-                Color.clear.frame(width: 60, height: 10)
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(spacing: 2) {
+                Color.clear.frame(width: 50, height: 10)
                 ForEach(Array(entry.weekLabels.enumerated()), id: \.offset) { _, label in
                     Text(label)
                         .font(.system(size: 7))
@@ -113,37 +109,21 @@ struct HeatmapWidgetView: View {
             }
 
             ForEach(Array(entry.grid.enumerated()), id: \.offset) { rowIndex, row in
-                HStack(spacing: 3) {
+                HStack(spacing: 2) {
                     Text(entry.habitNames[rowIndex])
-                        .font(.system(size: 9))
+                        .font(.system(size: 8))
                         .foregroundStyle(.secondary)
-                        .frame(width: 60, alignment: .trailing)
+                        .frame(width: 50, alignment: .trailing)
                         .lineLimit(1)
 
                     ForEach(Array(row.enumerated()), id: \.offset) { _, count in
                         RoundedRectangle(cornerRadius: 2)
                             .fill(heatColor(count: count))
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .aspectRatio(1, contentMode: .fit)
                     }
                 }
             }
-
-            HStack(spacing: 4) {
-                Spacer()
-                Text("Less")
-                    .font(.system(size: 7))
-                    .foregroundStyle(.tertiary)
-                ForEach(0..<5) { level in
-                    RoundedRectangle(cornerRadius: 1.5)
-                        .fill(heatColor(count: level * 2))
-                        .frame(width: 8, height: 8)
-                }
-                Text("More")
-                    .font(.system(size: 7))
-                    .foregroundStyle(.tertiary)
-            }
-            .padding(.top, 2)
         }
         .widgetURL(URL(string: "simplehabittracker://"))
         .containerBackground(.fill.tertiary, for: .widget)
@@ -200,6 +180,6 @@ struct HeatmapWidget: Widget {
         }
         .configurationDisplayName("Habit Heatmap")
         .description("See your completion patterns at a glance")
-        .supportedFamilies([.systemLarge])
+        .supportedFamilies([.systemMedium])
     }
 }
