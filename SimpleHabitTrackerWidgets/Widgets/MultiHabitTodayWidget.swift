@@ -55,7 +55,7 @@ struct MultiHabitTodayProvider: AppIntentTimelineProvider {
             return Entry(date: Date(), habits: [], dayIndex: dayIndex, theme: .current(), isPremium: false)
         }
 
-        guard let container = try? SharedModelContainer.create() else {
+        guard let container = try? SharedModelContainer.create(forWidget: true) else {
             return Entry(date: Date(), habits: [], dayIndex: dayIndex, theme: .current(), isPremium: true)
         }
 

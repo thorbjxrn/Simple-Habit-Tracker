@@ -59,7 +59,7 @@ struct SingleHabitWeekProvider: AppIntentTimelineProvider {
         }
 
         guard let selectedHabit = configuration.habit,
-              let container = try? SharedModelContainer.create() else {
+              let container = try? SharedModelContainer.create(forWidget: true) else {
             return Entry(
                 date: Date(),
                 habitName: "Select a habit",

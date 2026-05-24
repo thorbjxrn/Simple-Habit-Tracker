@@ -15,7 +15,7 @@ struct HabitEntity: AppEntity {
 
 struct HabitQuery: EntityQuery {
     func entities(for identifiers: [UUID]) async throws -> [HabitEntity] {
-        let container = try SharedModelContainer.create()
+        let container = try SharedModelContainer.create(forWidget: true)
         let context = ModelContext(container)
         let descriptor = FetchDescriptor<Habit>(sortBy: [SortDescriptor(\.sortOrder)])
         let habits = (try? context.fetch(descriptor)) ?? []
@@ -25,7 +25,7 @@ struct HabitQuery: EntityQuery {
     }
 
     func suggestedEntities() async throws -> [HabitEntity] {
-        let container = try SharedModelContainer.create()
+        let container = try SharedModelContainer.create(forWidget: true)
         let context = ModelContext(container)
         let descriptor = FetchDescriptor<Habit>(sortBy: [SortDescriptor(\.sortOrder)])
         let habits = (try? context.fetch(descriptor)) ?? []

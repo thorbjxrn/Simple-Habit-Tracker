@@ -1,5 +1,6 @@
 import Foundation
 import StoreKit
+import WidgetKit
 
 @Observable
 @MainActor
@@ -159,6 +160,7 @@ final class PurchaseManager {
         isPremium = newValue
         UserDefaults.standard.set(newValue, forKey: Self.isPremiumKey)
         SharedModelContainer.sharedUserDefaults.set(newValue, forKey: Self.isPremiumKey)
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     // MARK: - Debug

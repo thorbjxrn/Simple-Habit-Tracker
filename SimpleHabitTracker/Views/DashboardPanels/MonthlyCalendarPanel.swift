@@ -188,7 +188,7 @@ private struct SingleMonthView: View {
         .onTapGesture {
             guard !info.isFuture, let date = info.date, let habit else { return }
             let weekOff = weekOffset(for: date)
-            let record = viewModel.weekRecord(for: habit, weekOffset: weekOff)
+            let record = viewModel.ensureWeekRecord(for: habit, weekOffset: weekOff)
             let calendar = Calendar.current
             let dayOfWeek = calendar.component(.weekday, from: date)
             let dayIndex = (dayOfWeek - calendar.firstWeekday + 7) % 7

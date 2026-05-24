@@ -8,21 +8,21 @@ enum SharedModelContainer {
         UserDefaults(suiteName: appGroupID) ?? .standard
     }
 
-    static func create() throws -> ModelContainer {
-        let syncEnabled = sharedUserDefaults.bool(forKey: "iCloudSyncEnabled")
-        let isPremium = sharedUserDefaults.bool(forKey: "isPremiumCached")
-
+    static func create(forWidget: Bool = false) throws -> ModelContainer {
         let config: ModelConfiguration
-        if syncEnabled && isPremium {
-            config = ModelConfiguration(
-                url: storeURL,
-                cloudKitDatabase: .private("iCloud.thorbjxrn.SimpleHabitTracker")
-            )
+        if !forWidget {
+            let syncEnabled = sharedUserDefaults.bool(forKey: "iCloudSyncEnabled")
+            let isPremium = sharedUserDefaults.bool(forKey: "isPremiumCached")
+            if syncEnabled && isPremium {
+                config = ModelConfiguration(
+                    url: storeURL,
+                    cloudKitDatabase: .private("iCloud.thorbjxrn.SimpleHabitTracker")
+                )
+            } else {
+                config = ModelConfiguration(url: storeURL, cloudKitDatabase: .none)
+            }
         } else {
-            config = ModelConfiguration(
-                url: storeURL,
-                cloudKitDatabase: .none
-            )
+            config = ModelConfiguration(url: storeURL, cloudKitDatabase: .none)
         }
         return try ModelContainer(for: Habit.self, configurations: config)
     }
@@ -51,10 +51,19 @@ enum SharedModelContainer {
         guard fileManager.fileExists(atPath: defaultURL.path) else { return }
 
         let extensions = ["", "-wal", "-shm"]
-        for ext in extensions {
-            let src = URL(fileURLWithPath: defaultURL.path + ext)
-            let dst = URL(fileURLWithPath: newStoreURL.path + ext)
-            try? fileManager.copyItem(at: src, to: dst)
+        var copied: [URL] = []
+        do {
+            for ext in extensions {
+                let src = URL(fileURLWithPath: defaultURL.path + ext)
+                let dst = URL(fileURLWithPath: newStoreURL.path + ext)
+                guard fileManager.fileExists(atPath: src.path) else { continue }
+                try fileManager.copyItem(at: src, to: dst)
+                copied.append(dst)
+            }
+        } catch {
+            for dst in copied {
+                try? fileManager.removeItem(at: dst)
+            }
         }
     }
 
@@ -92,24 +101,30 @@ enum SharedModelContainer {
     }
 
     static func toggleDay(habitID: UUID, dayIndex: Int) {
-        guard let container = try? create() else { return }
-        let context = ModelContext(container)
+        guard dayIndex >= 0 && dayIndex < 7 else { return }
 
-        let descriptor = FetchDescriptor<Habit>()
-        guard let habits = try? context.fetch(descriptor),
-              let habit = habits.first(where: { $0.id == habitID }) else { return }
+        do {
+            let container = try create(forWidget: true)
+            let context = ModelContext(container)
 
-        let record = currentWeekRecord(for: habit, context: context)
-        guard dayIndex >= 0 && dayIndex < record.completedDays.count else { return }
+            let descriptor = FetchDescriptor<Habit>()
+            let habits = try context.fetch(descriptor)
+            guard let habit = habits.first(where: { $0.id == habitID }) else { return }
 
-        var days = record.completedDays
-        switch days[dayIndex] {
-        case .notCompleted: days[dayIndex] = .completed
-        case .completed: days[dayIndex] = .failed
-        case .failed: days[dayIndex] = .notCompleted
+            let record = currentWeekRecord(for: habit, context: context)
+            guard dayIndex < record.completedDays.count else { return }
+
+            var days = record.completedDays
+            switch days[dayIndex] {
+            case .notCompleted: days[dayIndex] = .completed
+            case .completed: days[dayIndex] = .failed
+            case .failed: days[dayIndex] = .notCompleted
+            }
+            record.completedDays = days
+            try context.save()
+        } catch {
+            print("Widget toggleDay failed: \(error)")
         }
-        record.completedDays = days
-        try? context.save()
     }
 
     static func dayLabels() -> [String] {

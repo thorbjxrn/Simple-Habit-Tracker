@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct SettingsView: View {
     @Environment(PurchaseManager.self) private var purchaseManager
@@ -138,6 +139,8 @@ struct SettingsView: View {
         )
         .onTapGesture {
             selectedThemeRaw = theme.rawValue
+            SharedModelContainer.sharedUserDefaults.set(theme.rawValue, forKey: "selectedTheme")
+            WidgetCenter.shared.reloadAllTimelines()
         }
     }
 
@@ -155,6 +158,8 @@ struct SettingsView: View {
                         get: { iCloudSyncEnabled },
                         set: { newValue in
                             iCloudSyncEnabled = newValue
+                            SharedModelContainer.sharedUserDefaults.set(newValue, forKey: "iCloudSyncEnabled")
+                            WidgetCenter.shared.reloadAllTimelines()
                             showRestartAlert = true
                         }
                     )) {

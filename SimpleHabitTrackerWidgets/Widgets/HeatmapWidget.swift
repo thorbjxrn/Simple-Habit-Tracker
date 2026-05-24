@@ -39,7 +39,7 @@ struct HeatmapProvider: TimelineProvider {
         let isPremium = SharedModelContainer.sharedUserDefaults.bool(forKey: "isPremiumCached")
         let theme = WidgetTheme.current()
 
-        guard isPremium, let container = try? SharedModelContainer.create() else {
+        guard isPremium, let container = try? SharedModelContainer.create(forWidget: true) else {
             return Entry(date: Date(), grid: [], habitNames: [], weekLabels: [], theme: theme, isPremium: isPremium)
         }
 
