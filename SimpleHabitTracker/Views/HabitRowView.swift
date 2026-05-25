@@ -103,9 +103,7 @@ struct HabitRowView: View {
                         }
                     }
 
-                if streak >= 1 || habit.targetDaysPerWeek != nil {
-                    Spacer()
-                }
+                Spacer()
                 if streak >= 1 {
                     streakBadge(streak: streak)
                 }

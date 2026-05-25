@@ -235,6 +235,8 @@ final class HabitViewModel {
             } else {
                 return 0
             }
+        } else if weekOffset != 0 {
+            return 0
         }
 
         var offset = weekOffset - 1
