@@ -3,10 +3,7 @@
 ## Shipped
 
 - [x] ~~Widgets (v1.1)~~ — 4 WidgetKit widgets (single today free, week/multi/heatmap premium), interactive toggle, theme sync
-
-## Priority (v1.2)
-
-- [ ] Streak tracking & display — current streak, best streak, streak badges. App Store subtitle already promises this
+- [x] ~~Streak tracking (v1.2)~~ — per-habit flame badge, consecutive weeks meeting weekly target, relative to viewed week
 
 ## Small / Polish (v1.2)
 
