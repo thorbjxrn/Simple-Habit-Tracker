@@ -10,6 +10,7 @@ struct HabitRowView: View {
     let onSetWeeklyGoal: ((Habit) -> Void)?
     let onMoveUp: ((Habit) -> Void)?
     let onMoveDown: ((Habit) -> Void)?
+    let streak: Int
     let isFirst: Bool
     let isLast: Bool
     let isPremium: Bool
@@ -39,6 +40,7 @@ struct HabitRowView: View {
         onSetWeeklyGoal: ((Habit) -> Void)? = nil,
         onMoveUp: ((Habit) -> Void)? = nil,
         onMoveDown: ((Habit) -> Void)? = nil,
+        streak: Int = 0,
         isFirst: Bool = false,
         isLast: Bool = false,
         isPremium: Bool = false
@@ -52,6 +54,7 @@ struct HabitRowView: View {
         self.onSetWeeklyGoal = onSetWeeklyGoal
         self.onMoveUp = onMoveUp
         self.onMoveDown = onMoveDown
+        self.streak = streak
         self.isFirst = isFirst
         self.isLast = isLast
         self.isPremium = isPremium
@@ -100,8 +103,13 @@ struct HabitRowView: View {
                         }
                     }
 
-                if let target = habit.targetDaysPerWeek {
+                if streak >= 1 || habit.targetDaysPerWeek != nil {
                     Spacer()
+                }
+                if streak >= 1 {
+                    streakBadge(streak: streak)
+                }
+                if let target = habit.targetDaysPerWeek {
                     weeklyGoalBadge(count: weeklyCompletionCount, target: target)
                 }
             }
@@ -161,6 +169,26 @@ struct HabitRowView: View {
         .background(
             Capsule()
                 .fill(met ? theme.completedColor.opacity(0.15) : Color.secondary.opacity(0.1))
+        )
+    }
+
+    // MARK: - Streak Badge
+
+    @ViewBuilder
+    private func streakBadge(streak: Int) -> some View {
+        HStack(spacing: 2) {
+            Image(systemName: "flame.fill")
+                .font(.caption2)
+            Text("\(streak)")
+                .font(.caption)
+                .fontWeight(.medium)
+        }
+        .foregroundStyle(.orange)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 2)
+        .background(
+            Capsule()
+                .fill(Color.orange.opacity(0.15))
         )
     }
 
