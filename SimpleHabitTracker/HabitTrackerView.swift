@@ -259,6 +259,7 @@ struct HabitTrackerView: View {
                                 onMoveDown: { habit in
                                     viewModel?.moveHabitDown(habit)
                                 },
+                                streak: viewModel?.currentStreak(for: habit, weekOffset: offset) ?? 0,
                                 isFirst: habit.id == habits.first?.id,
                                 isLast: habit.id == habits.last?.id,
                                 isPremium: purchaseManager.isPremium

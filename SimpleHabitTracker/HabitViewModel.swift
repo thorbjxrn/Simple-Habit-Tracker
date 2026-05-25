@@ -217,6 +217,48 @@ final class HabitViewModel {
         return results
     }
 
+    func currentStreak(for habit: Habit, weekOffset: Int = 0) -> Int {
+        let target = habit.targetDaysPerWeek ?? 7
+
+        let calendar = Calendar.current
+        var streak = 0
+
+        let viewedWeekStart = weekStartDate(for: dateForWeekOffset(weekOffset))
+        if let viewedRecord = habit.weekRecords.first(where: {
+            calendar.isDate($0.weekStartDate, equalTo: viewedWeekStart, toGranularity: .day)
+        }) {
+            let completions = viewedRecord.completedDays.filter { $0 == .completed }.count
+            if completions >= target {
+                streak += 1
+            } else if weekOffset == 0 {
+                // Current week in progress — skip it, count from previous
+            } else {
+                return 0
+            }
+        } else if weekOffset != 0 {
+            return 0
+        }
+
+        var offset = weekOffset - 1
+        while abs(offset) <= 520 {
+            let startOfWeek = weekStartDate(for: dateForWeekOffset(offset))
+
+            guard let record = habit.weekRecords.first(where: {
+                calendar.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
+            }) else { break }
+
+            let completions = record.completedDays.filter { $0 == .completed }.count
+            if completions >= target {
+                streak += 1
+                offset -= 1
+            } else {
+                break
+            }
+        }
+
+        return streak
+    }
+
     /// Consecutive weeks (going back from current) with at least one completion across any habit.
     func currentStreak() -> Int {
         let habits = fetchHabits()
