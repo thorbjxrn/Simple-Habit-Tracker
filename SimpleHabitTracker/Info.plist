@@ -6,6 +6,10 @@
 	<string>Simple Habits</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3919813110479769~8668344615</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Your data will be used to show you ads that are more relevant to you.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

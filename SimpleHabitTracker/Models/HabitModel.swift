@@ -3,10 +3,12 @@ import SwiftData
 
 @Model
 final class Habit {
-    var id: UUID
-    var name: String
-    var createdDate: Date
-    var sortOrder: Int
+    // Inline defaults are required for CloudKit-backed SwiftData:
+    // every stored property must be optional or have a default value.
+    var id: UUID = UUID()
+    var name: String = ""
+    var createdDate: Date = Date()
+    var sortOrder: Int = 0
     var colorTheme: String?
     var targetDaysPerWeek: Int?
 

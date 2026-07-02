@@ -2,6 +2,7 @@ import XCTest
 import SwiftData
 @testable import SimpleHabitTracker
 
+@MainActor
 final class SimpleHabitTrackerTests: XCTestCase {
 
     private var container: ModelContainer!
@@ -9,8 +10,16 @@ final class SimpleHabitTrackerTests: XCTestCase {
     private var viewModel: HabitViewModel!
 
     override func setUpWithError() throws {
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        container = try ModelContainer(for: Habit.self, WeekRecord.self, configurations: config)
+        let schema = Schema([Habit.self, WeekRecord.self])
+        // cloudKitDatabase must be .none: the default (.automatic) attempts CloudKit
+        // setup because the test host app carries an iCloud entitlement, and that
+        // fails container creation for in-memory stores (loadIssueModelContainer).
+        let config = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: true,
+            cloudKitDatabase: .none
+        )
+        container = try ModelContainer(for: schema, configurations: config)
         context = ModelContext(container)
         viewModel = HabitViewModel(modelContext: context)
     }

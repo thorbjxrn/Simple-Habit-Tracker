@@ -3,9 +3,11 @@ import SwiftData
 
 @Model
 final class WeekRecord {
-    var id: UUID
-    var weekStartDate: Date
-    var completedDaysRaw: [String]
+    // Inline defaults are required for CloudKit-backed SwiftData:
+    // every stored property must be optional or have a default value.
+    var id: UUID = UUID()
+    var weekStartDate: Date = Date()
+    var completedDaysRaw: [String] = []
     var habit: Habit?
 
     var completedDays: [HabitState] {

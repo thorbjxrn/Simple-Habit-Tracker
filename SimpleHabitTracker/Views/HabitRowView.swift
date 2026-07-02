@@ -132,6 +132,15 @@ struct HabitRowView: View {
                                 triggerHaptic(for: state)
                                 onToggle(index)
                             }
+                            .accessibilityElement()
+                            .accessibilityLabel("\(habit.name), \(dayName(for: index))")
+                            .accessibilityValue(accessibilityValue(for: state))
+                            .accessibilityHint("Double tap to change status")
+                            .accessibilityAddTraits(.isButton)
+                            .accessibilityAction {
+                                triggerHaptic(for: state)
+                                onToggle(index)
+                            }
 
                         if useDotIndicator {
                             Circle()
@@ -188,6 +197,24 @@ struct HabitRowView: View {
             Capsule()
                 .fill(Color.orange.opacity(0.15))
         )
+    }
+
+    // MARK: - Accessibility
+
+    private func dayName(for index: Int) -> String {
+        let calendar = Calendar.current
+        guard let date = calendar.date(byAdding: .day, value: index, to: weekRecord.weekStartDate) else {
+            return "Day \(index + 1)"
+        }
+        return date.formatted(.dateTime.weekday(.wide))
+    }
+
+    private func accessibilityValue(for state: HabitState) -> String {
+        switch state {
+        case .notCompleted: return "Not completed"
+        case .completed: return "Completed"
+        case .failed: return "Missed"
+        }
     }
 
     // MARK: - Haptics

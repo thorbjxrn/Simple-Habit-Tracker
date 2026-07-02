@@ -32,7 +32,8 @@ struct SimpleHabitTrackerApp: App {
         }
 
         MobileAds.shared.requestConfiguration.tagForUnderAgeOfConsent = false
-        MobileAds.shared.start()
+        // MobileAds.shared.start() is deferred to AdManager.startAdsIfNeeded(),
+        // which resolves App Tracking Transparency before any ad request.
 
         try? Tips.configure()
     }
@@ -46,6 +47,9 @@ struct SimpleHabitTrackerApp: App {
                     if !hasCompletedOnboarding {
                         showOnboarding = true
                     }
+                }
+                .task {
+                    await adManager.startAdsIfNeeded()
                 }
                 .fullScreenCover(isPresented: $showOnboarding) {
                     OnboardingView {
