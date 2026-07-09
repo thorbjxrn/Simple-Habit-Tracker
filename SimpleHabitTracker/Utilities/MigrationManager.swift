@@ -27,8 +27,13 @@ struct MigrationManager {
             return
         }
 
-        guard let legacyHabits = try? JSONDecoder().decode([LegacyHabit].self, from: data) else {
-            UserDefaults.standard.set(true, forKey: migrationKey)
+        let legacyHabits: [LegacyHabit]
+        do {
+            legacyHabits = try JSONDecoder().decode([LegacyHabit].self, from: data)
+        } catch {
+            // Leave migrationKey unset so migration retries next launch instead of
+            // permanently discarding the user's legacy data.
+            print("Migration decode failed, will retry next launch: \(error)")
             return
         }
 

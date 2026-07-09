@@ -1,3 +1,4 @@
+import AppTrackingTransparency
 import Foundation
 import GoogleMobileAds
 import UIKit
@@ -16,6 +17,10 @@ final class AdManager {
     // MARK: - State
 
     private(set) var interstitialAd: InterstitialAd?
+
+    /// True once ATT has been resolved and the Mobile Ads SDK started.
+    /// No ad may be requested before this to guarantee requests respect the ATT choice.
+    private(set) var adsStarted = false
 
     @ObservationIgnored
     private static let appOpenCountKey = "adManager_appOpenCount"
@@ -47,7 +52,7 @@ final class AdManager {
 
     /// Whether to show the banner ad (hidden during grace period)
     var shouldShowBanner: Bool {
-        !purchaseManager.isPremium && !isInGracePeriod
+        adsStarted && !purchaseManager.isPremium && !isInGracePeriod
     }
 
     /// Call when the user navigates to a past week. Returns true if an interstitial should show.
@@ -71,10 +76,24 @@ final class AdManager {
         self.historyNavCount = UserDefaults.standard.integer(forKey: Self.historyNavCountKey)
         self.appOpenCount = UserDefaults.standard.integer(forKey: Self.appOpenCountKey)
         self.appOpenCount += 1
+    }
 
-        if !isInGracePeriod {
-            loadInterstitial()
+    // MARK: - Startup (ATT + SDK)
+
+    /// Requests App Tracking Transparency authorization (only when ads will actually
+    /// be served — never for premium or grace-period users), then starts the Mobile
+    /// Ads SDK and preloads the first interstitial. Called once from the app root.
+    func startAdsIfNeeded() async {
+        guard !adsStarted else { return }
+        guard !purchaseManager.isPremium, !isInGracePeriod else { return }
+
+        if ATTrackingManager.trackingAuthorizationStatus == .notDetermined {
+            _ = await ATTrackingManager.requestTrackingAuthorization()
         }
+
+        await MobileAds.shared.start()
+        adsStarted = true
+        loadInterstitial()
     }
 
     // MARK: - Interstitial Ad Loading
