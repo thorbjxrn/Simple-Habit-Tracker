@@ -7,10 +7,10 @@
 - [x] ~~ATT missing despite AdMob + privacy policy promising it~~ — ATT request gates MobileAds start
 - [x] ~~VoiceOver can't reach day-toggle circles~~ — label/value/action on HabitRowView circles
 - [x] ~~ITSAppUsesNonExemptEncryption missing~~
-- [ ] Reconcile PrivacyInfo.xcprivacy + ASC privacy questionnaire with AdMob SDK (tracking, Device ID / Advertising Data)
-- [ ] Widget deep links dead: register URL scheme, add .onOpenURL, encode habit ID in widgetURL
+- [x] ~~Reconcile PrivacyInfo.xcprivacy with AdMob SDK~~ — NSPrivacyTracking=true + DeviceID/AdvertisingData (tracking, 3rd-party ads); widget extension got its own manifest (CA92.1). REMAINING MANUAL STEP: ASC web questionnaire must match — Device ID + Advertising Data, both 'used for tracking' + third-party advertising
+- [x] ~~Widget deep links dead~~ — simplehabittracker:// scheme registered, single-habit widgets encode habit UUID, .onOpenURL lands on current week
 - [ ] Rotation layout switch uses deprecated UIDevice.orientation, destroys state; no iPad Split View handling
-- [ ] Lost-update race in SharedModelContainer.toggleDay (serialize writes through an actor)
+- [x] ~~Lost-update race in SharedModelContainer.toggleDay~~ — writes serialized through WidgetStoreWriter actor with cached container; app-side reloads debounced via WidgetReloader
 - [ ] VersionedSchema/SchemaMigrationPlan V1 baseline
 - [ ] Force-unwrapped app-group container URL (SharedModelContainer)
 - [ ] Perf: per-habit [Date: WeekRecord] dictionary + completedCount helper (streaks, heatmap, stats, calendar)

@@ -58,7 +58,7 @@ struct SimpleHabitTrackerApp: App {
                     }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                    WidgetCenter.shared.reloadAllTimelines()
+                    WidgetReloader.requestReload()
                 }
         }
         .modelContainer(modelContainer)

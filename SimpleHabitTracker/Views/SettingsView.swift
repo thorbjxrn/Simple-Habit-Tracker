@@ -140,7 +140,7 @@ struct SettingsView: View {
         .onTapGesture {
             selectedThemeRaw = theme.rawValue
             SharedModelContainer.sharedUserDefaults.set(theme.rawValue, forKey: "selectedTheme")
-            WidgetCenter.shared.reloadAllTimelines()
+            WidgetReloader.requestReload()
         }
     }
 
@@ -159,7 +159,7 @@ struct SettingsView: View {
                         set: { newValue in
                             iCloudSyncEnabled = newValue
                             SharedModelContainer.sharedUserDefaults.set(newValue, forKey: "iCloudSyncEnabled")
-                            WidgetCenter.shared.reloadAllTimelines()
+                            WidgetReloader.requestReload()
                             showRestartAlert = true
                         }
                     )) {

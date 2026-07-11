@@ -147,7 +147,7 @@ struct SingleHabitTodayView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .widgetURL(URL(string: "simplehabittracker://"))
+        .widgetURL(entry.habitID.flatMap { URL(string: "simplehabittracker://habit/\($0.uuidString)") } ?? URL(string: "simplehabittracker://"))
         .containerBackground(.fill.tertiary, for: .widget)
     }
 }

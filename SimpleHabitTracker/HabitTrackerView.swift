@@ -79,6 +79,12 @@ struct HabitTrackerView: View {
         return (weekday - firstWeekday + 7) % 7
     }
 
+    private func handleDeepLink(_ url: URL) {
+        // Widget deep link: simplehabittracker://habit/<uuid> — land on the current week.
+        guard url.scheme == "simplehabittracker" else { return }
+        displayedWeekOffset = 0
+    }
+
     var body: some View {
         Group {
             if isLandscape, let vm = viewModel {
@@ -90,6 +96,9 @@ struct HabitTrackerView: View {
             } else {
                 habitListView
             }
+        }
+        .onOpenURL { url in
+            handleDeepLink(url)
         }
         .onAppear {
             if viewModel == nil {
@@ -241,7 +250,7 @@ struct HabitTrackerView: View {
                                 onToggle: { dayIndex in
                                     let record = viewModel?.ensureWeekRecord(for: habit, weekOffset: offset) ?? weekRecord
                                     viewModel?.toggleDay(weekRecord: record, dayIndex: dayIndex)
-                                    WidgetCenter.shared.reloadAllTimelines()
+                                    WidgetReloader.requestReload()
                                 },
                                 onRename: { id, currentName in
                                     renameHabit(id: id, currentName: currentName)
