@@ -1,4 +1,3 @@
-import AppTrackingTransparency
 import Foundation
 import GoogleMobileAds
 import UIKit
@@ -18,8 +17,7 @@ final class AdManager {
 
     private(set) var interstitialAd: InterstitialAd?
 
-    /// True once ATT has been resolved and the Mobile Ads SDK started.
-    /// No ad may be requested before this to guarantee requests respect the ATT choice.
+    /// True once the Mobile Ads SDK has started. No ad may be requested before this.
     private(set) var adsStarted = false
 
     @ObservationIgnored
@@ -78,22 +76,27 @@ final class AdManager {
         self.appOpenCount += 1
     }
 
-    // MARK: - Startup (ATT + SDK)
+    // MARK: - Startup (SDK)
 
-    /// Requests App Tracking Transparency authorization (only when ads will actually
-    /// be served — never for premium or grace-period users), then starts the Mobile
-    /// Ads SDK and preloads the first interstitial. Called once from the app root.
+    /// Starts the Mobile Ads SDK and preloads the first interstitial (never for
+    /// premium or grace-period users). Called once from the app root.
+    /// No ATT prompt: every request is explicitly non-personalized (npa=1).
     func startAdsIfNeeded() async {
         guard !adsStarted else { return }
         guard !purchaseManager.isPremium, !isInGracePeriod else { return }
 
-        if ATTrackingManager.trackingAuthorizationStatus == .notDetermined {
-            _ = await ATTrackingManager.requestTrackingAuthorization()
-        }
-
         await MobileAds.shared.start()
         adsStarted = true
         loadInterstitial()
+    }
+
+    /// All ad requests in the app must go through this: non-personalized only.
+    static func nonPersonalizedRequest() -> AdManagerRequest {
+        let request = AdManagerRequest()
+        let extras = Extras()
+        extras.additionalParameters = ["npa": "1"]
+        request.register(extras)
+        return request
     }
 
     // MARK: - Interstitial Ad Loading
@@ -105,7 +108,7 @@ final class AdManager {
             do {
                 interstitialAd = try await InterstitialAd.load(
                     with: Self.interstitialAdUnitID,
-                    request: AdManagerRequest()
+                    request: Self.nonPersonalizedRequest()
                 )
             } catch {
                 print("AdManager: Failed to load interstitial: \(error.localizedDescription)")
