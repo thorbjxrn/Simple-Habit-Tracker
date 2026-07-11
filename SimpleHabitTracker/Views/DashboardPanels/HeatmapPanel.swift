@@ -142,7 +142,7 @@ struct HeatmapPanel: View {
 
     private func completionCount(habit: Habit, weekStart: Date) -> Int {
         let calendar = Calendar.current
-        guard let record = habit.weekRecords.first(where: {
+        guard let record = (habit.weekRecords ?? []).first(where: {
             calendar.isDate($0.weekStartDate, equalTo: weekStart, toGranularity: .day)
         }) else {
             return 0

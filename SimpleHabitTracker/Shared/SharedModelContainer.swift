@@ -12,9 +12,9 @@ enum SharedModelContainer {
     static func create(forWidget: Bool = false) throws -> ModelContainer {
         let config: ModelConfiguration
         if !forWidget {
-            let syncEnabled = sharedUserDefaults.bool(forKey: "iCloudSyncEnabled")
+            // iCloud sync is automatic with Premium — no user toggle.
             let isPremium = sharedUserDefaults.bool(forKey: "isPremiumCached")
-            if syncEnabled && isPremium {
+            if isPremium {
                 config = ModelConfiguration(
                     url: storeURL,
                     cloudKitDatabase: .private("iCloud.thorbjxrn.SimpleHabitTracker")
@@ -88,7 +88,7 @@ enum SharedModelContainer {
         let startOfWeek = weekStartDate(for: Date())
         let calendar = Calendar.current
 
-        if let existing = habit.weekRecords.first(where: {
+        if let existing = (habit.weekRecords ?? []).first(where: {
             calendar.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
         }) {
             return existing
@@ -96,7 +96,7 @@ enum SharedModelContainer {
 
         let record = WeekRecord(weekStartDate: startOfWeek)
         context.insert(record)
-        habit.weekRecords.append(record)
+        habit.weekRecords = (habit.weekRecords ?? []) + [record]
         try? context.save()
         return record
     }

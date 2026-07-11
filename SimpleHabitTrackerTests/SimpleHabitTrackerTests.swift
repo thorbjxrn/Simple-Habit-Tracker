@@ -41,7 +41,7 @@ final class SimpleHabitTrackerTests: XCTestCase {
         XCTAssertEqual(habits.first?.sortOrder, 0)
         XCTAssertNotNil(habits.first?.createdDate)
         // Should also create a WeekRecord for the current week
-        XCTAssertEqual(habits.first?.weekRecords.count, 1)
+        XCTAssertEqual(habits.first?.weekRecords?.count, 1)
     }
 
     func testAddMultipleHabitsIncrementsSort() throws {
@@ -64,7 +64,7 @@ final class SimpleHabitTrackerTests: XCTestCase {
         let habits = viewModel.fetchHabits()
         XCTAssertEqual(habits.count, 1)
         let habit = habits.first!
-        let weekRecordID = habit.weekRecords.first!.id
+        let weekRecordID = (habit.weekRecords ?? []).first!.id
 
         viewModel.removeHabit(habit)
 
@@ -136,7 +136,7 @@ final class SimpleHabitTrackerTests: XCTestCase {
         viewModel.addHabit(name: "Stretch")
 
         let habit = viewModel.fetchHabits().first!
-        let weekRecord = habit.weekRecords.first!
+        let weekRecord = (habit.weekRecords ?? []).first!
 
         // Should have 7 days, all notCompleted
         XCTAssertEqual(weekRecord.completedDays.count, 7)
@@ -306,13 +306,13 @@ final class SimpleHabitTrackerTests: XCTestCase {
 
         // Verify each habit has a week record with the correct states
         for habit in habits {
-            XCTAssertEqual(habit.weekRecords.count, 1)
-            let record = habit.weekRecords.first!
+            XCTAssertEqual(habit.weekRecords?.count, 1)
+            let record = (habit.weekRecords ?? []).first!
             XCTAssertEqual(record.completedDays.count, 7)
         }
 
         let readingHabit = habits.first(where: { $0.name == "Legacy Reading" })!
-        let readingRecord = readingHabit.weekRecords.first!
+        let readingRecord = (readingHabit.weekRecords ?? []).first!
         XCTAssertEqual(readingRecord.completedDays[0], .completed)
         XCTAssertEqual(readingRecord.completedDays[1], .notCompleted)
         XCTAssertEqual(readingRecord.completedDays[2], .failed)

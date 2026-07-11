@@ -80,7 +80,7 @@ final class HabitViewModel {
         let targetDate = dateForWeekOffset(weekOffset)
         let startOfWeek = weekStartDate(for: targetDate)
 
-        if let existing = habit.weekRecords.first(where: {
+        if let existing = (habit.weekRecords ?? []).first(where: {
             Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
         }) {
             return existing
@@ -93,7 +93,7 @@ final class HabitViewModel {
         let targetDate = dateForWeekOffset(weekOffset)
         let startOfWeek = weekStartDate(for: targetDate)
 
-        if let existing = habit.weekRecords.first(where: {
+        if let existing = (habit.weekRecords ?? []).first(where: {
             Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
         }) {
             return existing
@@ -187,7 +187,7 @@ final class HabitViewModel {
 
         for habit in habits {
             // Only count days from habit creation or week start, whichever is later
-            guard let record = habit.weekRecords.first(where: {
+            guard let record = (habit.weekRecords ?? []).first(where: {
                 calendar.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
             }) else { continue }
 
@@ -224,7 +224,7 @@ final class HabitViewModel {
         var streak = 0
 
         let viewedWeekStart = weekStartDate(for: dateForWeekOffset(weekOffset))
-        if let viewedRecord = habit.weekRecords.first(where: {
+        if let viewedRecord = (habit.weekRecords ?? []).first(where: {
             calendar.isDate($0.weekStartDate, equalTo: viewedWeekStart, toGranularity: .day)
         }) {
             let completions = viewedRecord.completedDays.filter { $0 == .completed }.count
@@ -243,7 +243,7 @@ final class HabitViewModel {
         while abs(offset) <= 520 {
             let startOfWeek = weekStartDate(for: dateForWeekOffset(offset))
 
-            guard let record = habit.weekRecords.first(where: {
+            guard let record = (habit.weekRecords ?? []).first(where: {
                 calendar.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
             }) else { break }
 
@@ -274,7 +274,7 @@ final class HabitViewModel {
 
             var hasCompletion = false
             for habit in habits {
-                if let record = habit.weekRecords.first(where: {
+                if let record = (habit.weekRecords ?? []).first(where: {
                     calendar.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
                 }) {
                     if record.completedDays.contains(.completed) {
@@ -308,7 +308,7 @@ final class HabitViewModel {
         let calendar = Calendar.current
 
         for habit in habits {
-            for record in habit.weekRecords {
+            for record in habit.weekRecords ?? [] {
                 // Normalize to start of day for comparison
                 let normalized = calendar.startOfDay(for: record.weekStartDate)
                 weekStarts.insert(normalized)
@@ -320,7 +320,7 @@ final class HabitViewModel {
         for weekStart in weekStarts {
             var weekTotal = 0
             for habit in habits {
-                if let record = habit.weekRecords.first(where: {
+                if let record = (habit.weekRecords ?? []).first(where: {
                     calendar.isDate($0.weekStartDate, equalTo: weekStart, toGranularity: .day)
                 }) {
                     weekTotal += record.completedDays.filter { $0 == .completed }.count
@@ -341,7 +341,7 @@ final class HabitViewModel {
         var totalCompleted = 0
 
         for habit in habits {
-            for record in habit.weekRecords {
+            for record in habit.weekRecords ?? [] {
                 for state in record.completedDays {
                     totalPossible += 1
                     if state == .completed {
@@ -361,7 +361,7 @@ final class HabitViewModel {
         var total = 0
 
         for habit in habits {
-            for record in habit.weekRecords {
+            for record in habit.weekRecords ?? [] {
                 total += record.completedDays.filter { $0 == .completed }.count
             }
         }

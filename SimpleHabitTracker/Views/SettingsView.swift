@@ -6,9 +6,7 @@ struct SettingsView: View {
     @Environment(PurchaseManager.self) private var purchaseManager
     @Environment(\.modelContext) private var modelContext
     @State private var showPaywall = false
-    @State private var showRestartAlert = false
     @AppStorage("todayIndicatorStyle") private var useDotIndicator = true
-    @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled = false
     @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.defaultTheme.rawValue
 
     private var appVersion: String {
@@ -31,11 +29,6 @@ struct SettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPaywall) {
             PaywallView(purchaseManager: purchaseManager)
-        }
-        .alert("Restart Required", isPresented: $showRestartAlert) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text("Please restart the app for iCloud Sync changes to take effect.")
         }
     }
 
@@ -154,16 +147,11 @@ struct SettingsView: View {
         Section {
             if purchaseManager.isPremium {
                 if isICloudAvailable {
-                    Toggle(isOn: Binding(
-                        get: { iCloudSyncEnabled },
-                        set: { newValue in
-                            iCloudSyncEnabled = newValue
-                            SharedModelContainer.sharedUserDefaults.set(newValue, forKey: "iCloudSyncEnabled")
-                            WidgetReloader.requestReload()
-                            showRestartAlert = true
-                        }
-                    )) {
+                    HStack {
                         Label("iCloud Sync", systemImage: "icloud")
+                        Spacer()
+                        Text("On")
+                            .foregroundStyle(.secondary)
                     }
                 } else {
                     HStack {
@@ -191,9 +179,9 @@ struct SettingsView: View {
             Text("Data")
         } footer: {
             if purchaseManager.isPremium {
-                if iCloudSyncEnabled && isICloudAvailable {
-                    Text("Syncs your habits across all devices signed into the same iCloud account.")
-                } else if !isICloudAvailable {
+                if isICloudAvailable {
+                    Text("Your habits sync automatically across all devices signed into the same iCloud account.")
+                } else {
                     Text("Sign in to iCloud in device Settings to enable sync.")
                 }
             }

@@ -68,7 +68,7 @@ struct MultiHabitTodayProvider: AppIntentTimelineProvider {
 
         let startOfWeek = SharedModelContainer.weekStartDate(for: Date())
         let habitData = filtered.map { habit -> HabitTodayData in
-            let record = habit.weekRecords.first(where: {
+            let record = (habit.weekRecords ?? []).first(where: {
                 Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
             })
             let state = record?.completedDays[dayIndex] ?? .notCompleted

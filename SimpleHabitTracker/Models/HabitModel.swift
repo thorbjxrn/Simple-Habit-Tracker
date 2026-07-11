@@ -12,8 +12,10 @@ final class Habit {
     var colorTheme: String?
     var targetDaysPerWeek: Int?
 
+    // CloudKit-backed SwiftData additionally requires all relationships to be
+    // optional. Same underlying relationship name, so lightweight migration applies.
     @Relationship(deleteRule: .cascade, inverse: \WeekRecord.habit)
-    var weekRecords: [WeekRecord] = []
+    var weekRecords: [WeekRecord]? = []
 
     init(
         id: UUID = UUID(),

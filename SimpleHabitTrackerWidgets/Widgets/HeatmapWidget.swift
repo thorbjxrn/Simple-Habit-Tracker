@@ -64,7 +64,7 @@ struct HeatmapProvider: TimelineProvider {
         for habit in habits {
             var row: [Int] = []
             for weekStart in weekStarts {
-                let count = habit.weekRecords
+                let count = (habit.weekRecords ?? [])
                     .first(where: { calendar.isDate($0.weekStartDate, equalTo: weekStart, toGranularity: .day) })
                     .map { $0.completedDays.filter { $0 == .completed }.count } ?? 0
                 row.append(count)

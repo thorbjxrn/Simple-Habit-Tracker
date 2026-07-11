@@ -90,7 +90,7 @@ struct SingleHabitWeekProvider: AppIntentTimelineProvider {
         }
 
         let startOfWeek = SharedModelContainer.weekStartDate(for: Date())
-        let record = habit.weekRecords.first(where: {
+        let record = (habit.weekRecords ?? []).first(where: {
             Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
         })
 
