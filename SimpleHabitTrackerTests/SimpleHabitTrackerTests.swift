@@ -345,9 +345,10 @@ final class SimpleHabitTrackerTests: XCTestCase {
 
     // MARK: - Cross-process visibility (widget writes -> app context)
 
-    /// The widget process writes through its own ModelContainer. A live app
-    /// context serves cached rows until refreshed — rollback() refaults them.
-    /// This reproduces the mechanism with two containers on one store file.
+    /// Two containers on one store file see each other's writes after
+    /// rollback() — but only IN-PROCESS. Verified on-simulator that this does
+    /// NOT hold across processes (widget -> app), which is why the app rebuilds
+    /// its ModelContainer on foreground when the external-write token changes.
     func testRollbackPicksUpExternalWrites() throws {
         let storeURL = FileManager.default.temporaryDirectory
             .appendingPathComponent("cross-process-\(UUID().uuidString).store")

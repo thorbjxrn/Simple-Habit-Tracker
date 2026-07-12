@@ -35,6 +35,26 @@ enum SharedModelContainer {
         return containerURL.appendingPathComponent("SimpleHabitTracker.store")
     }
 
+    // MARK: - External write marker
+
+    /// The widget process writes through its own ModelContainer; a live app
+    /// container keeps serving cached rows (rollback/refetch is not enough
+    /// across processes). The widget bumps this token after each write and the
+    /// app rebuilds its container on foreground when the token changed.
+    private static var writeTokenURL: URL {
+        FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: appGroupID
+        )!.appendingPathComponent("external-write-token")
+    }
+
+    static func markExternalWrite() {
+        try? UUID().uuidString.write(to: writeTokenURL, atomically: true, encoding: .utf8)
+    }
+
+    static var externalWriteToken: String {
+        (try? String(contentsOf: writeTokenURL, encoding: .utf8)) ?? ""
+    }
+
     // MARK: - Store Migration
 
     static func migrateStoreToAppGroupIfNeeded() {
@@ -155,6 +175,7 @@ private actor WidgetStoreWriter {
             }
             record.completedDays = days
             try context.save()
+            SharedModelContainer.markExternalWrite()
         } catch {
             print("Widget toggleDay failed: \(error)")
         }

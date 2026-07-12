@@ -6,7 +6,8 @@ import WidgetKit
 
 @main
 struct SimpleHabitTrackerApp: App {
-    let modelContainer: ModelContainer
+    @State private var modelContainer: ModelContainer
+    @State private var lastSeenWriteToken = SharedModelContainer.externalWriteToken
     @State private var purchaseManager: PurchaseManager
     @State private var adManager: AdManager
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
@@ -25,13 +26,13 @@ struct SimpleHabitTrackerApp: App {
         shared.set(UserDefaults.standard.string(forKey: "selectedTheme") ?? AppTheme.defaultTheme.rawValue, forKey: "selectedTheme")
 
         do {
-            modelContainer = try SharedModelContainer.create()
+            _modelContainer = State(initialValue: try SharedModelContainer.create())
         } catch {
             // Never crash-loop on a CloudKit store failure — fall back to the
             // local store (same URL, sync disabled) and keep the user's data usable.
             print("CloudKit container failed, falling back to local store: \(error)")
             do {
-                modelContainer = try SharedModelContainer.create(forWidget: true)
+                _modelContainer = State(initialValue: try SharedModelContainer.create(forWidget: true))
             } catch {
                 fatalError("Failed to create ModelContainer: \(error)")
             }
@@ -64,10 +65,17 @@ struct SimpleHabitTrackerApp: App {
                     }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                    // The widget process writes through its own container; refault
-                    // cached objects so @Query re-reads the store on foreground.
-                    // Safe: every mutation in the app saves eagerly.
-                    modelContainer.mainContext.rollback()
+                    // The widget process writes through its own container, and a
+                    // live container serves cached rows no matter how we poke it
+                    // (verified: rollback/refetch is not enough cross-process).
+                    // Rebuild the container — but only when a widget actually wrote.
+                    let token = SharedModelContainer.externalWriteToken
+                    if token != lastSeenWriteToken {
+                        lastSeenWriteToken = token
+                        if let fresh = try? SharedModelContainer.create() {
+                            modelContainer = fresh
+                        }
+                    }
                     WidgetReloader.requestReload()
                 }
         }
