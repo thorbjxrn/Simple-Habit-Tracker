@@ -120,7 +120,7 @@ struct MultiHabitTodayView: View {
         VStack(spacing: 8) {
             ForEach(habits) { habit in
                 HStack(spacing: 12) {
-                    Button(intent: ToggleHabitIntent(habitID: habit.id, dayIndex: entry.dayIndex)) {
+                    Button(intent: ToggleHabitIntent(habitID: habit.id, dayIndex: entry.dayIndex, sourceKind: "MultiHabitToday")) {
                         Circle()
                             .fill(entry.theme.color(for: habit.todayState))
                             .frame(width: 36, height: 36)
@@ -150,7 +150,7 @@ struct MultiHabitTodayView: View {
                 HStack(spacing: 12) {
                     ForEach(habits[rowIndex * 2..<min(rowIndex * 2 + 2, habits.count)]) { habit in
                         HStack(spacing: 8) {
-                            Button(intent: ToggleHabitIntent(habitID: habit.id, dayIndex: entry.dayIndex)) {
+                            Button(intent: ToggleHabitIntent(habitID: habit.id, dayIndex: entry.dayIndex, sourceKind: "MultiHabitToday")) {
                                 Circle()
                                     .fill(entry.theme.color(for: habit.todayState))
                                     .frame(width: 24, height: 24)

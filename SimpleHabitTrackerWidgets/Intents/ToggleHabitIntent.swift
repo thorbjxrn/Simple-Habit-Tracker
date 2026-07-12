@@ -11,11 +11,19 @@ struct ToggleHabitIntent: AppIntent {
     @Parameter(title: "Day Index")
     var dayIndex: Int
 
-    init() {}
+    @Parameter(title: "Source Widget Kind")
+    var sourceKind: String
 
-    init(habitID: UUID, dayIndex: Int) {
+    static let allKinds = ["SingleHabitToday", "SingleHabitWeek", "MultiHabitToday", "Heatmap"]
+
+    init() {
+        self.sourceKind = ""
+    }
+
+    init(habitID: UUID, dayIndex: Int, sourceKind: String = "") {
         self.habitID = habitID.uuidString
         self.dayIndex = dayIndex
+        self.sourceKind = sourceKind
     }
 
     func perform() async throws -> some IntentResult {
@@ -23,7 +31,12 @@ struct ToggleHabitIntent: AppIntent {
             return .result()
         }
         await SharedModelContainer.toggleDay(habitID: uuid, dayIndex: dayIndex)
-        WidgetCenter.shared.reloadAllTimelines()
+        // The system reloads the tapped widget automatically (budget-exempt).
+        // Only sibling kinds need explicit reloads — those DO count against the
+        // extension's daily reload budget, so don't waste it on the source kind.
+        for kind in Self.allKinds where kind != sourceKind {
+            WidgetCenter.shared.reloadTimelines(ofKind: kind)
+        }
         return .result()
     }
 }
