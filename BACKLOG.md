@@ -7,10 +7,10 @@
 - [x] ~~ATT missing despite AdMob + privacy policy promising it~~ — ATT request gates MobileAds start
 - [x] ~~VoiceOver can't reach day-toggle circles~~ — label/value/action on HabitRowView circles
 - [x] ~~ITSAppUsesNonExemptEncryption missing~~
-- [ ] Reconcile PrivacyInfo.xcprivacy + ASC privacy questionnaire with AdMob SDK (tracking, Device ID / Advertising Data)
-- [ ] Widget deep links dead: register URL scheme, add .onOpenURL, encode habit ID in widgetURL
+- [x] ~~Reconcile ads privacy story~~ — decision 2026-07-11: NO ATT prompt, non-personalized ads only (npa=1 on every request via AdManager.nonPersonalizedRequest). ATT code + NSUserTrackingUsageDescription removed; manifest: tracking=false, DeviceID/AdvertisingData declared non-tracking; widget extension has its own manifest (CA92.1). REMAINING MANUAL STEP: ASC questionnaire — Device ID + Advertising Data collected, NOT used for tracking, purpose third-party advertising
+- [x] ~~Widget deep links dead~~ — simplehabittracker:// scheme registered, single-habit widgets encode habit UUID, .onOpenURL lands on current week
 - [ ] Rotation layout switch uses deprecated UIDevice.orientation, destroys state; no iPad Split View handling
-- [ ] Lost-update race in SharedModelContainer.toggleDay (serialize writes through an actor)
+- [x] ~~Lost-update race in SharedModelContainer.toggleDay~~ — writes serialized through WidgetStoreWriter actor with cached container; app-side reloads debounced via WidgetReloader
 - [ ] VersionedSchema/SchemaMigrationPlan V1 baseline
 - [ ] Force-unwrapped app-group container URL (SharedModelContainer)
 - [ ] Perf: per-habit [Date: WeekRecord] dictionary + completedCount helper (streaks, heatmap, stats, calendar)

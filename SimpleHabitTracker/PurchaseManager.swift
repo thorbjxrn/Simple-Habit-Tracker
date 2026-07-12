@@ -160,7 +160,7 @@ final class PurchaseManager {
         isPremium = newValue
         UserDefaults.standard.set(newValue, forKey: Self.isPremiumKey)
         SharedModelContainer.sharedUserDefaults.set(newValue, forKey: Self.isPremiumKey)
-        WidgetCenter.shared.reloadAllTimelines()
+        WidgetReloader.requestReload()
     }
 
     // MARK: - Debug

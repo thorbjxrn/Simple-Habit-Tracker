@@ -22,7 +22,7 @@ struct ToggleHabitIntent: AppIntent {
         guard let uuid = UUID(uuidString: habitID) else {
             return .result()
         }
-        SharedModelContainer.toggleDay(habitID: uuid, dayIndex: dayIndex)
+        await SharedModelContainer.toggleDay(habitID: uuid, dayIndex: dayIndex)
         WidgetCenter.shared.reloadAllTimelines()
         return .result()
     }

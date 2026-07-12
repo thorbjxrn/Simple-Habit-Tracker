@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import WidgetKit
 
 enum SharedModelContainer {
     static let appGroupID = "group.thorbjxrn.SimpleHabitTracker"
@@ -11,9 +12,9 @@ enum SharedModelContainer {
     static func create(forWidget: Bool = false) throws -> ModelContainer {
         let config: ModelConfiguration
         if !forWidget {
-            let syncEnabled = sharedUserDefaults.bool(forKey: "iCloudSyncEnabled")
+            // iCloud sync is automatic with Premium — no user toggle.
             let isPremium = sharedUserDefaults.bool(forKey: "isPremiumCached")
-            if syncEnabled && isPremium {
+            if isPremium {
                 config = ModelConfiguration(
                     url: storeURL,
                     cloudKitDatabase: .private("iCloud.thorbjxrn.SimpleHabitTracker")
@@ -87,7 +88,7 @@ enum SharedModelContainer {
         let startOfWeek = weekStartDate(for: Date())
         let calendar = Calendar.current
 
-        if let existing = habit.weekRecords.first(where: {
+        if let existing = (habit.weekRecords ?? []).first(where: {
             calendar.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
         }) {
             return existing
@@ -95,23 +96,55 @@ enum SharedModelContainer {
 
         let record = WeekRecord(weekStartDate: startOfWeek)
         context.insert(record)
-        habit.weekRecords.append(record)
+        habit.weekRecords = (habit.weekRecords ?? []) + [record]
         try? context.save()
         return record
     }
 
-    static func toggleDay(habitID: UUID, dayIndex: Int) {
-        guard dayIndex >= 0 && dayIndex < 7 else { return }
+    private static let widgetWriter = WidgetStoreWriter()
 
+    /// Serialized through an actor: rapid taps on a widget fire overlapping
+    /// intents, and unserialized fetch-modify-save cycles drop toggles.
+    static func toggleDay(habitID: UUID, dayIndex: Int) async {
+        guard dayIndex >= 0 && dayIndex < 7 else { return }
+        await widgetWriter.toggleDay(habitID: habitID, dayIndex: dayIndex)
+    }
+
+    static func dayLabels() -> [String] {
+        var calendar = Calendar.current
+        calendar.locale = Locale.current
+        let symbols = calendar.veryShortWeekdaySymbols
+        let firstWeekday = calendar.firstWeekday
+        var reordered: [String] = []
+        for i in 0..<7 {
+            let index = (firstWeekday - 1 + i) % 7
+            reordered.append(symbols[index])
+        }
+        return reordered
+    }
+}
+
+// MARK: - Serialized widget writes
+
+private actor WidgetStoreWriter {
+    private var container: ModelContainer?
+
+    private func sharedContainer() throws -> ModelContainer {
+        if let container { return container }
+        let created = try SharedModelContainer.create(forWidget: true)
+        container = created
+        return created
+    }
+
+    func toggleDay(habitID: UUID, dayIndex: Int) {
         do {
-            let container = try create(forWidget: true)
-            let context = ModelContext(container)
+            let context = ModelContext(try sharedContainer())
 
             let descriptor = FetchDescriptor<Habit>()
             let habits = try context.fetch(descriptor)
             guard let habit = habits.first(where: { $0.id == habitID }) else { return }
 
-            let record = currentWeekRecord(for: habit, context: context)
+            let record = SharedModelContainer.currentWeekRecord(for: habit, context: context)
             guard dayIndex < record.completedDays.count else { return }
 
             var days = record.completedDays
@@ -126,17 +159,22 @@ enum SharedModelContainer {
             print("Widget toggleDay failed: \(error)")
         }
     }
+}
 
-    static func dayLabels() -> [String] {
-        var calendar = Calendar.current
-        calendar.locale = Locale.current
-        let symbols = calendar.veryShortWeekdaySymbols
-        let firstWeekday = calendar.firstWeekday
-        var reordered: [String] = []
-        for i in 0..<7 {
-            let index = (firstWeekday - 1 + i) % 7
-            reordered.append(symbols[index])
+// MARK: - Coalesced widget reloads
+
+/// Debounces reloadAllTimelines so a burst of data changes (toggling several
+/// days, settings sweeps) spends one reload from WidgetKit's budget, not six.
+@MainActor
+enum WidgetReloader {
+    private static var pending: Task<Void, Never>?
+
+    static func requestReload() {
+        pending?.cancel()
+        pending = Task {
+            try? await Task.sleep(for: .milliseconds(800))
+            guard !Task.isCancelled else { return }
+            WidgetCenter.shared.reloadAllTimelines()
         }
-        return reordered
     }
 }

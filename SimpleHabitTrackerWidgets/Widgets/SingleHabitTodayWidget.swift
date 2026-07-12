@@ -75,7 +75,7 @@ struct SingleHabitTodayProvider: AppIntentTimelineProvider {
         }
 
         let startOfWeek = SharedModelContainer.weekStartDate(for: Date())
-        let record = habit.weekRecords.first(where: {
+        let record = (habit.weekRecords ?? []).first(where: {
             Calendar.current.isDate($0.weekStartDate, equalTo: startOfWeek, toGranularity: .day)
         })
         let todayState = record?.completedDays[dayIndex] ?? .notCompleted
@@ -147,7 +147,7 @@ struct SingleHabitTodayView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .widgetURL(URL(string: "simplehabittracker://"))
+        .widgetURL(entry.habitID.flatMap { URL(string: "simplehabittracker://habit/\($0.uuidString)") } ?? URL(string: "simplehabittracker://"))
         .containerBackground(.fill.tertiary, for: .widget)
     }
 }

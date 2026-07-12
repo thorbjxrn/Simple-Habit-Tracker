@@ -268,7 +268,7 @@ private struct SingleMonthView: View {
         let dayIndex = (dayOfWeek - calendar.firstWeekday + 7) % 7
         let weekStart = viewModel.weekStartDate(for: date)
 
-        guard let record = habit.weekRecords.first(where: {
+        guard let record = (habit.weekRecords ?? []).first(where: {
             calendar.isDate($0.weekStartDate, equalTo: weekStart, toGranularity: .day)
         }), dayIndex >= 0, dayIndex < record.completedDays.count else {
             return .notCompleted

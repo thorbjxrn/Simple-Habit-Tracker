@@ -44,6 +44,7 @@
 		EE0005013100000500000001 /* AdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0005003100000500000001 /* AdManager.swift */; };
 		EE0005033100000500000002 /* BannerAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0005023100000500000002 /* BannerAdView.swift */; };
 		EE0005053100000500000003 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EE0005043100000500000003 /* PrivacyInfo.xcprivacy */; };
+		575680F3D7EA48F49CD6FE54 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 535A6A84D572415AADFE566A /* PrivacyInfo.xcprivacy */; };
 		F79994E6078F929DE872C71D /* SingleHabitTodayWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72A02BEFB8773A6996D563A /* SingleHabitTodayWidget.swift */; };
 		F815BAA805EBA904E4E40595 /* WeekRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001022D00000100000002 /* WeekRecord.swift */; };
 		FF0006013200000600000001 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0006003200000600000001 /* ThemeManager.swift */; };
@@ -106,6 +107,7 @@
 		28EC62842F93D01F00C7B580 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		473DA22BC4D0B1435EB47EE6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		50B94A56828B6ED7A10C4252 /* WidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetBundle.swift; sourceTree = "<group>"; };
+		535A6A84D572415AADFE566A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		7286FAD4ABC37C5915A136F3 /* SingleHabitWeekWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SingleHabitWeekWidget.swift; path = SingleHabitWeekWidget.swift; sourceTree = "<group>"; };
 		72957D37AF0FCA19053F960D /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		880D3C1241199F5C41F4897B /* ToggleHabitIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToggleHabitIntent.swift; path = ToggleHabitIntent.swift; sourceTree = "<group>"; };
@@ -271,6 +273,7 @@
 				DA0D2F7B4138E23DFC06C133 /* Widgets */,
 				748D74A8C007DE6387A48889 /* Helpers */,
 				50B94A56828B6ED7A10C4252 /* WidgetBundle.swift */,
+				535A6A84D572415AADFE566A /* PrivacyInfo.xcprivacy */,
 				D51BCFB0DC7BBDFEF1011474 /* SimpleHabitTrackerWidgets.entitlements */,
 				72957D37AF0FCA19053F960D /* Info.plist */,
 			);
@@ -517,6 +520,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				575680F3D7EA48F49CD6FE54 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -747,7 +751,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -778,7 +782,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -797,7 +801,7 @@
 				DEVELOPMENT_TEAM = 228DC29L7W;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTrackerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -817,7 +821,7 @@
 				DEVELOPMENT_TEAM = 228DC29L7W;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTrackerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -835,7 +839,7 @@
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 228DC29L7W;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTrackerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -853,7 +857,7 @@
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 228DC29L7W;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTrackerUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -879,7 +883,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTracker.Widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -905,7 +909,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = thorbjxrn.SimpleHabitTracker.Widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

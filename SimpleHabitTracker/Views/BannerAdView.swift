@@ -20,7 +20,7 @@ struct BannerAdView: UIViewRepresentable {
             bannerView.rootViewController = windowScene.windows.first?.rootViewController
         }
 
-        bannerView.load(AdManagerRequest())
+        bannerView.load(AdManager.nonPersonalizedRequest())
         return bannerView
     }
 

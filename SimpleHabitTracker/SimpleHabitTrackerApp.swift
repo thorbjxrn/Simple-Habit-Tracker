@@ -22,13 +22,19 @@ struct SimpleHabitTrackerApp: App {
         // Sync settings to shared UserDefaults for widget access
         let shared = SharedModelContainer.sharedUserDefaults
         shared.set(UserDefaults.standard.bool(forKey: "isPremiumCached"), forKey: "isPremiumCached")
-        shared.set(UserDefaults.standard.bool(forKey: "iCloudSyncEnabled"), forKey: "iCloudSyncEnabled")
         shared.set(UserDefaults.standard.string(forKey: "selectedTheme") ?? AppTheme.defaultTheme.rawValue, forKey: "selectedTheme")
 
         do {
             modelContainer = try SharedModelContainer.create()
         } catch {
-            fatalError("Failed to create ModelContainer: \(error)")
+            // Never crash-loop on a CloudKit store failure — fall back to the
+            // local store (same URL, sync disabled) and keep the user's data usable.
+            print("CloudKit container failed, falling back to local store: \(error)")
+            do {
+                modelContainer = try SharedModelContainer.create(forWidget: true)
+            } catch {
+                fatalError("Failed to create ModelContainer: \(error)")
+            }
         }
 
         MobileAds.shared.requestConfiguration.tagForUnderAgeOfConsent = false
@@ -58,7 +64,11 @@ struct SimpleHabitTrackerApp: App {
                     }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                    WidgetCenter.shared.reloadAllTimelines()
+                    // The widget process writes through its own container; refault
+                    // cached objects so @Query re-reads the store on foreground.
+                    // Safe: every mutation in the app saves eagerly.
+                    modelContainer.mainContext.rollback()
+                    WidgetReloader.requestReload()
                 }
         }
         .modelContainer(modelContainer)
