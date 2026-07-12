@@ -1,5 +1,9 @@
 # Simple Habits Backlog
 
+## Release status
+
+- 1.2.2 SUBMITTED 2026-07-12 (WAITING_FOR_REVIEW, auto-release after approval). Contains: 4 widget fixes (dropped toggles, dead deep links, stale-on-foreground via container rebuild, sibling reload budget), CloudKit launch-crash fix (optional relationships), iCloud sync automatic with Premium (no toggle), no-ATT non-personalized ads, rotation via window-shape, VersionedSchema V1 baseline, safe app-group URL, rewritten App Store description. Manual: App Privacy questionnaire updated to Device ID + Advertising Data, not used for tracking.
+
 ## Tech Debt / Hardening (from 2026-07 health check, full reports in scratch/)
 
 - [x] ~~Migration decode failure silently deletes legacy data~~ — retry instead of marking complete
