@@ -342,4 +342,51 @@ final class SimpleHabitTrackerTests: XCTestCase {
         // Clean up
         UserDefaults.standard.removeObject(forKey: "didMigrateToSwiftData_v1")
     }
+
+    // MARK: - Cross-process visibility (widget writes -> app context)
+
+    /// The widget process writes through its own ModelContainer. A live app
+    /// context serves cached rows until refreshed — rollback() refaults them.
+    /// This reproduces the mechanism with two containers on one store file.
+    func testRollbackPicksUpExternalWrites() throws {
+        let storeURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("cross-process-\(UUID().uuidString).store")
+        defer {
+            for ext in ["", "-wal", "-shm"] {
+                try? FileManager.default.removeItem(atPath: storeURL.path + ext)
+            }
+        }
+        let configA = ModelConfiguration(url: storeURL, cloudKitDatabase: .none)
+        let configB = ModelConfiguration(url: storeURL, cloudKitDatabase: .none)
+        let appContainer = try ModelContainer(for: Habit.self, configurations: configA)
+        let widgetContainer = try ModelContainer(for: Habit.self, configurations: configB)
+
+        // "App" creates a habit with an empty week record and caches it.
+        let appContext = appContainer.mainContext
+        let habit = Habit(name: "Water")
+        let record = WeekRecord(weekStartDate: SharedModelContainer.weekStartDate(for: Date()))
+        appContext.insert(habit)
+        appContext.insert(record)
+        habit.weekRecords = [record]
+        try appContext.save()
+        let habitID = habit.id
+        XCTAssertEqual((habit.weekRecords ?? []).first?.completedDays[0], HabitState.notCompleted)
+
+        // "Widget" toggles day 0 through its own container.
+        let widgetContext = ModelContext(widgetContainer)
+        let widgetHabits = try widgetContext.fetch(FetchDescriptor<Habit>())
+        let widgetHabit = try XCTUnwrap(widgetHabits.first(where: { $0.id == habitID }))
+        let widgetRecord = try XCTUnwrap((widgetHabit.weekRecords ?? []).first)
+        var days = widgetRecord.completedDays
+        days[0] = .completed
+        widgetRecord.completedDays = days
+        try widgetContext.save()
+
+        // App context refreshes on foreground: rollback refaults cached objects.
+        appContext.rollback()
+        let refreshed = try appContext.fetch(FetchDescriptor<Habit>())
+        let refreshedRecord = try XCTUnwrap((refreshed.first(where: { $0.id == habitID })?.weekRecords ?? []).first)
+        XCTAssertEqual(refreshedRecord.completedDays[0], HabitState.completed,
+                       "app context must see the widget's write after rollback()")
+    }
 }

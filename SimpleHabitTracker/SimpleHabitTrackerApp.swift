@@ -64,6 +64,10 @@ struct SimpleHabitTrackerApp: App {
                     }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                    // The widget process writes through its own container; refault
+                    // cached objects so @Query re-reads the store on foreground.
+                    // Safe: every mutation in the app saves eagerly.
+                    modelContainer.mainContext.rollback()
                     WidgetReloader.requestReload()
                 }
         }
