@@ -25,14 +25,30 @@ enum SharedModelContainer {
         } else {
             config = ModelConfiguration(url: storeURL, cloudKitDatabase: .none)
         }
-        return try ModelContainer(for: Habit.self, configurations: config)
+        return try ModelContainer(
+            for: Schema(versionedSchema: SimpleHabitsSchemaV1.self),
+            migrationPlan: SimpleHabitsMigrationPlan.self,
+            configurations: config
+        )
+    }
+
+    /// App-group container, with a survivable fallback: if the entitlement is
+    /// ever missing (misconfigured build), degrade to Application Support
+    /// instead of crashing on a force-unwrap. Widgets would see no data, but
+    /// the app keeps working.
+    static var groupContainerURL: URL {
+        if let url = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: appGroupID
+        ) {
+            return url
+        }
+        assertionFailure("App group \(appGroupID) unavailable — check entitlements")
+        return FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            ?? URL(fileURLWithPath: NSTemporaryDirectory())
     }
 
     private static var storeURL: URL {
-        let containerURL = FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: appGroupID
-        )!
-        return containerURL.appendingPathComponent("SimpleHabitTracker.store")
+        groupContainerURL.appendingPathComponent("SimpleHabitTracker.store")
     }
 
     // MARK: - External write marker
@@ -42,9 +58,7 @@ enum SharedModelContainer {
     /// across processes). The widget bumps this token after each write and the
     /// app rebuilds its container on foreground when the token changed.
     private static var writeTokenURL: URL {
-        FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: appGroupID
-        )!.appendingPathComponent("external-write-token")
+        groupContainerURL.appendingPathComponent("external-write-token")
     }
 
     static func markExternalWrite() {
@@ -59,10 +73,7 @@ enum SharedModelContainer {
 
     static func migrateStoreToAppGroupIfNeeded() {
         let fileManager = FileManager.default
-        let appGroupURL = fileManager.containerURL(
-            forSecurityApplicationGroupIdentifier: appGroupID
-        )!
-        let newStoreURL = appGroupURL.appendingPathComponent("SimpleHabitTracker.store")
+        let newStoreURL = groupContainerURL.appendingPathComponent("SimpleHabitTracker.store")
 
         guard !fileManager.fileExists(atPath: newStoreURL.path) else { return }
 

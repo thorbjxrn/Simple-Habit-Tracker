@@ -25,7 +25,6 @@ struct HabitTrackerView: View {
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
 
     @State private var viewModel: HabitViewModel?
-    @State private var isLandscape = false
     @State private var addHabitAlertID = UUID()
     @State private var showingAddHabitAlert = false
     @State private var newHabitName = ""
@@ -86,16 +85,25 @@ struct HabitTrackerView: View {
     }
 
     var body: some View {
-        Group {
-            if isLandscape, let vm = viewModel {
-                DashboardView(
-                    viewModel: vm,
-                    habits: habits,
-                    isPremium: purchaseManager.isPremium
-                )
-            } else {
-                habitListView
+        // Window-shape driven, not UIDevice.orientation: works for iPad
+        // Split View resizes and never sees stale face-up/face-down states.
+        GeometryReader { geo in
+            let isLandscape = geo.size.width > geo.size.height
+            Group {
+                if isLandscape, let vm = viewModel {
+                    DashboardView(
+                        viewModel: vm,
+                        habits: habits,
+                        isPremium: purchaseManager.isPremium
+                    )
+                    .onAppear {
+                        landscapeTip.invalidate(reason: .actionPerformed)
+                    }
+                } else {
+                    habitListView
+                }
             }
+            .frame(width: geo.size.width, height: geo.size.height)
         }
         .onOpenURL { url in
             handleDeepLink(url)
@@ -109,11 +117,6 @@ struct HabitTrackerView: View {
             if !hasCheckedInterstitialOnAppear {
                 hasCheckedInterstitialOnAppear = true
             }
-
-            updateOrientation()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
-            updateOrientation()
         }
     }
 
@@ -295,20 +298,6 @@ struct HabitTrackerView: View {
         return vm.weekRecord(for: habit, weekOffset: offset)
     }
 
-    // MARK: - Orientation
-
-    private func updateOrientation() {
-        let orientation = UIDevice.current.orientation
-        switch orientation {
-        case .landscapeLeft, .landscapeRight:
-            isLandscape = true
-            landscapeTip.invalidate(reason: .actionPerformed)
-        case .portrait:
-            isLandscape = false
-        default:
-            break
-        }
-    }
 
     // MARK: - Helpers
 

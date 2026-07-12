@@ -18,6 +18,7 @@
 		08C6A6B72C5AC8660001A26D /* SimpleHabitTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B62C5AC8660001A26D /* SimpleHabitTrackerUITests.swift */; };
 		08C6A6B92C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */; };
 		08E202542C5E9D6F0054A4AD /* HabitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E202532C5E9D6F0054A4AD /* HabitModel.swift */; };
+		EAD0FAB0BF0047B29425237C /* SchemaVersioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09325DE79AE14169B906F642 /* SchemaVersioning.swift */; };
 		0F76763EE4E5ECCB34825B09 /* HabitEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9924DFA902AE50626A33CCF6 /* HabitEntity.swift */; };
 		2864A8CC2F8ED3F100725303 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 2864A8CB2F8ED3F100725303 /* GoogleMobileAds */; };
 		28EC62852F93D01F00C7B580 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28EC62842F93D01F00C7B580 /* StoreKit.framework */; };
@@ -39,6 +40,7 @@
 		CC0003012F00000300000001 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0003002F00000300000001 /* PurchaseManager.swift */; };
 		CC0003032F00000300000002 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0003022F00000300000002 /* PaywallView.swift */; };
 		D21090B1A1C6C81D5A915F5F /* HabitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E202532C5E9D6F0054A4AD /* HabitModel.swift */; };
+		1FE7CF66457744F5A222E6AD /* SchemaVersioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09325DE79AE14169B906F642 /* SchemaVersioning.swift */; };
 		D38BAD50E93A4F557886AC8F /* HabitState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001002D00000100000001 /* HabitState.swift */; };
 		DD0004013000000400000001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0004003000000400000001 /* SettingsView.swift */; };
 		EE0005013100000500000001 /* AdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0005003100000500000001 /* AdManager.swift */; };
@@ -102,6 +104,7 @@
 		08C6A6B62C5AC8660001A26D /* SimpleHabitTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerUITests.swift; sourceTree = "<group>"; };
 		08C6A6B82C5AC8660001A26D /* SimpleHabitTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleHabitTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		08E202532C5E9D6F0054A4AD /* HabitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitModel.swift; sourceTree = "<group>"; };
+		09325DE79AE14169B906F642 /* SchemaVersioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaVersioning.swift; sourceTree = "<group>"; };
 		0CD2720295B04EA5CEE3496C /* HeatmapWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HeatmapWidget.swift; path = HeatmapWidget.swift; sourceTree = "<group>"; };
 		286C96352F92929B00310E89 /* Product.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Product.storekit; sourceTree = "<group>"; };
 		28EC62842F93D01F00C7B580 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -295,6 +298,7 @@
 			isa = PBXGroup;
 			children = (
 				08E202532C5E9D6F0054A4AD /* HabitModel.swift */,
+				09325DE79AE14169B906F642 /* SchemaVersioning.swift */,
 				AA0001002D00000100000001 /* HabitState.swift */,
 				AA0001022D00000100000002 /* WeekRecord.swift */,
 			);
@@ -532,6 +536,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08E202542C5E9D6F0054A4AD /* HabitModel.swift in Sources */,
+				EAD0FAB0BF0047B29425237C /* SchemaVersioning.swift in Sources */,
 				08C6A69E2C5AC8640001A26D /* HabitTrackerView.swift in Sources */,
 				08C6A69C2C5AC8640001A26D /* SimpleHabitTrackerApp.swift in Sources */,
 				087672852D28603500683FA2 /* HabitViewModel.swift in Sources */,
@@ -587,6 +592,7 @@
 				9745281CE1B40CE6DDD2CBF9 /* WidgetTheme.swift in Sources */,
 				8C3E8A8C8A96D89434561C3D /* WidgetDateHelpers.swift in Sources */,
 				D21090B1A1C6C81D5A915F5F /* HabitModel.swift in Sources */,
+				1FE7CF66457744F5A222E6AD /* SchemaVersioning.swift in Sources */,
 				F815BAA805EBA904E4E40595 /* WeekRecord.swift in Sources */,
 				D38BAD50E93A4F557886AC8F /* HabitState.swift in Sources */,
 				57D28BBFA2CCC5E1BFB12CD7 /* ThemeManager.swift in Sources */,

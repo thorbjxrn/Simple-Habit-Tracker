@@ -345,11 +345,13 @@ final class SimpleHabitTrackerTests: XCTestCase {
 
     // MARK: - Cross-process visibility (widget writes -> app context)
 
-    /// Two containers on one store file see each other's writes after
-    /// rollback() — but only IN-PROCESS. Verified on-simulator that this does
-    /// NOT hold across processes (widget -> app), which is why the app rebuilds
-    /// its ModelContainer on foreground when the external-write token changes.
-    func testRollbackPicksUpExternalWrites() throws {
+    /// A live container serves cached rows and does NOT reliably surface
+    /// another container's writes (rollback proved flaky in-process and
+    /// insufficient cross-process). The app therefore rebuilds its
+    /// ModelContainer on foreground when the widget's write token changes —
+    /// this test encodes that shipped mechanism: a FRESH container must see
+    /// the external write.
+    func testFreshContainerSeesExternalWrites() throws {
         let storeURL = FileManager.default.temporaryDirectory
             .appendingPathComponent("cross-process-\(UUID().uuidString).store")
         defer {
@@ -383,11 +385,14 @@ final class SimpleHabitTrackerTests: XCTestCase {
         widgetRecord.completedDays = days
         try widgetContext.save()
 
-        // App context refreshes on foreground: rollback refaults cached objects.
-        appContext.rollback()
-        let refreshed = try appContext.fetch(FetchDescriptor<Habit>())
+        // On foreground the app rebuilds its container (token-gated); a fresh
+        // container's context must see the widget's committed write.
+        let configFresh = ModelConfiguration(url: storeURL, cloudKitDatabase: .none)
+        let rebuiltContainer = try ModelContainer(for: Habit.self, configurations: configFresh)
+        let rebuiltContext = ModelContext(rebuiltContainer)
+        let refreshed = try rebuiltContext.fetch(FetchDescriptor<Habit>())
         let refreshedRecord = try XCTUnwrap((refreshed.first(where: { $0.id == habitID })?.weekRecords ?? []).first)
         XCTAssertEqual(refreshedRecord.completedDays[0], HabitState.completed,
-                       "app context must see the widget's write after rollback()")
+                       "a rebuilt container must see external writes")
     }
 }

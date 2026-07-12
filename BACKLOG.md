@@ -9,10 +9,10 @@
 - [x] ~~ITSAppUsesNonExemptEncryption missing~~
 - [x] ~~Reconcile ads privacy story~~ — decision 2026-07-11: NO ATT prompt, non-personalized ads only (npa=1 on every request via AdManager.nonPersonalizedRequest). ATT code + NSUserTrackingUsageDescription removed; manifest: tracking=false, DeviceID/AdvertisingData declared non-tracking; widget extension has its own manifest (CA92.1). REMAINING MANUAL STEP: ASC questionnaire — Device ID + Advertising Data collected, NOT used for tracking, purpose third-party advertising
 - [x] ~~Widget deep links dead~~ — simplehabittracker:// scheme registered, single-habit widgets encode habit UUID, .onOpenURL lands on current week
-- [ ] Rotation layout switch uses deprecated UIDevice.orientation, destroys state; no iPad Split View handling
+- [x] ~~Rotation layout switch uses deprecated UIDevice.orientation~~ — window-shape (GeometryReader) drives dashboard vs list; handles iPad Split View resizes and stale face-up/down states
 - [x] ~~Lost-update race in SharedModelContainer.toggleDay~~ — writes serialized through WidgetStoreWriter actor with cached container; app-side reloads debounced via WidgetReloader
-- [ ] VersionedSchema/SchemaMigrationPlan V1 baseline
-- [ ] Force-unwrapped app-group container URL (SharedModelContainer)
+- [x] ~~VersionedSchema/SchemaMigrationPlan V1 baseline~~ — SimpleHabitsSchemaV1 (1.0.0, CloudKit-compatible shape) + migration plan wired into SharedModelContainer.create
+- [x] ~~Force-unwrapped app-group container URL~~ — groupContainerURL with assertion + Application Support fallback
 - [ ] Perf: per-habit [Date: WeekRecord] dictionary + completedCount helper (streaks, heatmap, stats, calendar)
 - [ ] Scoped reloadTimelines(ofKind:) instead of reloadAllTimelines() (6 sites)
 - [ ] Wire Product.storekit into shared scheme; add StoreKitTest coverage for PurchaseManager
