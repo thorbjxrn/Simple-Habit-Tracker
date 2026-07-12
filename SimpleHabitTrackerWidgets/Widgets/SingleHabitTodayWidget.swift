@@ -123,7 +123,7 @@ struct SingleHabitTodayView: View {
             Spacer()
 
             if let habitID = entry.habitID {
-                Button(intent: ToggleHabitIntent(habitID: habitID, dayIndex: entry.dayIndex)) {
+                Button(intent: ToggleHabitIntent(habitID: habitID, dayIndex: entry.dayIndex, sourceKind: "SingleHabitToday")) {
                     Circle()
                         .fill(entry.theme.color(for: entry.todayState))
                         .frame(width: 52, height: 52)

@@ -140,7 +140,7 @@ struct SingleHabitWeekView: View {
                             .foregroundStyle(.secondary)
 
                         if index == entry.todayIndex, let habitID = entry.habitID {
-                            Button(intent: ToggleHabitIntent(habitID: habitID, dayIndex: index)) {
+                            Button(intent: ToggleHabitIntent(habitID: habitID, dayIndex: index, sourceKind: "SingleHabitWeek")) {
                                 dayDot(for: entry.days[index], isToday: true)
                             }
                             .buttonStyle(.plain)
